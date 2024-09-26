@@ -7,9 +7,21 @@
 - **フロントエンド**: React, Bootstrap
 - **バックエンド**: Spring Boot, Gradle
 - **データベース**: MySQL
-- **コンテナ化**: Docker
+- **インフラ**: Docker(コンテナ化), Docker Compose
 
 ## セットアップ手順
-1. リポジトリをクローン
-   ```bash
-   git clone https://github.com/hidepon4649/AttendanceManagement.git
+  ```bash
+  # リポジトリをクローン
+  git clone https://github.com/hidepon4649/AttendanceManagement.git
+  ```
+## アプリケーション起動手順
+  ```bash
+  # docker-composeのディレクトリに移動して、下記２つのコマンドを実行して下さい。
+  docker-compose up -d
+  ./gradlew bootRun
+
+  # ブラウザから下記URL
+  http://localhost:8080
+  # id/pw
+  user/password
+  ```
