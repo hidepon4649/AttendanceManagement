@@ -12,5 +12,4 @@
 ## セットアップ手順
 1. リポジトリをクローン
    ```bash
-   git clone https://github.com/yourusername/attendance-management-app.git
-   cd attendance-management-app
+   git clone https://github.com/hidepon4649/AttendanceManagement.git
