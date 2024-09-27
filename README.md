@@ -18,6 +18,8 @@
   ```bash
   # docker-composeのディレクトリに移動して、下記２つのコマンドを実行して下さい。
   docker-compose up -d
+  # backendディレクトリに移動してブートラン
+  cd backend
   ./gradlew bootRun
 
   # ブラウザから下記URL
