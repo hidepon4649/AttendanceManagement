@@ -12,6 +12,9 @@ RUN npm install
 COPY . .
 
 # ビルド
+# Dockerfileに環境変数を追加
+ENV NODE_OPTIONS=--openssl-legacy-provider
+
 RUN npm run build
 
 # アプリケーションの開始
