@@ -8,7 +8,7 @@ const MonthlyReport = () => {
   useEffect(() => {
     const fetchReport = async () => {
       if (month) {
-        const response = await axios.get(`/api/attendance/report/${month}`);
+        const response = await axios.get(`http://localhost:8080/api/attendance/report/${month}`);
         setReport(response.data);
       }
     };

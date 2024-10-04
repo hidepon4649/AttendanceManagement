@@ -5,10 +5,12 @@ services:
     build: ./backend
     ports:
       - "8080:8080"
+      - "5005:5005"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/attendance_db
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=secret
+      - SPRING_PROFILES_ACTIVE=dev
     depends_on:
       - db
     networks:

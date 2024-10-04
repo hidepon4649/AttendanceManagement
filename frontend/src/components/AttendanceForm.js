@@ -6,7 +6,7 @@ const AttendanceForm = () => {
 
   const handleClockIn = async () => {
     try {
-      const response = await axios.post('/api/attendance/clock-in', { employeeId });
+      const response = await axios.post('http://localhost:8080/api/attendance/clock-in', { employeeId });
       console.log('Clocked in:', response.data);
     } catch (error) {
       console.error('Clock-in failed:', error);
@@ -15,7 +15,7 @@ const AttendanceForm = () => {
 
   const handleClockOut = async () => {
     try {
-      const response = await axios.post('/api/attendance/clock-out', { employeeId });
+      const response = await axios.post('http://localhost:8080/api/attendance/clock-out', { employeeId });
       console.log('Clocked out:', response.data);
     } catch (error) {
       console.error('Clock-out failed:', error);

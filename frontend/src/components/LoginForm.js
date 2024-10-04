@@ -7,7 +7,8 @@ const LoginForm = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('/api/auth/login', { email, password });
+      // const response = await axios.post('/api/auth/login', { email, password });
+      const response = await axios.post('http://localhost:8080/api/auth/login', { email, password });
       console.log('Logged in:', response.data);
     } catch (error) {
       console.error('Login failed:', error);
