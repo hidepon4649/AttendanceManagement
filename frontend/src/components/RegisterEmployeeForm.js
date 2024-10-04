@@ -11,7 +11,8 @@ const RegisterEmployeeForm = () => {
 
   const handleRegister = async () => {
     try {
-      const response = await axios.post('/api/employees/register', {
+      // const response = await axios.post('/api/employees/register', {
+        const response = await axios.post('http://localhost:8080/api/employees/register', {
         name,
         email,
         password,
