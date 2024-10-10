@@ -21,7 +21,7 @@
   docker compose up -d
 
   # ブラウザから下記URL
-  http://localhost:8080
+  http://localhost:3000
   # id/pw
   user/password
   ```
