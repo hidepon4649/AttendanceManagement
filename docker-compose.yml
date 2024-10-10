@@ -3,6 +3,7 @@ services:
   backend:
     container_name: backend
     build: ./backend
+    # tty: true # デバッグ用にターミナルを有効化
     ports:
       - "8080:8080"
       - "5005:5005"
@@ -38,11 +39,11 @@ services:
       test: ["CMD", "mysqladmin", "ping", "-h", "db", "-u", "root", "-p$${MYSQL_ROOT_PASSWORD}"]
       interval: 10s
       retries: 3
-      
+
 networks:
   app-network:
     driver: bridge
-  
+
 volumes:
   db-data:
     driver: local
