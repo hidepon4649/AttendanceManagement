@@ -1,6 +1,8 @@
 # version: '3'
 services:
   backend:
+    volumes:
+      - .:/workspace:cached
     container_name: backend
     build: ./backend
     # tty: true # デバッグ用にターミナルを有効化
@@ -18,6 +20,8 @@ services:
       - app-network
 
   frontend:
+    volumes:
+      - .:/workspace:cached
     container_name: frontend
     build: ./frontend
     ports:

@@ -8,11 +8,11 @@ import MonthlyReport from './components/MonthlyReport';
 const App = () => {
   return (
     <Router>
-      <div>
+      <div className="container">
         <nav>
           <ul>
             <li>
-              <Link to="/">ログイン</Link>
+              <Link to="/">ログイン2</Link>
             </li>
             <li>
               <Link to="/register">社員登録</Link>

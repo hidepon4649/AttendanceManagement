@@ -1,6 +1,13 @@
 # ベースイメージ
 FROM amazoncorretto:17
 
+# tarコマンドをインストール
+RUN yum install -y tar gzip
+
+# GLIBCとlibstdc++をインストール
+RUN yum update -y && \
+    yum install -y gcc libstdc++ glibc
+
 # 作業ディレクトリ
 WORKDIR /app
 
