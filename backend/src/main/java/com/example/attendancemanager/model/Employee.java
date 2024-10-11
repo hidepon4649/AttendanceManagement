@@ -1,6 +1,10 @@
 package com.example.attendancemanager.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 @Entity
 public class Employee {
@@ -9,10 +13,17 @@ public class Employee {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
+    @Size(min = 8, max = 24)
     private String name;
+    @NotBlank
+    @Email
     private String email;
+    @NotBlank
+    @Pattern(regexp="^[a-zA-Z0-9_]{8,24}$")
     private String password;
     private boolean isAdmin;
+
     public Long getId() {
         return id;
     }

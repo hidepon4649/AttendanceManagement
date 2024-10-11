@@ -1,0 +1,6 @@
+{
+	"name": "backend container",
+	"dockerComposeFile": "../../docker-compose.yml",
+	"service": "backend",
+	"workspaceFolder": "/workspace/backend"
+}

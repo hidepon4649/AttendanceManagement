@@ -35,6 +35,7 @@ services:
       MYSQL_DATABASE: attendance_db
     volumes:
       - db-data:/var/lib/mysql
+      - ./my.cnf:/etc/mysql/conf.d/my.cnf # my.cnfファイルをマウント
     ports:
       - "3306:3306"
     networks:

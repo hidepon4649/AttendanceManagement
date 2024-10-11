@@ -12,7 +12,7 @@ const App = () => {
         <nav>
           <ul>
             <li>
-              <Link to="/">ログイン2</Link>
+              <Link to="/">ログイン4</Link>
             </li>
             <li>
               <Link to="/register">社員登録</Link>
