@@ -17,7 +17,7 @@ const MonthlyReport = () => {
   }, [month]);
 
   return (
-    <div>
+    <div className="mt-3">
       <h2>月末帳票出力</h2>
       <input type="month" value={month} onChange={(e) => setMonth(e.target.value)} />
       <ul>

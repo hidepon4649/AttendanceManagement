@@ -33,7 +33,7 @@ const RegisterEmployeeForm = () => {
   };
 
   return (
-    <div>
+    <div className="mt-3">
       <h2>社員登録</h2>
       {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
       {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}

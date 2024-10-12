@@ -16,7 +16,7 @@ const LoginForm = () => {
   };
 
   return (
-    <div>
+    <div className="mt-3">
       <h2>ログイン</h2>
       <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="メールアドレス" />
       <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="パスワード" />

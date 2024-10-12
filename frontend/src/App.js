@@ -10,18 +10,18 @@ const App = () => {
     <Router>
       <div className="container">
         <nav>
-          <ul>
-            <li>
-              <Link to="/">ログイン4</Link>
+          <ul className="nav nav-pills">
+            <li className="nav-item">
+              <Link className="nav-link" to="/">ログイン</Link>
             </li>
-            <li>
-              <Link to="/register">社員登録</Link>
+            <li className="nav-item">
+              <Link className="nav-link" to="/register">社員登録</Link>
             </li>
-            <li>
-              <Link to="/attendance">出退勤管理</Link>
+            <li className="nav-item">
+              <Link className="nav-link" to="/attendance">出退勤管理</Link>
             </li>
-            <li>
-              <Link to="/report">月末帳票出力</Link>
+            <li className="nav-item">
+              <Link className="nav-link" to="/report">月末帳票出力</Link>
             </li>
           </ul>
         </nav>
