@@ -1,27 +1,24 @@
-# ベースイメージ
-FROM amazoncorretto:17
+# マルチステージビルド
 
-# tarコマンドをインストール
-RUN yum install -y tar gzip
+# ---------------------------------------
+# ビルド用のイメージ
+FROM amazoncorretto:17 AS build
 
-# GLIBCとlibstdc++をインストール
-RUN yum update -y && \
-    yum install -y gcc libstdc++ glibc
-
-# 作業ディレクトリ
 WORKDIR /app
-
-# ホストのプロジェクトファイルをコンテナにコピー
 COPY . /app
 
-# gradlewを実行可能にする
 RUN chmod +x ./gradlew
-
-# gradlewでプロジェクトをビルド
 RUN ./gradlew clean build
 
-RUN cp build/libs/attendance-management-backend-0.0.1-SNAPSHOT.jar /app/attendance-management-backend.jar
+# ---------------------------------------
+# 実行用のイメージ
+FROM amazoncorretto:17
 
-# アプリケーションを起動
+WORKDIR /app
+COPY --from=build /app/build/libs/attendance-management-backend-0.0.1-SNAPSHOT.jar /app/attendance-management-backend.jar
+
+RUN yum update -y && \
+    yum install -y gcc libstdc++ glibc tar gzip
+
+# デバッグ用のポート5005を開放
 ENTRYPOINT ["java", "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005", "-jar", "attendance-management-backend.jar"]
-
