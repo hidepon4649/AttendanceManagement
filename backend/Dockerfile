@@ -20,5 +20,7 @@ COPY --from=build /app/build/libs/attendance-management-backend-0.0.1-SNAPSHOT.j
 RUN yum update -y && \
     yum install -y gcc libstdc++ glibc tar gzip
 
-# デバッグ用のポート5005を開放
-ENTRYPOINT ["java", "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005", "-jar", "attendance-management-backend.jar"]
+# JAVA_OPTS環境変数を設定 (devtoolsのリスタートを有効化)
+ENV JAVA_OPTS="-Dspring.devtools.restart.enabled=true"
+
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -jar attendance-management-backend.jar"]
