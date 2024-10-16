@@ -13,14 +13,14 @@ public class Employee {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
-    @Size(min = 8, max = 24)
+    @NotBlank(message = "名前は必須です")
+    @Size(min = 8, max = 24, message = "名前は8文字以上、24文字以下です")
     private String name;
-    @NotBlank
-    @Email
+    @NotBlank(message = "メールアドレスは必須です")
+    @Email(message = "メールアドレスが不正です")
     private String email;
-    @NotBlank
-    @Pattern(regexp="^[a-zA-Z0-9_]{8,24}$")
+    @NotBlank(message = "パスワードは必須です")
+    @Pattern(regexp="^[a-zA-Z0-9_]{8,24}$", message = "パスワードは半角英数で8文字以上、24文字以下です")
     private String password;
     private boolean isAdmin;
 

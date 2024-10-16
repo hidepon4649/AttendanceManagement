@@ -7,7 +7,7 @@ const RegisterEmployeeForm = () => {
   const [password, setPassword] = useState('');
   const [isAdmin, setIsAdmin] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errors, setErrors] = useState({});
 
   const handleRegister = async () => {
     try {
@@ -19,33 +19,31 @@ const RegisterEmployeeForm = () => {
         isAdmin
       });
       setSuccessMessage('社員の登録が成功しました！');
-      setErrorMessage('');
+      setErrors({});
       // 入力フィールドをクリア
       setName('');
       setEmail('');
       setPassword('');
       setIsAdmin(false);
     } catch (error) {
-
-      // レスポンスのエラーメッセージを表示用に整形
-      let errorMessage = '';
-      error.response.data.map((myData)=>{
-        let temp = myData.field + ':' + myData.defaultMessage;
-        console.log(temp);
-        errorMessage += temp;
-      })
-      // setErrorMessage('社員の登録に失敗しました。');
-      setErrorMessage('社員の登録に失敗しました。' + errorMessage);
-      setSuccessMessage('');
-      console.error('Employee registration failed:', error);
+      if (error.response && error.response.data) {
+        setErrors({ 
+            fieldErrors: error.response.data, // フィールドエラー
+            generalError: '社員の登録に失敗しました。' // 一般的なエラーメッセージ
+        }); 
+      } else {
+        setErrors({ 
+          generalError: '社員の登録に失敗しました。'  // 一般的なエラーメッセージ
+        });
+      }
     }
   };
 
   return (
     <div className="mt-3">
       <h2>社員登録</h2>
-      {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
-      {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+      {successMessage && <p className="success">{successMessage}</p>}
+      {errors.generalError && <p className="error">{errors.generalError}</p>}
       <div className="form-group">
         <label htmlFor="name">名前:</label>
         <input
@@ -57,6 +55,8 @@ const RegisterEmployeeForm = () => {
           onChange={(e) => setName(e.target.value)}
           placeholder="名前"
         />
+        {errors.fieldErrors && errors.fieldErrors.name && <p className="error">{errors.fieldErrors.name}</p>}
+
       </div>
       <div className="form-group">
         <label htmlFor="email">メールアドレス:</label>
@@ -69,6 +69,8 @@ const RegisterEmployeeForm = () => {
           onChange={(e) => setEmail(e.target.value)}
           placeholder="メールアドレス"
         />
+        {errors.fieldErrors && errors.fieldErrors.email && <p className="error">{errors.fieldErrors.email}</p>}
+
       </div>
       <div className="form-group">
         <label htmlFor="password">パスワード:</label>
@@ -80,6 +82,8 @@ const RegisterEmployeeForm = () => {
           onChange={(e) => setPassword(e.target.value)}
           placeholder="パスワード"
         />
+        {errors.fieldErrors && errors.fieldErrors.password && <p className="error">{errors.fieldErrors.password}</p>}
+
       </div>
       <div className="form-group">
         <label htmlFor="isAdmin">管理者権限:</label>
