@@ -26,7 +26,16 @@ const RegisterEmployeeForm = () => {
       setPassword('');
       setIsAdmin(false);
     } catch (error) {
-      setErrorMessage('社員の登録に失敗しました。');
+
+      // レスポンスのエラーメッセージを表示用に整形
+      let errorMessage = '';
+      error.response.data.map((myData)=>{
+        let temp = myData.field + ':' + myData.defaultMessage;
+        console.log(temp);
+        errorMessage += temp;
+      })
+      // setErrorMessage('社員の登録に失敗しました。');
+      setErrorMessage('社員の登録に失敗しました。' + errorMessage);
       setSuccessMessage('');
       console.error('Employee registration failed:', error);
     }
