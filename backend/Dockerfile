@@ -7,6 +7,9 @@ FROM amazoncorretto:17 AS build
 WORKDIR /app
 COPY . /app
 
+RUN yum update -y && \
+    yum install -y gcc libstdc++ glibc tar gzip git inotify-tools
+
 RUN chmod +x ./gradlew
 RUN ./gradlew clean build
 

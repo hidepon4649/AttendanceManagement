@@ -33,3 +33,7 @@ dependencies {
 jar {
     enabled = true
 }
+
+bootRun {
+    jvmArgs = ["-Dspring.devtools.restart.enabled=true", "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"]
+}

@@ -35,6 +35,8 @@ public class EmployeeController {
 
         }
 
+        // employee.setName("successHotReload12"); // デバッグ用コード。ホットリロードの確認
+
         Employee newEmployee = employeeService.saveEmployee(employee);
         return ResponseEntity.status(HttpStatus.CREATED).body(newEmployee);
     }

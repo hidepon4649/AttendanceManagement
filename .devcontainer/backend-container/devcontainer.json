@@ -7,25 +7,19 @@
 		"vscode": {
 			"extensions": [
 				"MS-CEINTL.vscode-language-pack-ja",
-				"Angular.ng-template",
-				"vmware.vscode-manifest-yaml",
-				"vmware.vscode-concourse",
-				"cweijan.dbclient-jdbc",
 				"vscjava.vscode-java-debug",
-				"ms-vscode-remote.remote-containers",
-				"ms-azuretools.vscode-docker",
 				"vscjava.vscode-java-pack",
+				"vscjava.vscode-gradle",
+				"vscjava.vscode-spring-boot-dashboard",
+				"vscjava.vscode-spring-initializr",
 				"GitHub.copilot",
 				"GitHub.copilot-chat",
 				"eamodio.gitlens",
-				"vscjava.vscode-gradle",
 				"VisualStudioExptTeam.vscodeintellicode",
-				"ritwickdey.LiveServer",
-				"vscjava.vscode-spring-boot-dashboard",
 				"vmware.vscode-boot-dev-pack",
 				"vmware.vscode-spring-boot",
-				"vscjava.vscode-spring-initializr",
-				"vscode-icons-team.vscode-icons"
+				"vscode-icons-team.vscode-icons",
+				"pivotal.vscode-spring-boot"
 			]
 		}
 	}
