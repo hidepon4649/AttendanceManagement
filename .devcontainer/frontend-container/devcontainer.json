@@ -2,7 +2,7 @@
 	"name": "frontend container",
 	"dockerComposeFile": "../../docker-compose.yml",
 	"service": "frontend",
-	"workspaceFolder": "/workspace/frontend",
+	"workspaceFolder": "/app/frontend",
 	"customizations": {
 		"vscode": {
 			"extensions": [
