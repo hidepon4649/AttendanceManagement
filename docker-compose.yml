@@ -1,10 +1,11 @@
-# version: '3'
+version: '3'
 services:
   backend:
     volumes:
-      - .:/workspace:cached
+      - ./backend:/app/backend
     container_name: backend
     build: ./backend
+    command: ./gradlew bootRun
     # tty: true # デバッグ用にターミナルを有効化
     ports:
       - "8080:8080"
@@ -14,6 +15,7 @@ services:
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=secret
       - SPRING_PROFILES_ACTIVE=dev
+      - JAVA_OPTS=-Dspring.devtools.restart.enabled=true -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
     depends_on:
       db:
         condition: service_healthy
@@ -22,7 +24,7 @@ services:
 
   frontend:
     volumes:
-      - .:/workspace:cached
+      - ./frontend:/app/frontend
     container_name: frontend
     build: ./frontend
     ports:

@@ -11,16 +11,21 @@ RUN chmod +x ./gradlew
 RUN ./gradlew clean build
 
 # ---------------------------------------
-# 実行用のイメージ
-FROM amazoncorretto:17
+# 開発中はソースコード修正を即時反映をしたいので、
+# "java -jar jarファイル"を実行するのではなく、
+# bootRunタスクを実行する(docker-compose.ymlで指定)
+# ---------------------------------------
 
-WORKDIR /app
-COPY --from=build /app/build/libs/attendance-management-backend-0.0.1-SNAPSHOT.jar /app/attendance-management-backend.jar
+# # ---------------------------------------
+# # 実行用のイメージ
+# FROM amazoncorretto:17
 
-RUN yum update -y && \
-    yum install -y gcc libstdc++ glibc tar gzip
+# WORKDIR /app
+# COPY --from=build /app/build/libs/attendance-management-backend-0.0.1-SNAPSHOT.jar /app/attendance-management-backend.jar
 
-# JAVA_OPTS環境変数を設定 (devtoolsのリスタートを有効化)
-ENV JAVA_OPTS="-Dspring.devtools.restart.enabled=true"
+# RUN yum update -y && \
+#     yum install -y gcc libstdc++ glibc tar gzip git
 
-ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -jar attendance-management-backend.jar"]
+# # JAVA_OPTS環境変数を設定 (devtoolsのリスタートを有効化)
+
+# ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -jar attendance-management-backend.jar"]

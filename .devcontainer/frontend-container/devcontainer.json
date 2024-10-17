@@ -2,5 +2,32 @@
 	"name": "frontend container",
 	"dockerComposeFile": "../../docker-compose.yml",
 	"service": "frontend",
-	"workspaceFolder": "/workspace/frontend"
+	"workspaceFolder": "/workspace/frontend",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"MS-CEINTL.vscode-language-pack-ja",
+				"Angular.ng-template",
+				"vmware.vscode-manifest-yaml",
+				"vmware.vscode-concourse",
+				"cweijan.dbclient-jdbc",
+				"vscjava.vscode-java-debug",
+				"ms-vscode-remote.remote-containers",
+				"ms-azuretools.vscode-docker",
+				"vscjava.vscode-java-pack",
+				"GitHub.copilot",
+				"GitHub.copilot-chat",
+				"eamodio.gitlens",
+				"vscjava.vscode-gradle",
+				"VisualStudioExptTeam.vscodeintellicode",
+				"ritwickdey.LiveServer",
+				"vscjava.vscode-spring-boot-dashboard",
+				"vmware.vscode-boot-dev-pack",
+				"vmware.vscode-spring-boot",
+				"vscjava.vscode-spring-initializr",
+				"vscode-icons-team.vscode-icons"
+
+			]
+		}
+	}
 }
