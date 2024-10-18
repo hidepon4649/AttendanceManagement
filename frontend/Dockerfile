@@ -4,34 +4,29 @@
 # ビルド用のイメージ
 FROM node:18-alpine AS build
 
-WORKDIR /app
+WORKDIR /app/frontend
 
 RUN apk add --no-cache git
 
-# 依存関係のインストール
-COPY package.json ./
-RUN npm install
-
-# アプリケーションのコードをコピー
-COPY . .
-
-ENV NODE_OPTIONS=--openssl-legacy-provider
-
-RUN npm run build
-
 # ---------------------------------------
-# 実行用のイメージ
-FROM node:18-alpine
+# 開発中はソースコード修正を即時反映をしたいので、
+# ホストOSのソースコードをマウントする。
+# コンテナ上でnpm install, build, start(docker-compose.ymlで指定)
+# ---------------------------------------
 
-WORKDIR /app
+# # ---------------------------------------
+# # 実行用のイメージ
+# FROM node:18-alpine
 
-# ビルド成果物をコピー
-COPY --from=build /app .
+# WORKDIR /app/frontend
 
-# 依存関係のインストール（本番用）
-RUN npm install --only=production
+# # ビルド成果物をコピー
+# COPY --from=build /app/frontend .
 
-ENV NODE_OPTIONS=--openssl-legacy-provider
+# # 依存関係のインストール（本番用）
+# RUN npm install --only=production
 
-# アプリケーションの開始
-CMD ["npm", "start"]
+# ENV NODE_OPTIONS=--openssl-legacy-provider
+
+# # アプリケーションの開始
+# CMD ["npm", "start"]

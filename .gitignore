@@ -13,6 +13,15 @@ backend/.gradle/
 .DS_Store
 backend/.DS_Store
 
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
 ### STS ###
 .apt_generated
 .classpath
@@ -42,4 +51,14 @@ out/
 /.nb-gradle/
 
 ### VS Code ###
-.vscode/
+# VS Code files for those working on multiple tools
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# Dependency directories
+node_modules/
+jspm_packages/

@@ -4,17 +4,14 @@
 # ビルド用のイメージ
 FROM amazoncorretto:17 AS build
 
-WORKDIR /app
-COPY . /app
+WORKDIR /app/backend
 
 RUN yum update -y && \
     yum install -y gcc libstdc++ glibc tar gzip git inotify-tools
 
-RUN chmod +x ./gradlew
-RUN ./gradlew clean build
-
 # ---------------------------------------
 # 開発中はソースコード修正を即時反映をしたいので、
+# ホストOSのソースコードをマウントする。
 # "java -jar jarファイル"を実行するのではなく、
 # bootRunタスクを実行する(docker-compose.ymlで指定)
 # ---------------------------------------

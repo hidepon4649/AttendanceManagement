@@ -1,0 +1,12 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "type": "java",
+        "name": "Debug Spring Boot App",
+        "request": "attach", // launchだと新規起動。attachだと実行中プロセスに接続
+        "hostName": "localhost",
+        "port": 5005
+      }
+    ]
+  }
