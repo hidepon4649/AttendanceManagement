@@ -23,7 +23,7 @@ const AttendanceForm = () => {
   };
 
   return (
-    <div className="mt-3">
+    <div className="mx-3 mt-3">
       <h2>出退勤管理</h2>
       <input type="text" value={employeeId} onChange={(e) => setEmployeeId(e.target.value)} placeholder="社員ID" />
       <button onClick={handleClockIn}>出勤</button>

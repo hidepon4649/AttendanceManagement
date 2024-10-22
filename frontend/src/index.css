@@ -1,4 +1,4 @@
-/* ベーススタイル */
+/* ベーススタイル
 body {
     margin: 0;
     font-family: Arial, sans-serif;
@@ -61,12 +61,10 @@ body {
     border-radius: 4px;
   }
   
-  /* フォームスタイル */
   .form-group {
     margin-bottom: 15px;
   }
   
-  /* ナビゲーションスタイル */
   nav ul {
     display: flex;
     justify-content: space-around;
@@ -89,4 +87,4 @@ body {
   }
   .success{
     color :green;
-  }
+  } */

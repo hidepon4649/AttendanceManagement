@@ -40,12 +40,12 @@ const RegisterEmployeeForm = () => {
   };
 
   return (
-    <div className="mt-3">
+    <div className="mx-3 mt-3">
       <h2>社員登録</h2>
-      {successMessage && <p className="success">{successMessage}</p>}
-      {errors.generalError && <p className="error">{errors.generalError}</p>}
-      <div className="form-group">
-        <label htmlFor="name">名前:</label>
+      {successMessage && <p className="text-success">{successMessage}</p>}
+      {errors.generalError && <p className="text-danger">{errors.generalError}</p>}
+      <div className="mb-3">
+        <label className="form-label" htmlFor="name">名前:</label>
         <input
           type="text"
           className="form-control" 
@@ -55,11 +55,11 @@ const RegisterEmployeeForm = () => {
           onChange={(e) => setName(e.target.value)}
           placeholder="名前"
         />
-        {errors.fieldErrors && errors.fieldErrors.name && <p className="error">{errors.fieldErrors.name}</p>}
+        {errors.fieldErrors && errors.fieldErrors.name && <p className="text-danger">{errors.fieldErrors.name}</p>}
 
       </div>
-      <div className="form-group">
-        <label htmlFor="email">メールアドレス:</label>
+      <div className="mb-3">
+        <label className="form-label" htmlFor="email">メールアドレス:</label>
         <input
           type="email"
           className="form-control" 
@@ -69,11 +69,11 @@ const RegisterEmployeeForm = () => {
           onChange={(e) => setEmail(e.target.value)}
           placeholder="メールアドレス"
         />
-        {errors.fieldErrors && errors.fieldErrors.email && <p className="error">{errors.fieldErrors.email}</p>}
+        {errors.fieldErrors && errors.fieldErrors.email && <p className="text-danger">{errors.fieldErrors.email}</p>}
 
       </div>
-      <div className="form-group">
-        <label htmlFor="password">パスワード:</label>
+      <div className="mb-3">
+        <label className="form-label" htmlFor="password">パスワード:</label>
         <input
           type="password"
           className="form-control" 
@@ -82,11 +82,11 @@ const RegisterEmployeeForm = () => {
           onChange={(e) => setPassword(e.target.value)}
           placeholder="パスワード"
         />
-        {errors.fieldErrors && errors.fieldErrors.password && <p className="error">{errors.fieldErrors.password}</p>}
+        {errors.fieldErrors && errors.fieldErrors.password && <p className="text-danger">{errors.fieldErrors.password}</p>}
 
       </div>
-      <div className="form-group">
-        <label htmlFor="isAdmin">管理者権限:</label>
+      <div className="mb-3">
+        <label className="form-label" htmlFor="isAdmin">管理者権限:</label>
         <input
           type="checkbox"
           id="isAdmin"

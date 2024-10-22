@@ -9,19 +9,19 @@ const App = () => {
   return (
     <Router>
       <div className="container">
-        <nav>
-          <ul className="nav nav-pills">
+        <nav className="navbar bg-primary">
+          <ul className="nav nav-tabs mx-3">
             <li className="nav-item">
-              <Link className="nav-link" to="/">ログイン</Link>
+              <Link className="nav-link" style={{color: "white"}} to="/" aria-current="page" >ログイン</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/register">社員登録</Link>
+              <Link className="nav-link" style={{color: "white"}}  to="/register">社員登録</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/attendance">出退勤管理</Link>
+              <Link className="nav-link" style={{color: "white"}}  to="/attendance">出退勤管理</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/report">月末帳票出力</Link>
+              <Link className="nav-link" style={{color: "white"}}  to="/report">月末帳票出力</Link>
             </li>
           </ul>
         </nav>

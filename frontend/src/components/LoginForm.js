@@ -16,10 +16,10 @@ const LoginForm = () => {
   };
 
   return (
-    <div className="mt-3">
+    <div className="mx-3 mt-3">
       <h2>ログイン</h2>
-      <div className="form-group">
-        <label htmlFor="email">メールアドレス:</label>
+      <div className="mb-3">
+        <label className="form-label" htmlFor="email">メールアドレス:</label>
         <input 
           type="email" 
           className="form-control"
@@ -29,10 +29,10 @@ const LoginForm = () => {
           onChange={(e) => setEmail(e.target.value)} 
           placeholder="メールアドレス" 
           />
-        </div>
-        <div className="form-group">
-          <label htmlFor="password">パスワード:</label>
-          <input 
+      </div>
+      <div className="mb-3">
+        <label className="form-label" htmlFor="password">パスワード:</label>
+        <input 
             type="password" 
             className="form-control"
             id="password"
@@ -40,8 +40,8 @@ const LoginForm = () => {
             onChange={(e) => setPassword(e.target.value)} 
             placeholder="パスワード" 
           />
-        </div>
-        <button className="btn btn-primary" onClick={handleLogin}>ログイン</button>
+      </div>
+       <button className="btn btn-primary mx-3 mt-3" onClick={handleLogin}>ログイン</button>
     </div>
   );
 };
