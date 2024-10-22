@@ -7,7 +7,8 @@
       "start": "react-scripts start",
       "build": "react-scripts build",
       "test": "react-scripts test",
-      "eject": "react-scripts eject"
+      "eject": "react-scripts eject",
+      "clean": "rimraf build"
     },
     "dependencies": {
       "axios": "^0.21.1",
@@ -29,7 +30,8 @@
       ]
     },
     "devDependencies": {
-      "bootstrap": "^5.1.0"
+      "bootstrap": "^5.1.0",
+      "rimraf": "^5.0.0"
     }
   }
   
