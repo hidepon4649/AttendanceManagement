@@ -12,7 +12,7 @@ const App = () => {
         <nav className="navbar bg-primary">
           <ul className="nav nav-tabs mx-3">
             <li className="nav-item">
-              <Link className="nav-link" style={{color: "white"}} to="/" aria-current="page" >ログイン</Link>
+              <Link className="nav-link" style={{color: "white"}} to="/">ログイン</Link>
             </li>
             <li className="nav-item">
               <Link className="nav-link" style={{color: "white"}}  to="/register">社員登録</Link>

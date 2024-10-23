@@ -2,11 +2,15 @@
 
 # ---------------------------------------
 # ビルド用のイメージ
-FROM node:18-alpine AS build
+FROM node:22.10.0-alpine AS build
 
 WORKDIR /app/frontend
 
 RUN apk add --no-cache git
+
+# 依存関係のインストール
+COPY package.json package-lock.json ./
+RUN npm install --legacy-peer-deps
 
 # ---------------------------------------
 # 開発中はソースコード修正を即時反映をしたいので、
