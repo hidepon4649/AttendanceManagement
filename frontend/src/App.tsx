@@ -4,6 +4,7 @@ import LoginForm from './components/LoginForm';
 import AttendanceForm from './components/AttendanceForm';
 import MonthlyReport from './components/MonthlyReport';
 import RegisterEmployeeForm from './components/RegisterEmployeeForm';
+import EmployeeList from './components/EmployeeList';
 
 const App = () => {
   return (
@@ -13,6 +14,9 @@ const App = () => {
           <ul className="nav nav-tabs mx-3">
             <li className="nav-item">
               <Link className="nav-link" style={{color: "white"}} to="/">ログイン</Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" style={{color: "white"}}  to="/list">社員一覧</Link>
             </li>
             <li className="nav-item">
               <Link className="nav-link" style={{color: "white"}}  to="/register">社員登録</Link>
@@ -28,6 +32,7 @@ const App = () => {
 
         <Switch>
           <Route path="/" exact component={LoginForm} />
+          <Route path="/list" component={EmployeeList} />
           <Route path="/register" component={RegisterEmployeeForm} />
           <Route path="/attendance" component={AttendanceForm} />
           <Route path="/report" component={MonthlyReport} />

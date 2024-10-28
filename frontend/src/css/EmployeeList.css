@@ -1,0 +1,4 @@
+/* EmployeeList.css */
+.table-hover tbody tr:hover {
+    background-color: lightgoldenrodyellow;
+  }
