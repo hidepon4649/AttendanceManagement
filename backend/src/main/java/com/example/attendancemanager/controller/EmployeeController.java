@@ -12,6 +12,7 @@ import org.springframework.validation.BindingResult;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.HashMap;
 
 @RestController
@@ -28,14 +29,12 @@ public class EmployeeController {
         if (result.hasErrors()) {
 
             Map<String, String> errors = new HashMap<>();
-            result.getFieldErrors().forEach(error -> 
-                errors.put(error.getField(), error.getDefaultMessage())
-            );
+            result.getFieldErrors().forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
             return ResponseEntity.badRequest().body(errors);
 
         }
 
-        employee.setName("successHotReload12"); // デバッグ用コード。ホットリロードの確認
+        // employee.setName("successHotReload12"); // デバッグ用コード。ホットリロードの確認
 
         Employee newEmployee = employeeService.saveEmployee(employee);
         return ResponseEntity.status(HttpStatus.CREATED).body(newEmployee);
@@ -44,5 +43,28 @@ public class EmployeeController {
     @GetMapping
     public List<Employee> getAllEmployees() {
         return employeeService.getAllEmployees();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getEmployeeById(@PathVariable Long id) {
+        Employee employee = employeeService.getEmployeeById(id);
+        if (employee != null) {
+            return ResponseEntity.ok(employee);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Employee not found");
+        }
+    }
+
+    @PostMapping("/edit/{id}")
+    public ResponseEntity<?> updateEmployee(@PathVariable Long id, @RequestBody Employee updateEmployee) {
+        Employee existignEmployee = employeeService.getEmployeeById(id);
+        if (existignEmployee != null) {
+            updateEmployee.setId(id);
+            employeeService.saveEmployee(updateEmployee);
+            return ResponseEntity.ok(updateEmployee);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Employee not found");
+        }
+
     }
 }

@@ -1,10 +1,13 @@
 import React, { useState,useEffect } from 'react';
 import axios from 'axios';
+import { useHistory } from 'react-router-dom';
 import '../css/EmployeeList.css';
+import { Employee } from '../models/Employee';
 
 const EmployeeList = () => {
 
   const [list, setList] = useState([]);
+  const history = useHistory();
 
   const fetchList = async () => {
     const response = await axios.get('http://localhost:8080/api/employees');
@@ -14,6 +17,11 @@ const EmployeeList = () => {
   useEffect(() => {
     fetchList();
   }, []); // 空の配列を第2引数に渡すことで、初回レンダリング時のみ実行される
+
+  const handleClick = (id: number) => {
+    console.log(id);
+    history.push(`/employees/edit/${id}`);
+  };
 
   return (
     <div className="mx-3 mt-3">
@@ -27,9 +35,10 @@ const EmployeeList = () => {
           </tr>
         </thead>
         <tbody>
-        {list.map((employee: { id: number; name: string; email: string; isAdmin: boolean }) => (
+        {/* {list.map((employee: { id: number; name: string; email: string; isAdmin: boolean }) => ( */}
+        {list.map((employee: Employee) => ( 
           <tr className="row" key={employee.id}>
-            <td className="col">
+            <td className="col" onClick={()=>handleClick(employee.id)}>
               {employee.name}
             </td>
             <td className="col">

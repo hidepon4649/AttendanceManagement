@@ -5,6 +5,7 @@ import AttendanceForm from './components/AttendanceForm';
 import MonthlyReport from './components/MonthlyReport';
 import RegisterEmployeeForm from './components/RegisterEmployeeForm';
 import EmployeeList from './components/EmployeeList';
+import EmployeeEdit from './components/EmployeeEdit';
 
 const App = () => {
   return (
@@ -16,10 +17,10 @@ const App = () => {
               <Link className="nav-link" style={{color: "white"}} to="/">ログイン</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" style={{color: "white"}}  to="/list">社員一覧</Link>
+              <Link className="nav-link" style={{color: "white"}}  to="/employees/list">社員一覧</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" style={{color: "white"}}  to="/register">社員登録</Link>
+              <Link className="nav-link" style={{color: "white"}}  to="/employees/register">社員登録</Link>
             </li>
             <li className="nav-item">
               <Link className="nav-link" style={{color: "white"}}  to="/attendance">出退勤管理</Link>
@@ -32,10 +33,11 @@ const App = () => {
 
         <Switch>
           <Route path="/" exact component={LoginForm} />
-          <Route path="/list" component={EmployeeList} />
-          <Route path="/register" component={RegisterEmployeeForm} />
+          <Route path="/employees/list" component={EmployeeList} />
+          <Route path="/employees/register" component={RegisterEmployeeForm} />
           <Route path="/attendance" component={AttendanceForm} />
           <Route path="/report" component={MonthlyReport} />
+          <Route path="/employees/edit/:id" component={EmployeeEdit} />
         </Switch>
       </div>
     </Router>

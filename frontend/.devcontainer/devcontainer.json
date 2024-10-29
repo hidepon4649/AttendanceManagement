@@ -27,7 +27,8 @@
 				// "vmware.vscode-spring-boot",
 				// "vscjava.vscode-spring-initializr",
 				"vscode-icons-team.vscode-icons",
-				"firsttris.vscode-jest-runner"
+				"firsttris.vscode-jest-runner",
+				"ms-vscode.vscode-typescript-next"
 			]
 		}
 	}
