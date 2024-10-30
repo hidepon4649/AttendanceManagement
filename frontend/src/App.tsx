@@ -14,19 +14,19 @@ const App = () => {
         <nav className="navbar bg-primary">
           <ul className="nav nav-tabs mx-3">
             <li className="nav-item">
-              <Link className="nav-link" style={{color: "white"}} to="/">ログイン</Link>
+              <Link className="nav-link text-light" to="/">ログイン</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" style={{color: "white"}}  to="/employees/list">社員一覧</Link>
+              <Link className="nav-link text-light" to="/employees/list">社員一覧</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" style={{color: "white"}}  to="/employees/register">社員登録</Link>
+              <Link className="nav-link text-light" to="/employees/register">社員登録</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" style={{color: "white"}}  to="/attendance">出退勤管理</Link>
+              <Link className="nav-link text-light" to="/attendance">出退勤管理</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" style={{color: "white"}}  to="/report">月末帳票出力</Link>
+              <Link className="nav-link text-light" to="/report">月末帳票出力</Link>
             </li>
           </ul>
         </nav>
