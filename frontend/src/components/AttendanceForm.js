@@ -17,6 +17,19 @@ const react_1 = require("react");
 const axios_1 = __importDefault(require("axios"));
 const AttendanceForm = () => {
     const [employeeId, setEmployeeId] = (0, react_1.useState)('');
+    const [employees, setEmployees] = (0, react_1.useState)([]);
+    (0, react_1.useEffect)(() => {
+        const fetchEmployees = () => __awaiter(void 0, void 0, void 0, function* () {
+            try {
+                const response = yield axios_1.default.get('http://localhost:8080/api/employees');
+                setEmployees(response.data);
+            }
+            catch (error) {
+                console.error('Failed to fetch employees:', error);
+            }
+        });
+        fetchEmployees();
+    }, []);
     const handleClockIn = () => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const response = yield axios_1.default.post('http://localhost:8080/api/attendance/clock-in', { employeeId });
@@ -35,6 +48,6 @@ const AttendanceForm = () => {
             console.error('Clock-out failed:', error);
         }
     });
-    return ((0, jsx_runtime_1.jsxs)("div", Object.assign({ className: "mx-3 mt-3" }, { children: [(0, jsx_runtime_1.jsx)("h2", { children: "\u51FA\u9000\u52E4\u7BA1\u7406" }), (0, jsx_runtime_1.jsx)("input", { type: "text", value: employeeId, onChange: (e) => setEmployeeId(e.target.value), placeholder: "\u793E\u54E1ID" }), (0, jsx_runtime_1.jsx)("button", Object.assign({ onClick: handleClockIn }, { children: "\u51FA\u52E4" })), (0, jsx_runtime_1.jsx)("button", Object.assign({ onClick: handleClockOut }, { children: "\u9000\u52E4" }))] })));
+    return ((0, jsx_runtime_1.jsxs)("div", Object.assign({ className: "mx-3 mt-3" }, { children: [(0, jsx_runtime_1.jsx)("h2", { children: "\u51FA\u9000\u52E4\u7BA1\u7406" }), (0, jsx_runtime_1.jsxs)("div", Object.assign({ className: "align-items-center" }, { children: [(0, jsx_runtime_1.jsx)("label", Object.assign({ className: "me-2", htmlFor: "id" }, { children: "\u793E\u54E1ID" })), (0, jsx_runtime_1.jsxs)("select", Object.assign({ className: "me-2", name: "id", value: employeeId, onChange: (e) => setEmployeeId(e.target.value) }, { children: [(0, jsx_runtime_1.jsx)("option", Object.assign({ value: "" }, { children: "\u793E\u54E1ID\u3092\u9078\u629E" })), employees.map(employee => ((0, jsx_runtime_1.jsx)("option", Object.assign({ value: employee.id }, { children: employee.name }), employee.id)))] })), (0, jsx_runtime_1.jsx)("button", Object.assign({ className: "me-2 btn btn-primary", onClick: handleClockIn }, { children: "\u51FA\u52E4" })), (0, jsx_runtime_1.jsx)("button", Object.assign({ className: "btn btn-secondary", onClick: handleClockOut }, { children: "\u9000\u52E4" }))] }))] })));
 };
 exports.default = AttendanceForm;
