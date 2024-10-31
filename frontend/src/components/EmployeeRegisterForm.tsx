@@ -1,30 +1,25 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { Employee } from '../models/Employee';
+
 
 const RegisterEmployeeForm = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [isAdmin, setIsAdmin] = useState(false);
+
+  const [employee, setEmployee] = useState({} as Employee);
+
   const [successMessage, setSuccessMessage] = useState('');
   const [errors, setErrors] = useState<Errors>({});
 
   const handleRegister = async () => {
     try {
-      // const response = await axios.post('/api/employees/register', {
-        const response = await axios.post('http://localhost:8080/api/employees/register', {
-        name,
-        email,
-        password,
-        isAdmin
-      });
+        const response = await axios.post('http://localhost:8080/api/employees/register', 
+          {... employee}
+      );
       setSuccessMessage('社員の登録が成功しました！');
       setErrors({});
       // 入力フィールドをクリア
-      setName('');
-      setEmail('');
-      setPassword('');
-      setIsAdmin(false);
+      setEmployee({} as Employee);
+
     } catch (error: any) {
       if (error.response && error.response.data) {
         setErrors({ 
@@ -39,6 +34,17 @@ const RegisterEmployeeForm = () => {
     }
   };
 
+  function handleOnChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const { name, value, type, checked } = event.target;
+
+    setEmployee((prevValue) => {
+        return {
+            ...prevValue,
+            [name] : type === 'checkbox' ? checked : value
+        } as Employee;
+    }) 
+  };
+
   return (
     <div className="mx-3 mt-3">
       <h2>社員登録</h2>
@@ -49,10 +55,10 @@ const RegisterEmployeeForm = () => {
         <input
           type="text"
           className="form-control" 
-          id="name"
+          name="name"
           autoComplete="username"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          value={employee.name}
+          onChange={handleOnChange}
           placeholder="名前"
         />
         {errors.fieldErrors && errors.fieldErrors.name && <p className="text-danger">{errors.fieldErrors.name}</p>}
@@ -63,10 +69,10 @@ const RegisterEmployeeForm = () => {
         <input
           type="email"
           className="form-control" 
-          id="email"
+          name="email"
           autoComplete="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          value={employee.email}
+          onChange={handleOnChange}
           placeholder="メールアドレス"
         />
         {errors.fieldErrors && errors.fieldErrors.email && <p className="text-danger">{errors.fieldErrors.email}</p>}
@@ -77,9 +83,9 @@ const RegisterEmployeeForm = () => {
         <input
           type="password"
           className="form-control" 
-          id="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          name="password"
+          value={employee.password}
+          onChange={handleOnChange}
           placeholder="パスワード"
         />
         {errors.fieldErrors && errors.fieldErrors.password && <p className="text-danger">{errors.fieldErrors.password}</p>}
@@ -89,17 +95,16 @@ const RegisterEmployeeForm = () => {
         <label className="form-label" htmlFor="isAdmin">管理者権限:</label>
         <input
           type="checkbox"
-          id="isAdmin"
-           className="form-check-input"
-          checked={isAdmin}
-          onChange={(e) => setIsAdmin(e.target.checked)}
+          name="isAdmin"
+          className="form-check-input"
+          checked={employee.isAdmin}
+          onChange={handleOnChange}
         />
       </div>
       <button className="btn btn-primary" onClick={handleRegister}>社員を登録</button>
     </div>
   );
 };
-
 
 interface FieldErrors {
   [key: string]: string;

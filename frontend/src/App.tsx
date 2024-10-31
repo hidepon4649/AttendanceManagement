@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
 import LoginForm from './components/LoginForm';
 import AttendanceForm from './components/AttendanceForm';
 import MonthlyReport from './components/MonthlyReport';
-import RegisterEmployeeForm from './components/RegisterEmployeeForm';
+import RegisterEmployeeForm from './components/EmployeeRegisterForm';
 import EmployeeList from './components/EmployeeList';
 import EmployeeEdit from './components/EmployeeEdit';
 

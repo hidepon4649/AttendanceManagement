@@ -1,58 +1,56 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import { Employee } from '../models/Employee';
 
 const EmployeeEdit = (props: any) => {
 
     const { id } = useParams<{ id: string }>();
+    const [employee, setEmployee] = useState({} as Employee);
 
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [isAdmin, setIsAdmin] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
     const [errors, setErrors] = useState<Errors>({});
 
     useEffect(() => {
         const fetchEmployee = async () => {
             const response = await axios.get(`http://localhost:8080/api/employees/${id}`);
-            const employee = response.data;
-            setName(employee.name);
-            setEmail(employee.email);
-            setPassword(employee.password);
-            setIsAdmin(employee.isAdmin);
+            setEmployee(response.data);
         };
         fetchEmployee();
     },[id]);
 
     const handleEdit = async () => {
         try {
-            // const response = await axios.post('/api/employees/register', {
-            const response = await axios.post(`http://localhost:8080/api/employees/edit/${id}`, {
-                name,
-                email,
-                password,
-                isAdmin
-            });
-            setSuccessMessage('社員の登録が成功しました！');
+            const response = await axios.post(`http://localhost:8080/api/employees/edit/${id}`, 
+                {... employee}
+            );
+            setSuccessMessage('社員の編集が成功しました！');
             setErrors({});
-            // 入力フィールドをクリア
-            setName('');
-            setEmail('');
-            setPassword('');
-            setIsAdmin(false);
+            // setEmployee({} as Employee);
+
         } catch (error: any) {
             if (error.response && error.response.data) {
                 setErrors({
                     fieldErrors: error.response.data, // フィールドエラー
-                    generalError: '社員の登録に失敗しました。' // 一般的なエラーメッセージ
+                    generalError: '社員の編集に失敗しました。' // 一般的なエラーメッセージ
                 });
             } else {
                 setErrors({
-                    generalError: '社員の登録に失敗しました。'  // 一般的なエラーメッセージ
+                    generalError: '社員の編集に失敗しました。'  // 一般的なエラーメッセージ
                 });
             }
         }
+    };
+
+    function handleOnChange(event: React.ChangeEvent<HTMLInputElement>) {
+        const { name, value, type, checked } = event.target;
+
+        setEmployee((prevValue) => {
+            return {
+                ...prevValue,
+                [name] : type === 'checkbox' ? checked : value
+            } as Employee;
+        }) 
     };
 
     return (
@@ -65,10 +63,10 @@ const EmployeeEdit = (props: any) => {
                 <input
                     type="text"
                     className="form-control"
-                    id="name"
+                    name="name"
                     autoComplete="username"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    value={employee.name}
+                    onChange={handleOnChange}
                     placeholder="名前"
                 />
                 {errors.fieldErrors && errors.fieldErrors.name && <p className="text-danger">{errors.fieldErrors.name}</p>}
@@ -79,10 +77,10 @@ const EmployeeEdit = (props: any) => {
                 <input
                     type="email"
                     className="form-control"
-                    id="email"
+                    name="email"
                     autoComplete="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    value={employee.email}
+                    onChange={handleOnChange}
                     placeholder="メールアドレス"
                 />
                 {errors.fieldErrors && errors.fieldErrors.email && <p className="text-danger">{errors.fieldErrors.email}</p>}
@@ -93,9 +91,9 @@ const EmployeeEdit = (props: any) => {
                 <input
                     type="password"
                     className="form-control"
-                    id="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    name="password"
+                    value={employee.password}
+                    onChange={handleOnChange}
                     placeholder="パスワード"
                 />
                 {errors.fieldErrors && errors.fieldErrors.password && <p className="text-danger">{errors.fieldErrors.password}</p>}
@@ -105,10 +103,10 @@ const EmployeeEdit = (props: any) => {
                 <label className="form-label" htmlFor="isAdmin">管理者権限:</label>
                 <input
                     type="checkbox"
-                    id="isAdmin"
+                    name="isAdmin"
                     className="form-check-input"
-                    checked={isAdmin}
-                    onChange={(e) => setIsAdmin(e.target.checked)}
+                    checked={employee.isAdmin}
+                    onChange={handleOnChange}
                 />
             </div>
             <button className="btn btn-primary" onClick={handleEdit}>更新</button>

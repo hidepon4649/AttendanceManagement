@@ -56,7 +56,17 @@ public class EmployeeController {
     }
 
     @PostMapping("/edit/{id}")
-    public ResponseEntity<?> updateEmployee(@PathVariable Long id, @RequestBody Employee updateEmployee) {
+    public ResponseEntity<?> updateEmployee(@PathVariable Long id, @Validated @RequestBody Employee updateEmployee,
+            BindingResult result) {
+
+        if (result.hasErrors()) {
+
+            Map<String, String> errors = new HashMap<>();
+            result.getFieldErrors().forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
+            return ResponseEntity.badRequest().body(errors);
+
+        }        
+
         Employee existignEmployee = employeeService.getEmployeeById(id);
         if (existignEmployee != null) {
             updateEmployee.setId(id);

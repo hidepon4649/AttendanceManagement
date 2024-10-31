@@ -4,6 +4,7 @@ export class Employee {
         private _id: number,
         private _name: string,
         private _email: string,
+        private _password: string,
         private _isAdmin: boolean
     ) {
     }
@@ -31,6 +32,12 @@ export class Employee {
     }
     public set isAdmin(value: boolean) {
         this._isAdmin = value;
+    }
+    public get password(): string {
+        return this._password;
+    }
+    public set password(value: string) {
+        this._password = value;
     }
 
 }
