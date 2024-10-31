@@ -36,4 +36,13 @@ public class AttendanceController {
     public List<Attendance> getMonthlyReport(@PathVariable String month) {
         return attendanceService.getMonthlyReport(month);
     }
+
+    @GetMapping("/{employee_id}")
+    public ResponseEntity<List<Attendance>> getAttendanceByEmployeeId(@PathVariable("employee_id") Long employeeId) {
+        List<Attendance> attendances = attendanceService.getAttendanceByEmployeeId(employeeId);
+        if (attendances.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        return ResponseEntity.ok(attendances);
+    }
 }

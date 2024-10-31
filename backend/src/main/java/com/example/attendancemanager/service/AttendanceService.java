@@ -45,4 +45,8 @@ public class AttendanceService {
         // month は "YYYY-MM" 形式で受け取ります
         return attendanceRepository.findByDateStartingWith(month);
     }
+    public List<Attendance> getAttendanceByEmployeeId(Long employeeId) {
+        // 実際のデータベース検索ロジックをここに追加します
+        return attendanceRepository.findByEmployeeId(employeeId);
+    }
 }

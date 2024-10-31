@@ -20,4 +20,7 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
     // List<Attendance> findByDateStartingWith(String month);
     @Query("SELECT a FROM Attendance a WHERE str(a.date) LIKE %:date%")
     List<Attendance> findByDateStartingWith(@Param("date") String date);
+
+    // 社員IDで出退勤データを取得
+    List<Attendance> findByEmployeeId(Long employeeId);
 }
