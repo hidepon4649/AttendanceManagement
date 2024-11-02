@@ -1,6 +1,7 @@
 package com.example.attendancemanager.controller;
 
 import com.example.attendancemanager.model.Employee;
+import com.example.attendancemanager.model.Role;
 import com.example.attendancemanager.service.EmployeeService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,6 @@ import org.springframework.validation.BindingResult;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.HashMap;
 
 @RestController
@@ -35,6 +35,11 @@ public class EmployeeController {
         }
 
         // employee.setName("successHotReload12"); // デバッグ用コード。ホットリロードの確認
+
+        // isAdminがtrueの場合はADMIN、falseの場合はUSER。
+        // MANAGER, SUPERVISOR は将来の拡張用として、Role.javaに定義しているが現時点では未使用。
+    
+        employee.setRole(employee.isAdmin() ? Role.ADMIN : Role.USER);
 
         Employee newEmployee = employeeService.saveEmployee(employee);
         return ResponseEntity.status(HttpStatus.CREATED).body(newEmployee);

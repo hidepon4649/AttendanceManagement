@@ -1,10 +1,12 @@
 package com.example.attendancemanager.controller;
 
-import com.example.attendancemanager.model.Employee;
-import com.example.attendancemanager.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -15,17 +17,20 @@ import java.util.Map;
 public class AuthController {
 
     @Autowired
-    private EmployeeRepository employeeRepository;
+    private AuthenticationManager authenticationManager;
 
     @PostMapping("/login")
-    public ResponseEntity<Employee> login(@RequestBody Map<String, String> loginData) {
+    public ResponseEntity<?> login(@RequestBody Map<String, String> loginData) {
         String email = loginData.get("email");
         String password = loginData.get("password");
-        Employee employee = employeeRepository.findByEmailAndPassword(email, password);
 
-        if (employee != null) {
-            return ResponseEntity.ok(employee);
-        } else {
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(email, password)
+            );
+            return ResponseEntity.ok(authentication.getPrincipal());
+        } catch (AuthenticationException e) {
+            System.err.println("Authentication failed: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }

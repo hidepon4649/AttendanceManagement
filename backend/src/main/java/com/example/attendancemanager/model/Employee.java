@@ -24,6 +24,9 @@ public class Employee {
     private String password;
     private boolean isAdmin;
 
+    @Enumerated(EnumType.STRING)
+    private Role role = Role.USER; // デフォルト値を設定
+
     public Long getId() {
         return id;
     }
@@ -55,6 +58,13 @@ public class Employee {
         this.isAdmin = isAdmin;
     }
 
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
     // Getters and Setters
     
 }

@@ -1,11 +1,11 @@
 USE attendance_db;
-
-INSERT INTO employee (id, email, is_admin, name, password) VALUES
-(1, 'itohtohirofumi@email.com', b'1', '伊藤博文', 'password'),
-(2, 'kurodakiyotaka@email.com', b'0', '黒田清隆', 'password'),
-(3, 'yamagataaritomo@email.com', b'0', '山縣有朋', 'password'),
-(4, 'matsukatamasayoshi@email.com', b'0', '松方正義', 'password'),
-(5, 'ohkumashigenobu@email.com', b'0', '大隈重信', 'password');
+-- password: password
+INSERT INTO employee (id, email, is_admin, role, name, password) VALUES
+(1, 'itohtohirofumi@email.com', b'1', 'ADMIN', '伊藤博文', '$2a$12$9S./kSh2vC6VqFPQLg1ege7gWPmJ556aCDBO2Qg/tj5ZWEiBoRb1i'),
+(2, 'kurodakiyotaka@email.com', b'0', 'USER', '黒田清隆', '$2a$12$9S./kSh2vC6VqFPQLg1ege7gWPmJ556aCDBO2Qg/tj5ZWEiBoRb1i'),
+(3, 'yamagataaritomo@email.com', b'0', 'USER', '山縣有朋', '$2a$12$9S./kSh2vC6VqFPQLg1ege7gWPmJ556aCDBO2Qg/tj5ZWEiBoRb1i'),
+(4, 'matsukatamasayoshi@email.com', b'0', 'USER', '松方正義', '$2a$12$9S./kSh2vC6VqFPQLg1ege7gWPmJ556aCDBO2Qg/tj5ZWEiBoRb1i'),
+(5, 'ohkumashigenobu@email.com', b'0', 'USER', '大隈重信', '$2a$12$9S./kSh2vC6VqFPQLg1ege7gWPmJ556aCDBO2Qg/tj5ZWEiBoRb1i');
 
 INSERT INTO attendance (clock_in_time, clock_out_time, date, employee_id) VALUES
 ('2024-11-01 08:25:00.000000', '2024-11-01 18:10:00.000000', '2024-11-01', 1),
