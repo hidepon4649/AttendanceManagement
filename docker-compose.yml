@@ -20,6 +20,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      flyway:
+        condition: service_completed_successfully
     networks:
       - app-network
 
@@ -52,6 +54,17 @@ services:
       test: ["CMD", "mysqladmin", "ping", "-h", "db", "-u", "root", "-p$${MYSQL_ROOT_PASSWORD}"]
       interval: 10s
       retries: 3
+
+  flyway:
+    image: flyway/flyway:7.11.2
+    command: -url=jdbc:mysql://db:3306/attendance_db -user=root -password=secret -locations=filesystem:/flyway/sql migrate
+    volumes:
+      - ./backend/src/main/resources/db/migration:/flyway/sql
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - app-network
 
 networks:
   app-network:
