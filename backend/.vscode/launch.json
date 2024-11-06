@@ -23,7 +23,8 @@
             "name": "Remote Debug AttendanceManagementApplication (in Docker)",
             "request": "attach",
             "hostName": "localhost",
-            "port": 5005
+            "port": 5005,
+            "showStaticVariables": true,
         }
     ]
 }
