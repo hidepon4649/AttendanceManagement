@@ -1,25 +1,25 @@
 package com.example.attendancemanager.service;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.example.attendancemanager.model.Employee;
 import com.example.attendancemanager.repository.EmployeeRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.util.List;
 
 @Service
 public class EmployeeService {
 
-    @Autowired
-    private EmployeeRepository employeeRepository;
+    private final EmployeeRepository employeeRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    public EmployeeService(EmployeeRepository employeeRepository) {
+        this.employeeRepository = employeeRepository;
+    }
 
     // 新しい社員を登録する
+    @Transactional
     public Employee saveEmployee(Employee employee) {
-        employee.setPassword(passwordEncoder.encode(employee.getPassword()));
         return employeeRepository.save(employee);
     }
 
@@ -33,8 +33,20 @@ public class EmployeeService {
         return employeeRepository.findById(id).orElse(null);
     }
 
+    // 特定の社員をIDで削除する
+    @Transactional
+    public void deleteEmployee(Long id) {
+        employeeRepository.deleteById(id);
+    }
+
+    // メールアドレスで社員を取得する
+    public Employee findByEmail(String email) {
+        return employeeRepository.findByEmail(email);
+    }
+
+    // 社員を保存する
+    @Transactional
     public void save(Employee employee) {
-        employee.setPassword(passwordEncoder.encode(employee.getPassword()));
         employeeRepository.save(employee);
     }
 }

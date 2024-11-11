@@ -7,7 +7,7 @@
 		"vscode": {
 			"extensions": [
 				"MS-CEINTL.vscode-language-pack-ja",
-				"vscjava.vscode-java-debug",
+				// "vscjava.vscode-java-debug",
 				"vscjava.vscode-java-pack",
 				"vscjava.vscode-gradle",
 				"vscjava.vscode-spring-boot-dashboard",

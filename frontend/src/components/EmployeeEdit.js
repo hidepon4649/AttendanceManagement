@@ -30,7 +30,7 @@ const EmployeeEdit = (props) => {
     }, [id]);
     const handleEdit = () => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const response = yield axios_1.default.post(`http://localhost:8080/api/employees/edit/${id}`, Object.assign({}, employee));
+            const response = yield axios_1.default.post(`http://localhost:8080/api/employees/${id}`, Object.assign({}, employee));
             setSuccessMessage('社員の編集が成功しました！');
             setErrors({});
             // setEmployee({} as Employee);

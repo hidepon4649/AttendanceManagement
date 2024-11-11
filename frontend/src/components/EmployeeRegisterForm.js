@@ -21,7 +21,7 @@ const RegisterEmployeeForm = () => {
     const [errors, setErrors] = (0, react_1.useState)({});
     const handleRegister = () => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const response = yield axios_1.default.post('http://localhost:8080/api/employees/register', Object.assign({}, employee));
+            const response = yield axios_1.default.post('http://localhost:8080/api/employees', Object.assign({}, employee));
             setSuccessMessage('社員の登録が成功しました！');
             setErrors({});
             // 入力フィールドをクリア

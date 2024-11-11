@@ -12,7 +12,7 @@ const RegisterEmployeeForm = () => {
 
   const handleRegister = async () => {
     try {
-        const response = await axios.post('http://localhost:8080/api/employees/register', 
+        const response = await axios.post('http://localhost:8080/api/employees', 
           {... employee}
       );
       setSuccessMessage('社員の登録が成功しました！');

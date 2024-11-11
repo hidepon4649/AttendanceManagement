@@ -2,11 +2,10 @@ USE attendance_db;
 
 CREATE TABLE IF NOT EXISTS employee (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    email VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
     is_admin BIT(1) NOT NULL,
     name VARCHAR(24) NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    role VARCHAR(50) NOT NULL DEFAULT 'USER'
+    password VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS attendance (
@@ -16,4 +15,11 @@ CREATE TABLE IF NOT EXISTS attendance (
     date DATE,
     employee_id BIGINT,
     FOREIGN KEY (employee_id) REFERENCES employee(id)
+);
+
+CREATE TABLE IF NOT EXISTS  roles (
+    email VARCHAR(255) NOT NULL,
+    role varchar(50) NOT NULL,
+    UNIQUE KEY roles_idx_1 (email, role),
+    CONSTRAINT roles_fk_1 FOREIGN KEY (email) REFERENCES employee (email)
 );

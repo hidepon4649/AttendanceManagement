@@ -8,6 +8,20 @@ const AttendanceForm = () => {
   const [employees, setEmployees] = useState([] as Employee[]);
   const [attendanceRecords, setAttendanceRecords] = useState([] as Attendance[]);
 
+  const fetchAttendanceRecords = async () => {
+    if (employeeId) {
+      try {
+        const date = new Date().toISOString().slice(0, 7); // YYYY-MM形式で年月を取得
+        const response = await axios.get(`http://localhost:8080/api/attendance/${employeeId}/${date}`);
+        setAttendanceRecords(response.data);
+        console.log('Attendance records:', attendanceRecords);
+        
+      } catch (error) {
+        console.error('Failed to fetch attendance records:', error);
+      }
+    }
+  };
+
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
@@ -21,38 +35,43 @@ const AttendanceForm = () => {
   }, []);
 
   useEffect(() => {
-    const fetchAttendanceRecords = async () => {
-      if (employeeId) {
-        try {
-          const response = await axios.get(`http://localhost:8080/api/attendance/${employeeId}`);
-          setAttendanceRecords(response.data);
-          console.log('Attendance records:', attendanceRecords);
-          
-        } catch (error) {
-          console.error('Failed to fetch attendance records:', error);
-        }
-      }
-    };
     fetchAttendanceRecords();
   }, [employeeId]);
 
-
   const handleClockIn = async () => {
-    try {
-      const response = await axios.post('http://localhost:8080/api/attendance/clock-in', { employeeId });
-      console.log('Clocked in:', response.data);
-    } catch (error) {
-      console.error('Clock-in failed:', error);
+    if (employeeId) {
+      try {
+        const response = await axios.post(`http://localhost:8080/api/attendance/${employeeId}/clock-in`);
+        console.log('Clocked in:', response.data);
+
+        // 出勤記録を再取得して更新
+        await fetchAttendanceRecords();
+
+      } catch (error) {
+        console.error('Clock-in failed:', error);
+      }
+  
     }
   };
 
   const handleClockOut = async () => {
-    try {
-      const response = await axios.post('http://localhost:8080/api/attendance/clock-out', { employeeId });
-      console.log('Clocked out:', response.data);
-    } catch (error) {
-      console.error('Clock-out failed:', error);
+    if (employeeId) {
+      try {
+        const response = await axios.post(`http://localhost:8080/api/attendance/${employeeId}/clock-out`);
+        console.log('Clocked out:', response.data);
+
+        // 出勤記録を再取得して更新
+        await fetchAttendanceRecords();
+
+      } catch (error) {
+        console.error('Clock-out failed:', error);
+      }
+  
     }
+  };
+
+  const handleEmployeeIdChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setEmployeeId(e.target.value);
   };
 
   const formatTime = (dateTimeString: string) => {
@@ -65,7 +84,7 @@ const AttendanceForm = () => {
       <h2>出退勤管理</h2>
       <div className="align-items-center">
         <label className="me-2" htmlFor="id">社員ID</label>
-        <select className="me-2" name="id" value={employeeId} onChange={(e) => setEmployeeId(e.target.value)}>
+        <select className="me-2" name="id" value={employeeId} onChange={handleEmployeeIdChange}>
           <option value="">社員IDを選択</option>
           {employees.map(employee => (
             <option key={employee.id} value={employee.id}>

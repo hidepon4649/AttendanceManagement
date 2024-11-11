@@ -20,8 +20,9 @@ const LoginForm = () => {
     const [password, setPassword] = (0, react_1.useState)('');
     const handleLogin = () => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            // const response = await axios.post('/api/auth/login', { email, password });
-            const response = yield axios_1.default.post('http://localhost:8080/api/auth/login', { email, password });
+            const response = yield axios_1.default.post('http://localhost:8080/login', { "username": email,
+                "password": password
+            });
             console.log('Logged in:', response.data);
         }
         catch (error) {

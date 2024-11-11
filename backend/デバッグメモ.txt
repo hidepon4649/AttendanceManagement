@@ -1,0 +1,92 @@
+Spring Security ログイン認証成功後の他画面への遷移時に認証情報が引き継がれない件
+
+・PostManでリクエスト送信する際に、AuthorizationタブでBearerTokenを選択する。
+・SecurityConfigクラスのクラスアノテーション(@EnableWebSecurity)が必要か否かを確認する。
+
+・SpringBootの下記WARNログ
+  AuthenticationManager configured with AuthenticationProvider bean with name daoAuthenticationProvider
+  2024-11-08 07:55:27 2024-11-07T22:55:26.948Z  WARN 1350 --- [  restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.```
+
+・Controllerクラスでブレークポイントをはって、下記の認証情報を確認する。
+  var x = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+・Controllerクラスでブレークポイントをはって、下記の認証情報を確認する。
+  handlerメソッドに"HttpSession session"を引数追加する。
+  handlerメソッドに"HttpServletRequest request"を引数追加する。
+  var s = session;
+  var r = request;
+
+・SecurityConfigクラス、@EnableWebSecurityアノテーション
+・インメモリーの固定値ユーザーでSecurity設定の動作確認(URLマッチャー等)する。
+      @Configuration
+      @EnableWebSecurity
+      public class FormLoginSecurityConfig {
+
+             @Bean
+             public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+                     http.authorizeHttpRequests().requestMatchers("/**").hasRole("USER").and().formLogin();
+                     return http.build();
+             }
+
+             @Bean
+             public UserDetailsService userDetailsService() {
+                     UserDetails user = User.withDefaultPasswordEncoder()
+                             .username("user")
+                             .password("password")
+                             .roles("USER")
+                             .build();
+                     return new InMemoryUserDetailsManager(user);
+             }
+      }
+
+・VSCodeのデバッガで変数の中身(HttpSessionの値)をスキャンできるようにする。
+・DevContainer実行時にVSCodeにJava拡張機能(Extension Pack for Java)がインストールされている事を確認する。
+・ログイン認証成功後、ブラウザとサーバ間の通信にJSESSIONIDが載っているか確認する。
+  ログイン認証成功時のレスポンスヘッダー、Set-Cookies:JSESSIONID=英数字
+  ログイン認証成功時のリダイレクトのリクエストヘッダー、Cookie:JSESSIONID=英数字
+
+・知識のおさらい
+　UserDetails
+　・ユーザー名、パスワード、権限の情報を保持する
+　UserDetailsService
+　・UserDetailsを取得するメソッド(loadUserByUsername)を持つ
+
+・roleカラムの名称は"authority"でないとダメ？
+・roleの設定メソッドの入力値がListでないとダメ？
+    // 現状
+    return User.builder()
+            .username(employee.getEmail())
+            .password(employee.getPassword())
+            .roles(employee.getRole().name())
+            .build();
+・
+・
+・
+・
+・
+・
+・
+
+時間があれば、以下をやる。
+・build.gradleの依存性注入ライブラリの全てにバージョンを明記する。(バージョン無記載だとlatestになり、将来的にエラーになる可能性あり)
+・CorsConfig.java, SecurityConfig.java。CORSの設定をSecurityConfig.javaに一本化する。CorsConfig.javaの廃止。
+・オブジェクトのnull判定による分岐は、Optionalでの実装に変更する。
+・自作済のValidRoleアノテーションをEmployee.javaのroleフィールドに設定する。
+・社員登録時の一位制約違反をチェックするvalidationを自作する。Employee.javaのemailフィールドに設定する。
+・formのcheckboxにスタイル指定。
+  <div class="form-check">
+    <input class="form-check-input" type="checkbox" id="isAdmin" name="isAdmin"></input>
+    <label class="form-check-label" for="isAdmin">管理者権限</label>
+  </div>
+・wait-for-it.shファイルを削除
+・AuthContoller.javaを削除する。cors設定はSecurityConfig.javaに一本化する。
+・URL設計をRestの原則に準拠する。
+  GET /api/employees          # 社員一覧
+  GET /api/employees/**       # 社員
+  POST /api/employees         # 社員登録
+  PUT /api/employees/**       # 社員編集
+  DELETE /api/employees/**    # 社員削除
+
+・authoritiesテーブルの新設
+・devcontainer.jsonの冗長な設定を掃除する。
+

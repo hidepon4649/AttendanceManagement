@@ -1,6 +1,9 @@
 package com.example.attendancemanager.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -24,8 +27,8 @@ public class Employee {
     private String password;
     private boolean isAdmin;
 
-    @Enumerated(EnumType.STRING)
-    private Role role = Role.USER; // デフォルト値を設定
+    // @Enumerated(EnumType.STRING)
+    // private Role role = Role.USER; // デフォルト値を設定
 
     public Long getId() {
         return id;
@@ -58,13 +61,13 @@ public class Employee {
         this.isAdmin = isAdmin;
     }
 
-    public Role getRole() {
-        return role;
-    }
+    // public Role getRole() {
+    //     return role;
+    // }
 
-    public void setRole(Role role) {
-        this.role = role;
-    }
+    // public void setRole(Role role) {
+    //     this.role = role;
+    // }
     // Getters and Setters
     
 }

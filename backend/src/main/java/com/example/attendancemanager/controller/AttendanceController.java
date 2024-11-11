@@ -1,48 +1,50 @@
 package com.example.attendancemanager.controller;
 
-import com.example.attendancemanager.model.Attendance;
-import com.example.attendancemanager.service.AttendanceService;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.Map;
+import com.example.attendancemanager.model.Attendance;
+import com.example.attendancemanager.service.AttendanceService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "${cors.allowed.origins}")
 @RequestMapping("/api/attendance")
 public class AttendanceController {
 
     @Autowired
     private AttendanceService attendanceService;
 
-    @PostMapping("/clock-in")
-    public ResponseEntity<Attendance> clockIn(@RequestBody Map<String, String> clockInData) {
-        Long employeeId = Long.parseLong(clockInData.get("employeeId"));
+    @PostMapping("/{employeeId}/clock-in")
+    public ResponseEntity<Attendance> clockIn(@PathVariable Long employeeId) {
         Attendance attendance = attendanceService.clockIn(employeeId);
         return ResponseEntity.status(HttpStatus.CREATED).body(attendance);
     }
 
-    @PostMapping("/clock-out")
-    public ResponseEntity<Attendance> clockOut(@RequestBody Map<String, String> clockOutData) {
-        Long employeeId = Long.parseLong(clockOutData.get("employeeId"));
+    @PostMapping("/{employeeId}/clock-out")
+    public ResponseEntity<Attendance> clockOut(@PathVariable Long employeeId) {
         Attendance attendance = attendanceService.clockOut(employeeId);
         return ResponseEntity.ok(attendance);
     }
 
-    @GetMapping("/report/{month}")
-    public List<Attendance> getMonthlyReport(@PathVariable String month) {
-        return attendanceService.getMonthlyReport(month);
-    }
-
-    @GetMapping("/{employee_id}")
-    public ResponseEntity<List<Attendance>> getAttendanceByEmployeeId(@PathVariable("employee_id") Long employeeId) {
-        List<Attendance> attendances = attendanceService.getAttendanceByEmployeeId(employeeId);
+    @GetMapping("/{employeeId}/{yearMonth}")
+    public ResponseEntity<List<Attendance>> getMonthlyReportByEmployeeId(@PathVariable Long employeeId, @PathVariable String yearMonth) {
+        // yearMonth は "YYYY-MM" 形式で受け取ります
+        var year = Integer.parseInt(yearMonth.split("-")[0]);
+        var month = Integer.parseInt(yearMonth.split("-")[1]);
+        List<Attendance> attendances = attendanceService.getMonthlyReportByEmployeeId(employeeId, year, month);
         if (attendances.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
         return ResponseEntity.ok(attendances);
     }
+
 }

@@ -1,30 +1,51 @@
 package com.example.attendancemanager.controller;
 
-import com.example.attendancemanager.model.Employee;
-import com.example.attendancemanager.model.Role;
-import com.example.attendancemanager.service.EmployeeService;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
+import com.example.attendancemanager.model.Employee;
+import com.example.attendancemanager.service.EmployeeService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "${cors.allowed.origins}")
 @RequestMapping("/api/employees")
 public class EmployeeController {
 
     @Autowired
     private EmployeeService employeeService;
 
-    @PostMapping("/register")
-    public ResponseEntity<?> registerEmployee(@Validated @RequestBody Employee employee, BindingResult result) {
+    @GetMapping
+    public List<Employee> getAllEmployees() {
+        return employeeService.getAllEmployees();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getEmployee(@PathVariable Long id) {
+        Employee employee = employeeService.getEmployeeById(id);
+        if (employee != null) {
+            return ResponseEntity.ok(employee);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Employee not found");
+        }
+    }
+
+    @PostMapping
+    public ResponseEntity<?> createEmployee(@Validated @RequestBody Employee employee, BindingResult result) {
 
         if (result.hasErrors()) {
 
@@ -34,33 +55,13 @@ public class EmployeeController {
 
         }
 
-        // employee.setName("successHotReload12"); // デバッグ用コード。ホットリロードの確認
-
-        // isAdminがtrueの場合はADMIN、falseの場合はUSER。
-        // MANAGER, SUPERVISOR は将来の拡張用として、Role.javaに定義しているが現時点では未使用。
-    
-        employee.setRole(employee.isAdmin() ? Role.ADMIN : Role.USER);
-
         Employee newEmployee = employeeService.saveEmployee(employee);
         return ResponseEntity.status(HttpStatus.CREATED).body(newEmployee);
     }
 
-    @GetMapping
-    public List<Employee> getAllEmployees() {
-        return employeeService.getAllEmployees();
-    }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getEmployeeById(@PathVariable Long id) {
-        Employee employee = employeeService.getEmployeeById(id);
-        if (employee != null) {
-            return ResponseEntity.ok(employee);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Employee not found");
-        }
-    }
 
-    @PostMapping("/edit/{id}")
+    @PostMapping("/{id}")
     public ResponseEntity<?> updateEmployee(@PathVariable Long id, @Validated @RequestBody Employee updateEmployee,
             BindingResult result) {
 
@@ -82,4 +83,17 @@ public class EmployeeController {
         }
 
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteEmployee(@PathVariable Long id) {
+
+        Employee existingEmployee = employeeService.getEmployeeById(id);
+        if (existingEmployee != null) {
+            employeeService.deleteEmployee(id);
+            return ResponseEntity.ok("Employee deleted successfully");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Employee not found");
+        }
+    }
+
 }

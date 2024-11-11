@@ -21,7 +21,7 @@ const EmployeeEdit = (props: any) => {
 
     const handleEdit = async () => {
         try {
-            const response = await axios.post(`http://localhost:8080/api/employees/edit/${id}`, 
+            const response = await axios.post(`http://localhost:8080/api/employees/${id}`, 
                 {... employee}
             );
             setSuccessMessage('社員の編集が成功しました！');
