@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Employee } from '../models/Employee';
 import { Attendance } from '../models/Attendance';
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
+import PunchClockIcon from '@mui/icons-material/PunchClock';
 
 const AttendanceForm = () => {
   const [employeeId, setEmployeeId] = useState('');
@@ -15,7 +18,7 @@ const AttendanceForm = () => {
         const response = await axios.get(`http://localhost:8080/api/attendance/${employeeId}/${date}`);
         setAttendanceRecords(response.data);
         console.log('Attendance records:', attendanceRecords);
-        
+
       } catch (error) {
         console.error('Failed to fetch attendance records:', error);
       }
@@ -50,7 +53,7 @@ const AttendanceForm = () => {
       } catch (error) {
         console.error('Clock-in failed:', error);
       }
-  
+
     }
   };
 
@@ -66,7 +69,7 @@ const AttendanceForm = () => {
       } catch (error) {
         console.error('Clock-out failed:', error);
       }
-  
+
     }
   };
 
@@ -81,8 +84,8 @@ const AttendanceForm = () => {
 
   return (
     <div className="mx-3 mt-3">
-      <h2>出退勤管理</h2>
-      <div className="align-items-center">
+      <h2 className="h2">出退勤管理</h2>
+      <div className="align-items-center mt-3">
         <label className="me-2" htmlFor="id">社員ID</label>
         <select className="me-2" name="id" value={employeeId} onChange={handleEmployeeIdChange}>
           <option value="">社員IDを選択</option>
@@ -92,8 +95,8 @@ const AttendanceForm = () => {
             </option>
           ))}
         </select>
-        <button className="me-2 btn btn-primary" onClick={handleClockIn}>出勤</button>
-        <button className="btn btn-secondary" onClick={handleClockOut}>退勤</button>
+        <Button className="mx-3 btn btn-primary" size="large" onClick={handleClockIn} variant="outlined" startIcon={<PunchClockIcon />}>出社</Button>
+        <Button className="btn btn-secondary" size="large" onClick={handleClockOut} variant="outlined" startIcon={<PunchClockIcon />}>退社</Button>
       </div>
       {attendanceRecords.length > 0 && (
         <table className="table table-striped table-hover mt-3">
@@ -101,7 +104,7 @@ const AttendanceForm = () => {
             <tr>
               <th>日付</th>
               <th>出勤時間</th>
-              <th>退勤時間</th>            
+              <th>退勤時間</th>
             </tr>
           </thead>
           <tbody>
@@ -114,7 +117,7 @@ const AttendanceForm = () => {
             ))}
           </tbody>
         </table>
-      )}      
+      )}
     </div>
   );
 };

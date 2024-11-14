@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import '../css/EmployeeList.css';
@@ -25,8 +25,8 @@ const EmployeeList = () => {
 
   return (
     <div className="mx-3 mt-3">
-      <h2>社員一覧</h2>
-      <table className="table table-hover table-striped">
+      <h2 className="h2">社員一覧</h2>
+      <table className="table table-hover table-striped mt-3">
         <thead>
           <tr className="row">
             <th className="col">名前</th>
@@ -35,20 +35,20 @@ const EmployeeList = () => {
           </tr>
         </thead>
         <tbody>
-        {/* {list.map((employee: { id: number; name: string; email: string; isAdmin: boolean }) => ( */}
-        {list.map((employee: Employee) => ( 
-          <tr className="row" key={employee.id}>
-            <td className="col" onClick={()=>handleClick(employee.id)}>
-              {employee.name}
-            </td>
-            <td className="col">
-              {employee.email}
-            </td>
-            <td className="col">
-              {employee.isAdmin ? '管理者' : '一般'}
+          {/* {list.map((employee: { id: number; name: string; email: string; isAdmin: boolean }) => ( */}
+          {list.map((employee: Employee) => (
+            <tr className="row" key={employee.id}>
+              <td className="col" onClick={() => handleClick(employee.id)}>
+                {employee.name}
               </td>
-          </tr>
-        ))}
+              <td className="col">
+                {employee.email}
+              </td>
+              <td className="col">
+                {employee.isAdmin ? '管理者' : '一般'}
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>

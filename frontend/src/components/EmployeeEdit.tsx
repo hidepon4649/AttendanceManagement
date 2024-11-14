@@ -17,12 +17,12 @@ const EmployeeEdit = (props: any) => {
             setEmployee(response.data);
         };
         fetchEmployee();
-    },[id]);
+    }, [id]);
 
     const handleEdit = async () => {
         try {
-            const response = await axios.post(`http://localhost:8080/api/employees/${id}`, 
-                {... employee}
+            const response = await axios.post(`http://localhost:8080/api/employees/${id}`,
+                { ...employee }
             );
             setSuccessMessage('社員の編集が成功しました！');
             setErrors({});
@@ -48,17 +48,17 @@ const EmployeeEdit = (props: any) => {
         setEmployee((prevValue) => {
             return {
                 ...prevValue,
-                [name] : type === 'checkbox' ? checked : value
+                [name]: type === 'checkbox' ? checked : value
             } as Employee;
-        }) 
+        })
     };
 
     return (
         <div className="mx-3 mt-3">
-            <h2>社員編集</h2>
+            <h2 className="h2">社員編集</h2>
             {successMessage && <p className="text-success">{successMessage}</p>}
             {errors.generalError && <p className="text-danger">{errors.generalError}</p>}
-            <div className="mb-3">
+            <div className="mb-3 mt-3">
                 <label className="form-label" htmlFor="name">名前:</label>
                 <input
                     type="text"

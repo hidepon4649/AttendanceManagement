@@ -8,27 +8,22 @@
 			// TODO:nodejs, Reactに不要なものを削除
 			"extensions": [
 				"MS-CEINTL.vscode-language-pack-ja",
-				// "Angular.ng-template",
-				// "vmware.vscode-manifest-yaml",
-				// "vmware.vscode-concourse",
-				// "cweijan.dbclient-jdbc",
-				// "vscjava.vscode-java-debug",
 				"ms-vscode-remote.remote-containers",
 				"ms-azuretools.vscode-docker",
-				// "vscjava.vscode-java-pack",
 				"GitHub.copilot",
 				"GitHub.copilot-chat",
 				"eamodio.gitlens",
-				// "vscjava.vscode-gradle",
 				"VisualStudioExptTeam.vscodeintellicode",
 				"ritwickdey.LiveServer",
-				// "vscjava.vscode-spring-boot-dashboard",
-				// "vmware.vscode-boot-dev-pack",
-				// "vmware.vscode-spring-boot",
-				// "vscjava.vscode-spring-initializr",
 				"vscode-icons-team.vscode-icons",
 				"firsttris.vscode-jest-runner",
-				"ms-vscode.vscode-typescript-next"
+				"ms-vscode.vscode-typescript-next",
+				"mgmcdermott.vscode-language-babel",
+				"rodrigovallades.es7-react-js-snippets",
+				"xabikos.javascriptsnippets",
+				"leizongmin.node-module-intellisense",
+				"christian-kohler.path-intellisense",
+				"esbenp.prettier-vscode"
 			]
 		}
 	}

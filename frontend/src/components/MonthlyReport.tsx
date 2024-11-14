@@ -18,21 +18,23 @@ const MonthlyReport = () => {
 
   return (
     <div className="mx-3 mt-3">
-      <h2>月末帳票出力</h2>
-      <input type="month" value={month} onChange={(e) => setMonth(e.target.value)} />
-      <ul>
-        {report.map((attendance:{
-                                  id: number;
-                                  employee: { name: string };
-                                  clockInTime: string;
-                                  clockOutTime: string;
-                                }) => (
-                                  
-          <li key={attendance.id}>
-            {attendance.employee.name}: 出勤 {attendance.clockInTime}, 退勤 {attendance.clockOutTime}
-          </li>
-        ))}
-      </ul>
+      <h2 className="h2">月末帳票出力</h2>
+      <div className="mt-3">
+        <input type="month" value={month} onChange={(e) => setMonth(e.target.value)} />
+        <ul>
+          {report.map((attendance: {
+            id: number;
+            employee: { name: string };
+            clockInTime: string;
+            clockOutTime: string;
+          }) => (
+
+            <li key={attendance.id}>
+              {attendance.employee.name}: 出勤 {attendance.clockInTime}, 退勤 {attendance.clockOutTime}
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };

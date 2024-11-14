@@ -27,6 +27,6 @@ const MonthlyReport = () => {
         });
         fetchReport();
     }, [month]);
-    return ((0, jsx_runtime_1.jsxs)("div", Object.assign({ className: "mx-3 mt-3" }, { children: [(0, jsx_runtime_1.jsx)("h2", { children: "\u6708\u672B\u5E33\u7968\u51FA\u529B" }), (0, jsx_runtime_1.jsx)("input", { type: "month", value: month, onChange: (e) => setMonth(e.target.value) }), (0, jsx_runtime_1.jsx)("ul", { children: report.map((attendance) => ((0, jsx_runtime_1.jsxs)("li", { children: [attendance.employee.name, ": \u51FA\u52E4 ", attendance.clockInTime, ", \u9000\u52E4 ", attendance.clockOutTime] }, attendance.id))) })] })));
+    return ((0, jsx_runtime_1.jsxs)("div", Object.assign({ className: "mx-3 mt-3" }, { children: [(0, jsx_runtime_1.jsx)("h2", Object.assign({ className: "h2" }, { children: "\u6708\u672B\u5E33\u7968\u51FA\u529B" })), (0, jsx_runtime_1.jsxs)("div", Object.assign({ className: "mt-3" }, { children: [(0, jsx_runtime_1.jsx)("input", { type: "month", value: month, onChange: (e) => setMonth(e.target.value) }), (0, jsx_runtime_1.jsx)("ul", { children: report.map((attendance) => ((0, jsx_runtime_1.jsxs)("li", { children: [attendance.employee.name, ": \u51FA\u52E4 ", attendance.clockInTime, ", \u9000\u52E4 ", attendance.clockOutTime] }, attendance.id))) })] }))] })));
 };
 exports.default = MonthlyReport;

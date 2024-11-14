@@ -11,6 +11,10 @@
         "clean": "rimraf build"
     },
     "dependencies": {
+        "@emotion/react": "^11.13.3",
+        "@emotion/styled": "^11.13.0",
+        "@mui/icons-material": "^6.1.7",
+        "@mui/material": "^6.1.7",
         "@types/jest": "^29.5.14",
         "@types/node": "^22.7.9",
         "@types/react": "^18.3.12",
