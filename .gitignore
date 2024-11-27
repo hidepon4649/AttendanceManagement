@@ -62,3 +62,8 @@ out/
 # Dependency directories
 node_modules/
 jspm_packages/
+
+# compiled output
+ frontend/src/components/**/*.js
+ frontend/src/components/*.js
+
