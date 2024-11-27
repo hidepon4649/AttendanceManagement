@@ -63,7 +63,10 @@ out/
 node_modules/
 jspm_packages/
 
-# compiled output
- frontend/src/components/**/*.js
- frontend/src/components/*.js
+# frontend/src/components 内のすべての JS ファイルを無視
+frontend/src/components/*.js
+frontend/src/components/**/*.js
 
+# TypeScript ファイル（TSX）は必要なら無視しないようにする
+!frontend/src/components/*.tsx
+!frontend/src/components/**/*.tsx
