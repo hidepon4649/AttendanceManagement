@@ -55,7 +55,7 @@ const EmployeeEdit = (props: any) => {
 
     return (
         <div className="mx-3 mt-3">
-            <h2 className="h2">社員編集</h2>
+            <h2>社員編集</h2>
             {successMessage && <p className="text-success">{successMessage}</p>}
             {errors.generalError && <p className="text-danger">{errors.generalError}</p>}
             <div className="mb-3 mt-3">

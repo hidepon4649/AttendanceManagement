@@ -25,7 +25,7 @@ const EmployeeList = () => {
 
   return (
     <div className="mx-3 mt-3">
-      <h2 className="h2">社員一覧</h2>
+      <h2>社員一覧</h2>
       <table className="table table-hover table-striped mt-3">
         <thead>
           <tr className="row">

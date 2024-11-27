@@ -4,23 +4,28 @@ import { Employee } from '../models/Employee';
 import { Attendance } from '../models/Attendance';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
 import PunchClockIcon from '@mui/icons-material/PunchClock';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 
 const AttendanceForm = () => {
   const [employeeId, setEmployeeId] = useState('');
   const [employees, setEmployees] = useState([] as Employee[]);
   const [attendanceRecords, setAttendanceRecords] = useState([] as Attendance[]);
+  const [targetMonth, setTargetMonth] = useState(new Date().toISOString().slice(0, 7)); // YYYY-MM形式で年月を取得
 
   const fetchAttendanceRecords = async () => {
     if (employeeId) {
       try {
-        const date = new Date().toISOString().slice(0, 7); // YYYY-MM形式で年月を取得
-        const response = await axios.get(`http://localhost:8080/api/attendance/${employeeId}/${date}`);
+        setAttendanceRecords([] as Attendance[]); // ID切り替え時に初期化
+        const response = await axios.get(`http://localhost:8080/api/attendance/${employeeId}/${targetMonth}`);
         setAttendanceRecords(response.data);
         console.log('Attendance records:', attendanceRecords);
 
       } catch (error) {
         console.error('Failed to fetch attendance records:', error);
+        
       }
     }
   };
@@ -39,7 +44,7 @@ const AttendanceForm = () => {
 
   useEffect(() => {
     fetchAttendanceRecords();
-  }, [employeeId]);
+  }, [employeeId, targetMonth]);
 
   const handleClockIn = async () => {
     if (employeeId) {
@@ -77,6 +82,24 @@ const AttendanceForm = () => {
     setEmployeeId(e.target.value);
   };
 
+  const updateMonth = (offset: number) => {
+    const [year, month] = targetMonth.split('-').map(Number); // 年と月を分解
+    const date = new Date(year, month + offset, 1); // 日付オブジェクト作成（0ベースの月）
+    return date.toISOString().slice(0, 7); // YYYY-MM形式で返す
+  };
+  
+  const handlePrevMonth = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const newMonth = updateMonth(-1); // 前の月に移動
+    console.log(newMonth);
+    setTargetMonth(newMonth);
+  };
+  
+  const handleNextMonth = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const newMonth = updateMonth(1); // 次の月に移動
+    console.log(newMonth);
+    setTargetMonth(newMonth);
+  };
+
   const formatTime = (dateTimeString: string) => {
     const date = new Date(dateTimeString);
     return date.toTimeString().split(' ')[0]; // "HH:MM:SS"形式で取得
@@ -84,7 +107,18 @@ const AttendanceForm = () => {
 
   return (
     <div className="mx-3 mt-3">
-      <h2 className="h2">出退勤管理</h2>
+      <div className="row">
+        <div className="col-2">
+          <h2>出退勤管理</h2>
+        </div>
+        <div className="col-2">
+          <h3>
+            <IconButton aria-label="prev month" name="prevMonth" onClick={handlePrevMonth}><NavigateBeforeIcon /></IconButton>
+            {targetMonth}
+            <IconButton aria-label="next month" name="nextMonth" onClick={handleNextMonth}><NavigateNextIcon /></IconButton>
+          </h3>
+        </div>
+      </div>
       <div className="align-items-center mt-3">
         <label className="me-2" htmlFor="id">社員ID</label>
         <select className="me-2" name="id" value={employeeId} onChange={handleEmployeeIdChange}>
