@@ -14,6 +14,7 @@ const AttendanceForm = () => {
   const [employees, setEmployees] = useState([] as Employee[]);
   const [attendanceRecords, setAttendanceRecords] = useState([] as Attendance[]);
   const [targetMonth, setTargetMonth] = useState(new Date().toISOString().slice(0, 7)); // YYYY-MM形式で年月を取得
+  const [dates, setDates] = useState<string[]>([]);
 
   const fetchAttendanceRecords = async () => {
     if (employeeId) {
@@ -30,6 +31,24 @@ const AttendanceForm = () => {
     }
   };
 
+  const targetMonthDefaultRecords = async () => {
+    const [year, month] = targetMonth.split('-').map(Number);
+    const lastDay = new Date(year, month, 0).getDate(); // 月の最終日を取得(月は0ベース)
+
+    // 日付の配列を作成. 1日から月末までの日付を格納.
+    // ロケール指定をしなかった場合に月初日付がずれる場合があるため ja-JPを指定
+    const daysArray = Array.from(
+      { length: lastDay }, 
+      (_, i) => new Date(year, month - 1, i + 1).toLocaleDateString('ja-JP', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        timeZone: 'Asia/Tokyo'
+      }).replace(/\//g, '-'));
+      
+    setDates(daysArray);
+  };
+
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
@@ -44,6 +63,7 @@ const AttendanceForm = () => {
 
   useEffect(() => {
     fetchAttendanceRecords();
+    targetMonthDefaultRecords();
   }, [employeeId, targetMonth]);
 
   const handleClockIn = async () => {
@@ -142,13 +162,16 @@ const AttendanceForm = () => {
             </tr>
           </thead>
           <tbody>
-            {attendanceRecords.map(record => (
-              <tr key={record.id}>
-                <td>{record.date}</td>
-                <td>{formatTime(record.clockInTime)}</td>
-                <td>{formatTime(record.clockOutTime)}</td>
-              </tr>
-            ))}
+            {dates.map(date => {
+              const record = attendanceRecords.find(record => record.date === date);
+              return (
+                <tr key={date}>
+                  <td>{date}</td>
+                  <td>{record ? formatTime(record.clockInTime) : '-'}</td>
+                  <td>{record ? formatTime(record.clockOutTime) : '-'}</td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       )}
