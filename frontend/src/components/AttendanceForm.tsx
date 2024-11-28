@@ -152,7 +152,6 @@ const AttendanceForm = () => {
         <Button className="mx-3 btn btn-primary" size="large" onClick={handleClockIn} variant="outlined" startIcon={<PunchClockIcon />}>出社</Button>
         <Button className="btn btn-secondary" size="large" onClick={handleClockOut} variant="outlined" startIcon={<PunchClockIcon />}>退社</Button>
       </div>
-      {attendanceRecords.length > 0 && (
         <table className="table table-striped table-hover mt-3">
           <thead>
             <tr>
@@ -163,7 +162,7 @@ const AttendanceForm = () => {
           </thead>
           <tbody>
             {dates.map(date => {
-              const record = attendanceRecords.find(record => record.date === date);
+              const record =  attendanceRecords.length ? attendanceRecords.find(record => record.date === date) : null;
               return (
                 <tr key={date}>
                   <td>{date}</td>
@@ -174,7 +173,6 @@ const AttendanceForm = () => {
             })}
           </tbody>
         </table>
-      )}
     </div>
   );
 };
