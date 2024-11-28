@@ -111,8 +111,8 @@ const AttendanceForm = () => {
         <div className="col-2">
           <h2>出退勤管理</h2>
         </div>
-        <div className="col-2">
-          <h3>
+        <div className="col-3">
+          <h3 className='d-inline-flex align-items-center'>
             <IconButton aria-label="prev month" name="prevMonth" onClick={handlePrevMonth}><NavigateBeforeIcon /></IconButton>
             {targetMonth}
             <IconButton aria-label="next month" name="nextMonth" onClick={handleNextMonth}><NavigateNextIcon /></IconButton>
