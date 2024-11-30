@@ -25,6 +25,7 @@
             "hostName": "localhost",
             "port": 5005,
             "showStaticVariables": true,
+            "projectName": "backend"
         }
     ]
 }

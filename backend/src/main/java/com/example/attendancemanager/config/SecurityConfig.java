@@ -1,42 +1,69 @@
-// package com.example.attendancemanager.config;
+package com.example.attendancemanager.config;
 
-// import org.springframework.context.annotation.Bean;
-// import org.springframework.context.annotation.Configuration;
-// import org.springframework.security.config.Customizer;
-// import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-// import org.springframework.security.web.SecurityFilterChain;
-// import org.springframework.web.cors.CorsConfiguration;
-// import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
-// @Configuration
-// public class SecurityConfig {
+import com.example.attendancemanager.filter.JwtAuthenticationFilter;
+import com.example.attendancemanager.service.CustomUserDetailsService;
 
-//     @Bean
-//     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//         http
-//             .cors(cors -> {
-//                 UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//                 CorsConfiguration config = new CorsConfiguration();
-//                 config.setAllowCredentials(true);
-//                 config.addAllowedOrigin("http://localhost:3000"); // 許可するオリジンを指定
-//                 config.addAllowedHeader("*");
-//                 config.addAllowedMethod("*");
-//                 source.registerCorsConfiguration("/**", config);
-//                 cors.configurationSource(source);
-//             })
-//             .authorizeHttpRequests(authorizeRequests ->
-//                 authorizeRequests
-//                     // 社員情報
-//                     .requestMatchers("/api/employees").authenticated()
-//                     .requestMatchers("/api/employees/**").authenticated()
-//                     // 勤怠情報
-//                     .requestMatchers("/api/attendance").authenticated()
-//                     .requestMatchers("/api/attendance/**").authenticated()
-//             )
-//             .httpBasic(Customizer.withDefaults())
-//             .csrf(csrf -> csrf.disable()); // CSRFを無効化
+@Configuration
+public class SecurityConfig {
 
-//         return http.build();
-//     }
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final CustomUserDetailsService userDetailsService;
 
-// }
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter,
+            CustomUserDetailsService userDetailsService) {
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+        this.userDetailsService = userDetailsService;
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .anyRequest().authenticated())
+                .addFilterBefore(jwtAuthenticationFilter,
+                        UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(corsFilter(), JwtAuthenticationFilter.class); // CORSフィルターを追加
+
+        return http.build();
+    }
+
+    @Bean
+    public CorsFilter corsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.addAllowedOrigin("http://localhost:3000");
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("*");
+        source.registerCorsConfiguration("/**", config);
+        return new CorsFilter(source);
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public AuthenticationManager authManager(HttpSecurity http) throws Exception {
+        AuthenticationManagerBuilder authManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
+        authManagerBuilder
+                .userDetailsService(userDetailsService)
+                .passwordEncoder(passwordEncoder());
+        return authManagerBuilder.build();
+    }
+}

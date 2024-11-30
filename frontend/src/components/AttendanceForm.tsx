@@ -1,61 +1,73 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { Employee } from '../models/Employee';
-import { Attendance } from '../models/Attendance';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import PunchClockIcon from '@mui/icons-material/PunchClock';
-import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
-import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { Employee } from "../models/Employee";
+import { Attendance } from "../models/Attendance";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import PunchClockIcon from "@mui/icons-material/PunchClock";
+import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 
 const AttendanceForm = () => {
-  const [employeeId, setEmployeeId] = useState('');
+  const [employeeId, setEmployeeId] = useState("");
   const [employees, setEmployees] = useState([] as Employee[]);
-  const [attendanceRecords, setAttendanceRecords] = useState([] as Attendance[]);
-  const [targetMonth, setTargetMonth] = useState(new Date().toISOString().slice(0, 7)); // YYYY-MM形式で年月を取得
+  const [attendanceRecords, setAttendanceRecords] = useState(
+    [] as Attendance[]
+  );
+  const [targetMonth, setTargetMonth] = useState(
+    new Date().toISOString().slice(0, 7)
+  ); // YYYY-MM形式で年月を取得
   const [dates, setDates] = useState<string[]>([]);
 
   const fetchAttendanceRecords = async () => {
+    const token = localStorage.getItem("token");
     if (employeeId) {
       try {
         setAttendanceRecords([] as Attendance[]); // ID切り替え時に初期化
-        const response = await axios.get(`http://localhost:8080/api/attendance/${employeeId}/${targetMonth}`);
+        const response = await axios.get(
+          `http://localhost:8080/api/attendance/${employeeId}/${targetMonth}`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
         setAttendanceRecords(response.data);
-        console.log('Attendance records:', attendanceRecords);
-
+        console.log("Attendance records:", attendanceRecords);
       } catch (error) {
-        console.error('Failed to fetch attendance records:', error);
-        
+        console.error("Failed to fetch attendance records:", error);
       }
     }
   };
 
   const targetMonthDefaultRecords = async () => {
-    const [year, month] = targetMonth.split('-').map(Number);
+    const [year, month] = targetMonth.split("-").map(Number);
     const lastDay = new Date(year, month, 0).getDate(); // 月の最終日を取得(月は0ベース)
 
     // 日付の配列を作成. 1日から月末までの日付を格納.
     // ロケール指定をしなかった場合に月初日付がずれる場合があるため ja-JPを指定
-    const daysArray = Array.from(
-      { length: lastDay }, 
-      (_, i) => new Date(year, month - 1, i + 1).toLocaleDateString('ja-JP', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        timeZone: 'Asia/Tokyo'
-      }).replace(/\//g, '-'));
-      
+    const daysArray = Array.from({ length: lastDay }, (_, i) =>
+      new Date(year, month - 1, i + 1)
+        .toLocaleDateString("ja-JP", {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          timeZone: "Asia/Tokyo",
+        })
+        .replace(/\//g, "-")
+    );
+
     setDates(daysArray);
   };
 
   useEffect(() => {
     const fetchEmployees = async () => {
+      const token = localStorage.getItem("token");
       try {
-        const response = await axios.get('http://localhost:8080/api/employees');
+        const response = await axios.get(
+          "http://localhost:8080/api/employees",
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
         setEmployees(response.data);
       } catch (error) {
-        console.error('Failed to fetch employees:', error);
+        console.error("Failed to fetch employees:", error);
       }
     };
     fetchEmployees();
@@ -69,32 +81,32 @@ const AttendanceForm = () => {
   const handleClockIn = async () => {
     if (employeeId) {
       try {
-        const response = await axios.post(`http://localhost:8080/api/attendance/${employeeId}/clock-in`);
-        console.log('Clocked in:', response.data);
+        const response = await axios.post(
+          `http://localhost:8080/api/attendance/${employeeId}/clock-in`
+        );
+        console.log("Clocked in:", response.data);
 
         // 出勤記録を再取得して更新
         await fetchAttendanceRecords();
-
       } catch (error) {
-        console.error('Clock-in failed:', error);
+        console.error("Clock-in failed:", error);
       }
-
     }
   };
 
   const handleClockOut = async () => {
     if (employeeId) {
       try {
-        const response = await axios.post(`http://localhost:8080/api/attendance/${employeeId}/clock-out`);
-        console.log('Clocked out:', response.data);
+        const response = await axios.post(
+          `http://localhost:8080/api/attendance/${employeeId}/clock-out`
+        );
+        console.log("Clocked out:", response.data);
 
         // 出勤記録を再取得して更新
         await fetchAttendanceRecords();
-
       } catch (error) {
-        console.error('Clock-out failed:', error);
+        console.error("Clock-out failed:", error);
       }
-
     }
   };
 
@@ -103,17 +115,17 @@ const AttendanceForm = () => {
   };
 
   const updateMonth = (offset: number) => {
-    const [year, month] = targetMonth.split('-').map(Number); // 年と月を分解
+    const [year, month] = targetMonth.split("-").map(Number); // 年と月を分解
     const date = new Date(year, month + offset, 1); // 日付オブジェクト作成（0ベースの月）
     return date.toISOString().slice(0, 7); // YYYY-MM形式で返す
   };
-  
+
   const handlePrevMonth = (e: React.MouseEvent<HTMLButtonElement>) => {
     const newMonth = updateMonth(-1); // 前の月に移動
     console.log(newMonth);
     setTargetMonth(newMonth);
   };
-  
+
   const handleNextMonth = (e: React.MouseEvent<HTMLButtonElement>) => {
     const newMonth = updateMonth(1); // 次の月に移動
     console.log(newMonth);
@@ -122,7 +134,7 @@ const AttendanceForm = () => {
 
   const formatTime = (dateTimeString: string) => {
     const date = new Date(dateTimeString);
-    return date.toTimeString().split(' ')[0]; // "HH:MM:SS"形式で取得
+    return date.toTimeString().split(" ")[0]; // "HH:MM:SS"形式で取得
   };
 
   return (
@@ -132,47 +144,84 @@ const AttendanceForm = () => {
           <h2>出退勤管理</h2>
         </div>
         <div className="col-3">
-          <h3 className='d-inline-flex align-items-center'>
-            <IconButton aria-label="prev month" name="prevMonth" onClick={handlePrevMonth}><NavigateBeforeIcon /></IconButton>
+          <h3 className="d-inline-flex align-items-center">
+            <IconButton
+              aria-label="prev month"
+              name="prevMonth"
+              onClick={handlePrevMonth}
+            >
+              <NavigateBeforeIcon />
+            </IconButton>
             {targetMonth}
-            <IconButton aria-label="next month" name="nextMonth" onClick={handleNextMonth}><NavigateNextIcon /></IconButton>
+            <IconButton
+              aria-label="next month"
+              name="nextMonth"
+              onClick={handleNextMonth}
+            >
+              <NavigateNextIcon />
+            </IconButton>
           </h3>
         </div>
       </div>
       <div className="align-items-center mt-3">
-        <label className="me-2" htmlFor="id">社員ID</label>
-        <select className="me-2" name="id" value={employeeId} onChange={handleEmployeeIdChange}>
+        <label className="me-2" htmlFor="id">
+          社員ID
+        </label>
+        <select
+          className="me-2"
+          name="id"
+          value={employeeId}
+          onChange={handleEmployeeIdChange}
+        >
           <option value="">社員IDを選択</option>
-          {employees.map(employee => (
+          {employees.map((employee) => (
             <option key={employee.id} value={employee.id}>
               {employee.name}
             </option>
           ))}
         </select>
-        <Button className="mx-3 btn btn-primary" size="large" onClick={handleClockIn} variant="outlined" startIcon={<PunchClockIcon />}>出社</Button>
-        <Button className="btn btn-secondary" size="large" onClick={handleClockOut} variant="outlined" startIcon={<PunchClockIcon />}>退社</Button>
+        <Button
+          className="mx-3 btn btn-primary"
+          size="large"
+          onClick={handleClockIn}
+          variant="outlined"
+          startIcon={<PunchClockIcon />}
+        >
+          出社
+        </Button>
+        <Button
+          className="btn btn-secondary"
+          size="large"
+          onClick={handleClockOut}
+          variant="outlined"
+          startIcon={<PunchClockIcon />}
+        >
+          退社
+        </Button>
       </div>
-        <table className="table table-striped table-hover mt-3">
-          <thead>
-            <tr>
-              <th>日付</th>
-              <th>出勤時間</th>
-              <th>退勤時間</th>
-            </tr>
-          </thead>
-          <tbody>
-            {dates.map(date => {
-              const record =  attendanceRecords.length ? attendanceRecords.find(record => record.date === date) : null;
-              return (
-                <tr key={date}>
-                  <td>{date}</td>
-                  <td>{record ? formatTime(record.clockInTime) : '-'}</td>
-                  <td>{record ? formatTime(record.clockOutTime) : '-'}</td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+      <table className="table table-striped table-hover mt-3">
+        <thead>
+          <tr>
+            <th>日付</th>
+            <th>出勤時間</th>
+            <th>退勤時間</th>
+          </tr>
+        </thead>
+        <tbody>
+          {dates.map((date) => {
+            const record = attendanceRecords.length
+              ? attendanceRecords.find((record) => record.date === date)
+              : null;
+            return (
+              <tr key={date}>
+                <td>{date}</td>
+                <td>{record ? formatTime(record.clockInTime) : "-"}</td>
+                <td>{record ? formatTime(record.clockOutTime) : "-"}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
     </div>
   );
 };

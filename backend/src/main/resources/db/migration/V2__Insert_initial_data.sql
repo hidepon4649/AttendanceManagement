@@ -1,11 +1,11 @@
 USE attendance_db;
 -- password: password
 INSERT INTO employee (id, email, is_admin, name, password) VALUES
-(1, 'itohtohirofumi@email.com', b'1', '伊藤博文', '{bcript}$2a$12$9S./kSh2vC6VqFPQLg1ege7gWPmJ556aCDBO2Qg/tj5ZWEiBoRb1i'),
-(2, 'kurodakiyotaka@email.com', b'0', '黒田清隆', '{bcript}$2a$12$9S./kSh2vC6VqFPQLg1ege7gWPmJ556aCDBO2Qg/tj5ZWEiBoRb1i'),
-(3, 'yamagataaritomo@email.com', b'0', '山縣有朋', '{bcript}$2a$12$9S./kSh2vC6VqFPQLg1ege7gWPmJ556aCDBO2Qg/tj5ZWEiBoRb1i'),
-(4, 'matsukatamasayoshi@email.com', b'0', '松方正義', '{bcript}$2a$12$9S./kSh2vC6VqFPQLg1ege7gWPmJ556aCDBO2Qg/tj5ZWEiBoRb1i'),
-(5, 'ohkumashigenobu@email.com', b'0', '大隈重信', '{bcript}$2a$12$9S./kSh2vC6VqFPQLg1ege7gWPmJ556aCDBO2Qg/tj5ZWEiBoRb1i');
+(1, 'itohtohirofumi@email.com', b'1', '伊藤博文', '$2a$12$9S./kSh2vC6VqFPQLg1ege7gWPmJ556aCDBO2Qg/tj5ZWEiBoRb1i'),
+(2, 'kurodakiyotaka@email.com', b'0', '黒田清隆', '$2a$12$9S./kSh2vC6VqFPQLg1ege7gWPmJ556aCDBO2Qg/tj5ZWEiBoRb1i'),
+(3, 'yamagataaritomo@email.com', b'0', '山縣有朋', '$2a$12$9S./kSh2vC6VqFPQLg1ege7gWPmJ556aCDBO2Qg/tj5ZWEiBoRb1i'),
+(4, 'matsukatamasayoshi@email.com', b'0', '松方正義', '$2a$12$9S./kSh2vC6VqFPQLg1ege7gWPmJ556aCDBO2Qg/tj5ZWEiBoRb1i'),
+(5, 'ohkumashigenobu@email.com', b'0', '大隈重信', '$2a$12$9S./kSh2vC6VqFPQLg1ege7gWPmJ556aCDBO2Qg/tj5ZWEiBoRb1i');
 
 INSERT INTO roles (email, role) VALUES
 ('itohtohirofumi@email.com','ROLE_USER'),
