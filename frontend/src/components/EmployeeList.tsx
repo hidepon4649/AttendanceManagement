@@ -1,16 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useHistory } from 'react-router-dom';
-import '../css/EmployeeList.css';
-import { Employee } from '../models/Employee';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useHistory } from "react-router-dom";
+import "../css/EmployeeList.css";
+import { Employee } from "../models/Employee";
 
 const EmployeeList = () => {
-
   const [list, setList] = useState([]);
   const history = useHistory();
 
   const fetchList = async () => {
-    const response = await axios.get('http://localhost:8080/api/employees');
+    const token = localStorage.getItem("token");
+    const response = await axios.get("http://localhost:8080/api/employees", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
     setList(response.data);
   };
 
@@ -41,20 +43,14 @@ const EmployeeList = () => {
               <td className="col" onClick={() => handleClick(employee.id)}>
                 {employee.name}
               </td>
-              <td className="col">
-                {employee.email}
-              </td>
-              <td className="col">
-                {employee.isAdmin ? '管理者' : '一般'}
-              </td>
+              <td className="col">{employee.email}</td>
+              <td className="col">{employee.isAdmin ? "管理者" : "一般"}</td>
             </tr>
           ))}
         </tbody>
       </table>
     </div>
   );
-
 };
-
 
 export default EmployeeList;

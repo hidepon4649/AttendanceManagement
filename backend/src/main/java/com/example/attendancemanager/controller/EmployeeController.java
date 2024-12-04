@@ -7,6 +7,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -22,15 +24,21 @@ import com.example.attendancemanager.model.Employee;
 import com.example.attendancemanager.service.EmployeeService;
 
 @RestController
-@CrossOrigin(origins = "${cors.allowed.origins}")
+@CrossOrigin(origins = "${app.cors.allowed.origins}")
 @RequestMapping("/api/employees")
 public class EmployeeController {
+
+    // TODO: 各ハンドラーメソッドに、@AuthenticationPrincipal UserDetails userDetails
+    // を追加してログインユーザー情報を取得できるようにして下さい。
+    // TODO: 各ハンドラーメソッドに、@AuthenticationPrincipal UserDetails userDetails
+    // を追加して操作ログを記録して下さい。
 
     @Autowired
     private EmployeeService employeeService;
 
     @GetMapping
-    public List<Employee> getAllEmployees() {
+    public List<Employee> getAllEmployees(@AuthenticationPrincipal UserDetails userDetails) {
+        System.out.println(userDetails); // TODO:DBに証跡ログを記録する
         return employeeService.getAllEmployees();
     }
 
@@ -59,8 +67,6 @@ public class EmployeeController {
         return ResponseEntity.status(HttpStatus.CREATED).body(newEmployee);
     }
 
-
-
     @PostMapping("/{id}")
     public ResponseEntity<?> updateEmployee(@PathVariable Long id, @Validated @RequestBody Employee updateEmployee,
             BindingResult result) {
@@ -71,7 +77,7 @@ public class EmployeeController {
             result.getFieldErrors().forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
             return ResponseEntity.badRequest().body(errors);
 
-        }        
+        }
 
         Employee existignEmployee = employeeService.getEmployeeById(id);
         if (existignEmployee != null) {

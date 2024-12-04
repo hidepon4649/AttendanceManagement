@@ -1,8 +1,8 @@
 package com.example.attendancemanager.model;
 
 public enum Role {
-    USER,
-    ADMIN,
-    MANAGER,
-    SUPERVISOR
+    ROLE_USER,
+    ROLE_ADMIN,
+    ROLE_MANAGER,
+    ROLE_SUPERVISOR
 }

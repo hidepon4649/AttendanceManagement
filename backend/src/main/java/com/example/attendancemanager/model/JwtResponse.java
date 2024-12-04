@@ -1,4 +1,4 @@
-package com.example.attendancemanager.config;
+package com.example.attendancemanager.model;
 
 public class JwtResponse {
     private String token;

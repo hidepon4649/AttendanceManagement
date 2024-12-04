@@ -16,9 +16,16 @@ import com.example.attendancemanager.model.Attendance;
 import com.example.attendancemanager.service.AttendanceService;
 
 @RestController
-@CrossOrigin(origins = "${cors.allowed.origins}")
+@CrossOrigin(origins = "${app.cors.allowed.origins}")
 @RequestMapping("/api/attendance")
 public class AttendanceController {
+
+    // TODO: 各ハンドラーメソッドに、@AuthenticationPrincipal UserDetails userDetails
+    // を追加してログインユーザー情報を取得できるようにして下さい。
+    // TODO: 各ハンドラーメソッドに、@AuthenticationPrincipal UserDetails userDetails
+    // を追加して操作ログを記録して下さい。
+    // TODO:過去日付の打刻を禁止する。
+    // TODO:過去日付の打刻修正は管理者のみ可能とする。
 
     @Autowired
     private AttendanceService attendanceService;
@@ -36,7 +43,8 @@ public class AttendanceController {
     }
 
     @GetMapping("/{employeeId}/{yearMonth}")
-    public ResponseEntity<List<Attendance>> getMonthlyReportByEmployeeId(@PathVariable Long employeeId, @PathVariable String yearMonth) {
+    public ResponseEntity<List<Attendance>> getMonthlyReportByEmployeeId(@PathVariable Long employeeId,
+            @PathVariable String yearMonth) {
         // yearMonth は "YYYY-MM" 形式で受け取ります
         var year = Integer.parseInt(yearMonth.split("-")[0]);
         var month = Integer.parseInt(yearMonth.split("-")[1]);
