@@ -28,17 +28,11 @@ import com.example.attendancemanager.service.EmployeeService;
 @RequestMapping("/api/employees")
 public class EmployeeController {
 
-    // TODO: 各ハンドラーメソッドに、@AuthenticationPrincipal UserDetails userDetails
-    // を追加してログインユーザー情報を取得できるようにして下さい。
-    // TODO: 各ハンドラーメソッドに、@AuthenticationPrincipal UserDetails userDetails
-    // を追加して操作ログを記録して下さい。
-
     @Autowired
     private EmployeeService employeeService;
 
     @GetMapping
     public List<Employee> getAllEmployees(@AuthenticationPrincipal UserDetails userDetails) {
-        System.out.println(userDetails); // TODO:DBに証跡ログを記録する
         return employeeService.getAllEmployees();
     }
 

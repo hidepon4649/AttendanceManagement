@@ -20,10 +20,6 @@ import com.example.attendancemanager.service.AttendanceService;
 @RequestMapping("/api/attendance")
 public class AttendanceController {
 
-    // TODO: 各ハンドラーメソッドに、@AuthenticationPrincipal UserDetails userDetails
-    // を追加してログインユーザー情報を取得できるようにして下さい。
-    // TODO: 各ハンドラーメソッドに、@AuthenticationPrincipal UserDetails userDetails
-    // を追加して操作ログを記録して下さい。
     // TODO:過去日付の打刻を禁止する。
     // TODO:過去日付の打刻修正は管理者のみ可能とする。
 

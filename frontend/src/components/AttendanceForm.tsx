@@ -10,6 +10,8 @@ import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 
 const AttendanceForm = () => {
+  // tokenの設定を一番外側(ココ)に移動する事も要検討。
+
   const [employeeId, setEmployeeId] = useState("");
   const [employees, setEmployees] = useState([] as Employee[]);
   const [attendanceRecords, setAttendanceRecords] = useState(
@@ -79,10 +81,13 @@ const AttendanceForm = () => {
   }, [employeeId, targetMonth]);
 
   const handleClockIn = async () => {
+    const token = localStorage.getItem("token");
     if (employeeId) {
       try {
         const response = await axios.post(
-          `http://localhost:8080/api/attendance/${employeeId}/clock-in`
+          `http://localhost:8080/api/attendance/${employeeId}/clock-in`,
+          {}, // 空のリクエストボディ
+          { headers: { Authorization: `Bearer ${token}` } }
         );
         console.log("Clocked in:", response.data);
 
@@ -95,10 +100,13 @@ const AttendanceForm = () => {
   };
 
   const handleClockOut = async () => {
+    const token = localStorage.getItem("token");
     if (employeeId) {
       try {
         const response = await axios.post(
-          `http://localhost:8080/api/attendance/${employeeId}/clock-out`
+          `http://localhost:8080/api/attendance/${employeeId}/clock-out`,
+          {}, // 空のリクエストボディ
+          { headers: { Authorization: `Bearer ${token}` } }
         );
         console.log("Clocked out:", response.data);
 
