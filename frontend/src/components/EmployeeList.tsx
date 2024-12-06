@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "../css/EmployeeList.css";
 import { Employee } from "../models/Employee";
 
 const EmployeeList = () => {
   const [list, setList] = useState([]);
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const fetchList = async () => {
     const token = localStorage.getItem("token");
@@ -22,7 +22,7 @@ const EmployeeList = () => {
 
   const handleClick = (id: number) => {
     console.log(id);
-    history.push(`/employees/edit/${id}`);
+    navigate(`/employees/edit/${id}`);
   };
 
   return (

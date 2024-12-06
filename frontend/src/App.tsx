@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import LoginPage from "./components/LoginPage";
 import AttendanceForm from "./components/AttendanceForm";
 import MonthlyReport from "./components/MonthlyReport";
@@ -78,14 +78,17 @@ const App = () => {
           </ul>
         </nav>
 
-        <Switch>
-          <Route path="/" exact component={LoginPage} />
-          <Route path="/employees/list" component={EmployeeList} />
-          <Route path="/employees/register" component={RegisterEmployeeForm} />
-          <Route path="/attendance" component={AttendanceForm} />
-          <Route path="/report" component={MonthlyReport} />
-          <Route path="/employees/edit/:id" component={EmployeeEdit} />
-        </Switch>
+        <Routes>
+          <Route path="/" element={<LoginPage />} />
+          <Route path="/employees/list" element={<EmployeeList />} />
+          <Route
+            path="/employees/register"
+            element={<RegisterEmployeeForm />}
+          />
+          <Route path="/attendance" element={<AttendanceForm />} />
+          <Route path="/report" element={<MonthlyReport />} />
+          <Route path="/employees/edit/:id" element={<EmployeeEdit />} />
+        </Routes>
       </div>
     </Router>
   );

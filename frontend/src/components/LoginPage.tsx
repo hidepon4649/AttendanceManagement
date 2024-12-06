@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -18,7 +18,7 @@ const LoginPage = () => {
       setError("");
       console.log("Logged in:", response.data);
       localStorage.setItem("token", response.data.token);
-      history.push("/attendance");
+      navigate("/attendance");
     } catch (error) {
       console.error("Login failed:", error);
       setError(
