@@ -1,20 +1,28 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  useNavigate,
+} from "react-router-dom";
+
 import LoginPage from "./components/LoginPage";
 import AttendanceForm from "./components/AttendanceForm";
 import MonthlyReport from "./components/MonthlyReport";
 import RegisterEmployeeForm from "./components/EmployeeRegisterForm";
 import EmployeeList from "./components/EmployeeList";
 import EmployeeEdit from "./components/EmployeeEdit";
-import Stack from "@mui/material/Stack";
+import LogoutButton from "./components/LogoutButton ";
 import Button from "@mui/material/Button";
 import HomeIcon from "@mui/icons-material/Home";
 import PeopleIcon from "@mui/icons-material/People";
 import BadgeIcon from "@mui/icons-material/Badge";
 import PunchClockIcon from "@mui/icons-material/PunchClock";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import LogoutIcon from "@mui/icons-material/Logout";
 
 const App = () => {
+
   return (
     <Router>
       <div className="container">
@@ -74,6 +82,9 @@ const App = () => {
               >
                 月末帳票出力
               </Button>
+            </li>
+            <li className="nav-item">
+              <LogoutButton />
             </li>
           </ul>
         </nav>

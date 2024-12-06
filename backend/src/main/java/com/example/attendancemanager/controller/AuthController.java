@@ -1,5 +1,8 @@
 package com.example.attendancemanager.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -36,5 +39,18 @@ public class AuthController {
         String token = tokenProvider.generateToken(authentication.getName());
 
         return ResponseEntity.ok(new JwtResponse(token));
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Map<String, String>> logoutUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = (authentication != null) ? authentication.getName() : "Unknown";
+        SecurityContextHolder.clearContext();
+
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "ログアウトしました");
+        response.put("username", username);
+
+        return ResponseEntity.ok(response);
     }
 }
