@@ -11,11 +11,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-import com.example.attendancemanager.filter.JwtAuthenticationFilter;
+import com.example.attendancemanager.security.JwtAuthEntryPoint;
+import com.example.attendancemanager.security.JwtAuthTokenFilter;
 import com.example.attendancemanager.service.CustomUserDetailsService;
 
 @Configuration
@@ -23,33 +25,46 @@ import com.example.attendancemanager.service.CustomUserDetailsService;
 @EnableMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfig {
 
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final JwtAuthEntryPoint jwtAuthEntoryPoint;
+    private final JwtAuthTokenFilter jwtAuthenticationFilter;
     private final CustomUserDetailsService userDetailsService;
 
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter,
-            CustomUserDetailsService userDetailsService) {
+    public SecurityConfig(JwtAuthTokenFilter jwtAuthenticationFilter,
+            CustomUserDetailsService userDetailsService,
+            JwtAuthEntryPoint jwtAuthEntoryPoint) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.userDetailsService = userDetailsService;
+        this.jwtAuthEntoryPoint = jwtAuthEntoryPoint;
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        // TODO: CSRF対策を有効化する
         // TODO: 管理者権限とユーザー権限の切り分け
-        http.csrf(csrf -> csrf.disable())
+        // TODO: CSRFトークンの設定
+        http
+                // .csrf(csrf ->
+                // csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                // .ignoringRequestMatchers("/api/auth/**")
+                // .ignoringRequestMatchers("/api/csrf/token")
+                // .ignoringRequestMatchers("/api/public/**") // 公開APIへのリクエストはCSRFトークンを無視
+                // )
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/csrf/token").permitAll()
+                        .requestMatchers("/api/public/**").permitAll()
                         .requestMatchers("/api/employees/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
+                .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthEntoryPoint))
                 .addFilterBefore(jwtAuthenticationFilter,
                         UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(corsFilter(), JwtAuthenticationFilter.class); // CORSフィルターを追加
+                .addFilterBefore(getCorsFilter(), JwtAuthTokenFilter.class); // CORSフィルターを追加
 
         return http.build();
     }
 
     @Bean
-    public CorsFilter corsFilter() {
+    public CorsFilter getCorsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);

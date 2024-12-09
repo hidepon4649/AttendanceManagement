@@ -11,7 +11,7 @@ const EmployeeList = () => {
   const fetchList = async () => {
     const token = localStorage.getItem("token");
     const response = await axios.get("http://localhost:8080/api/employees", {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${token}` }, // headersに X-XSRF-TOKEN: "値" を追加する
     });
     setList(response.data);
   };

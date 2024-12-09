@@ -1,4 +1,4 @@
-package com.example.attendancemanager.filter;
+package com.example.attendancemanager.security;
 
 import java.io.IOException;
 
@@ -10,21 +10,23 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.example.attendancemanager.config.JwtTokenProvider;
-
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Component
-public class JwtAuthenticationFilter extends OncePerRequestFilter {
+public class JwtAuthTokenFilter extends OncePerRequestFilter {
 
-    private final JwtTokenProvider tokenProvider;
+    private static final Logger logger = LoggerFactory.getLogger(JwtAuthTokenFilter.class);
+
+    private final JwtUtils jwtUtils;
     private final UserDetailsService userDetailsService;
 
-    public JwtAuthenticationFilter(JwtTokenProvider tokenProvider, UserDetailsService userDetailsService) {
-        this.tokenProvider = tokenProvider;
+    public JwtAuthTokenFilter(JwtUtils jwtUtils, UserDetailsService userDetailsService) {
+        this.jwtUtils = jwtUtils;
         this.userDetailsService = userDetailsService;
     }
 
@@ -32,26 +34,32 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
 
-        String token = extractToken(request);
-        if (token != null && tokenProvider.validateToken(token)) {
-            String email = tokenProvider.getEmailFromToken(token);
+        String token = parseToken(request);
+        if (token != null && jwtUtils.validateToken(token)) {
+            String email = jwtUtils.getEmailFromToken(token);
             UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails,
                     null, userDetails.getAuthorities());
+
+            logger.debug("Roles from JWT: {}", userDetails.getAuthorities());
+
             authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
         chain.doFilter(request, response);
+
     }
 
-    private String extractToken(HttpServletRequest request) {
+    private String parseToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
+        logger.debug("Authorization Header: {} ", bearerToken);
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }
         return null;
     }
+
 }

@@ -13,9 +13,11 @@ const LogoutButton: React.FC = () => {
       const response = await axios.post(
         "http://localhost:8080/api/auth/logout",
         {}, // 空のリクエストボディ
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}` } } // headersに X-XSRF-TOKEN: "値" を追加する
       );
       localStorage.removeItem("token");
+      localStorage.removeItem("CSRF-TOKEN");
+
       navigate("/"); // logout後はログインページにリダイレクト
     } catch (error) {
       console.error("Logout failed:", error);

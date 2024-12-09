@@ -24,12 +24,18 @@ const AttendanceForm = () => {
 
   const fetchAttendanceRecords = async () => {
     const token = localStorage.getItem("token");
+    const csrfToken = localStorage.getItem("CSRF-TOKEN");
     if (employeeId) {
       try {
         setAttendanceRecords([] as Attendance[]); // ID切り替え時に初期化
         const response = await axios.get(
           `http://localhost:8080/api/attendance/${employeeId}/${targetMonth}`,
-          { headers: { Authorization: `Bearer ${token}` } }
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "X-XSRF-TOKEN": `${csrfToken}`,
+            },
+          } // headersに X-XSRF-TOKEN: "値" を追加する
         );
         setAttendanceRecords(response.data);
         console.log("Attendance records:", attendanceRecords);
@@ -62,10 +68,16 @@ const AttendanceForm = () => {
   useEffect(() => {
     const fetchEmployees = async () => {
       const token = localStorage.getItem("token");
+      const csrfToken = localStorage.getItem("CSRF-TOKEN");
       try {
         const response = await axios.get(
           "http://localhost:8080/api/employees",
-          { headers: { Authorization: `Bearer ${token}` } }
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "X-XSRF-TOKEN": `${csrfToken}`,
+            },
+          } // headersに X-XSRF-TOKEN: "値" を追加する
         );
         setEmployees(response.data);
       } catch (error) {
@@ -82,12 +94,19 @@ const AttendanceForm = () => {
 
   const handleClockIn = async () => {
     const token = localStorage.getItem("token");
+    const csrftoken = localStorage.getItem("CSRF-TOKEN");
     if (employeeId) {
       try {
         const response = await axios.post(
           `http://localhost:8080/api/attendance/${employeeId}/clock-in`,
           {}, // 空のリクエストボディ
-          { headers: { Authorization: `Bearer ${token}` } }
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              // "X-XSRF-TOKEN": `${csrftoken}`,
+              // "Access-Control-Allow-Origin": "*",
+            },
+          } // headersに X-XSRF-TOKEN: "値" を追加する
         );
         console.log("Clocked in:", response.data);
 
@@ -101,12 +120,18 @@ const AttendanceForm = () => {
 
   const handleClockOut = async () => {
     const token = localStorage.getItem("token");
+    const csrfToken = localStorage.getItem("CSRF-TOKEN");
     if (employeeId) {
       try {
         const response = await axios.post(
           `http://localhost:8080/api/attendance/${employeeId}/clock-out`,
           {}, // 空のリクエストボディ
-          { headers: { Authorization: `Bearer ${token}` } }
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "X-XSRF-TOKEN": `${csrfToken}`,
+            },
+          } // headersに X-XSRF-TOKEN: "値" を追加する
         );
         console.log("Clocked out:", response.data);
 
