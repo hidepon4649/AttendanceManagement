@@ -42,13 +42,11 @@ public class SecurityConfig {
         // TODO: 管理者権限とユーザー権限の切り分け
         // TODO: CSRFトークンの設定
         http
-                // .csrf(csrf ->
-                // csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                // .ignoringRequestMatchers("/api/auth/**")
-                // .ignoringRequestMatchers("/api/csrf/token")
-                // .ignoringRequestMatchers("/api/public/**") // 公開APIへのリクエストはCSRFトークンを無視
-                // )
-                .csrf(csrf -> csrf.disable())
+                .csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                        .ignoringRequestMatchers("/api/auth/**")
+                        .ignoringRequestMatchers("/api/csrf/token")
+                        .ignoringRequestMatchers("/api/public/**"))
+                // .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/csrf/token").permitAll()

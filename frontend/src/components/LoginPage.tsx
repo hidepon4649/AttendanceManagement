@@ -11,20 +11,24 @@ const LoginPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      // const responseCsrf = await axios.get(
-      //   "http://localhost:8080/api/csrf/token"
-      // );
-      // console.log("CSRF token:", responseCsrf.data);
-      // localStorage.setItem("CSRF-TOKEN", responseCsrf.data.token);
+      const responseCsrf = await axios.post(
+        "http://localhost:8080/api/csrf/token",
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+      console.log("CSRF token:", responseCsrf.data.token);
+      localStorage.setItem("CSRF-TOKEN", responseCsrf.data.token);
 
       const response = await axios.post(
         "http://localhost:8080/api/auth/login",
         { email, password },
         {
           withCredentials: true,
-          // headers: {
-          //   "X-XSRF-TOKEN": localStorage.getItem("CSRF-TOKEN"),
-          // },
+          headers: {
+            "X-XSRF-TOKEN": localStorage.getItem("CSRF-TOKEN"),
+          },
         }
       );
       setError("");
