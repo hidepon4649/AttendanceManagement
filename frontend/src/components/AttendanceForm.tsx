@@ -24,7 +24,6 @@ const AttendanceForm = () => {
 
   const fetchAttendanceRecords = async () => {
     const token = localStorage.getItem("token");
-    const csrfToken = localStorage.getItem("CSRF-TOKEN");
     if (employeeId) {
       try {
         setAttendanceRecords([] as Attendance[]); // ID切り替え時に初期化
@@ -33,9 +32,8 @@ const AttendanceForm = () => {
           {
             headers: {
               Authorization: `Bearer ${token}`,
-              "X-XSRF-TOKEN": `${csrfToken}`,
             },
-          } // headersに X-XSRF-TOKEN: "値" を追加する
+          }
         );
         setAttendanceRecords(response.data);
         console.log("Attendance records:", attendanceRecords);
@@ -68,16 +66,14 @@ const AttendanceForm = () => {
   useEffect(() => {
     const fetchEmployees = async () => {
       const token = localStorage.getItem("token");
-      const csrfToken = localStorage.getItem("CSRF-TOKEN");
       try {
         const response = await axios.get(
           "http://localhost:8080/api/employees",
           {
             headers: {
               Authorization: `Bearer ${token}`,
-              "X-XSRF-TOKEN": `${csrfToken}`,
             },
-          } // headersに X-XSRF-TOKEN: "値" を追加する
+          }
         );
         setEmployees(response.data);
       } catch (error) {
@@ -97,13 +93,17 @@ const AttendanceForm = () => {
     const csrftoken = localStorage.getItem("CSRF-TOKEN");
     if (employeeId) {
       try {
+        // const responseCsrf = await axios.get(
+        //   "http://localhost:8080/api/csrf/token"
+        // );
+
         const response = await axios.post(
           `http://localhost:8080/api/attendance/${employeeId}/clock-in`,
           {}, // 空のリクエストボディ
           {
             headers: {
               Authorization: `Bearer ${token}`,
-              // "X-XSRF-TOKEN": `${csrftoken}`,
+              "X-XSRF-TOKEN": `${csrftoken}`,
               // "Access-Control-Allow-Origin": "*",
             },
           } // headersに X-XSRF-TOKEN: "値" を追加する
@@ -127,6 +127,7 @@ const AttendanceForm = () => {
           `http://localhost:8080/api/attendance/${employeeId}/clock-out`,
           {}, // 空のリクエストボディ
           {
+            // withCredentials: true,
             headers: {
               Authorization: `Bearer ${token}`,
               "X-XSRF-TOKEN": `${csrfToken}`,
