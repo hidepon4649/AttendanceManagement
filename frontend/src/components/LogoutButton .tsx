@@ -13,7 +13,13 @@ const LogoutButton: React.FC = () => {
       const response = await axios.post(
         "http://localhost:8080/api/auth/logout",
         {}, // 空のリクエストボディ
-        { headers: { Authorization: `Bearer ${token}` } }
+        {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "X-CSRF-TOKEN": localStorage.getItem("CSRF-TOKEN"),
+          },
+        }
       );
       localStorage.removeItem("token");
       localStorage.removeItem("CSRF-TOKEN");

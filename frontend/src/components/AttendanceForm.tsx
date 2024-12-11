@@ -101,9 +101,10 @@ const AttendanceForm = () => {
           `http://localhost:8080/api/attendance/${employeeId}/clock-in`,
           {}, // 空のリクエストボディ
           {
+            withCredentials: true,
             headers: {
               Authorization: `Bearer ${token}`,
-              "X-XSRF-TOKEN": `${csrftoken}`,
+              "X-CSRF-TOKEN": `${csrftoken}`,
               // "Access-Control-Allow-Origin": "*",
             },
           } // headersに X-XSRF-TOKEN: "値" を追加する
@@ -127,10 +128,10 @@ const AttendanceForm = () => {
           `http://localhost:8080/api/attendance/${employeeId}/clock-out`,
           {}, // 空のリクエストボディ
           {
-            // withCredentials: true,
+            withCredentials: true,
             headers: {
               Authorization: `Bearer ${token}`,
-              "X-XSRF-TOKEN": `${csrfToken}`,
+              "X-CSRF-TOKEN": `${csrfToken}`,
             },
           } // headersに X-XSRF-TOKEN: "値" を追加する
         );

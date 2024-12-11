@@ -27,7 +27,7 @@ const LoginPage = () => {
         {
           withCredentials: true,
           headers: {
-            "X-XSRF-TOKEN": localStorage.getItem("CSRF-TOKEN"),
+            "X-CSRF-TOKEN": localStorage.getItem("CSRF-TOKEN"),
           },
         }
       );
