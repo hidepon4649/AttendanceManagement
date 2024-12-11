@@ -34,7 +34,6 @@ public class AuthController {
     private JwtUtils jwtUtils;
 
     @PostMapping("/login")
-    // public ResponseEntity<?> authenticateUser(@RequestBody Employee employee) {
     public ResponseEntity<?> authenticateUser(@RequestBody JwtRequest jwtRequest) {
         Authentication authentication;
         try {
@@ -51,8 +50,6 @@ public class AuthController {
         }
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        // String token = jwtUtils.generateToken(authentication.getName());
-        // return ResponseEntity.ok(new JwtResponse(token));
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String jwtToken = jwtUtils.generateToken(userDetails.getUsername());
         List<String> roles = userDetails.getAuthorities().stream()
