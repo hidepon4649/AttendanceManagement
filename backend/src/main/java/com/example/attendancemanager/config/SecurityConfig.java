@@ -23,16 +23,16 @@ import com.example.attendancemanager.service.CustomUserDetailsService;
 @EnableMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfig {
 
-    private final JwtAuthEntryPoint jwtAuthEntoryPoint;
+    private final JwtAuthEntryPoint jwtAuthEntryPoint;
     private final JwtAuthTokenFilter jwtAuthenticationFilter;
     private final CustomUserDetailsService userDetailsService;
 
     public SecurityConfig(JwtAuthTokenFilter jwtAuthenticationFilter,
             CustomUserDetailsService userDetailsService,
-            JwtAuthEntryPoint jwtAuthEntoryPoint) {
+            JwtAuthEntryPoint jwtAuthEntryPoint) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.userDetailsService = userDetailsService;
-        this.jwtAuthEntoryPoint = jwtAuthEntoryPoint;
+        this.jwtAuthEntryPoint = jwtAuthEntryPoint;
     }
 
     @Bean
@@ -47,7 +47,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/public/**").permitAll()
                         .requestMatchers("/api/employees/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
-                .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthEntoryPoint))
+                .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthEntryPoint))
                 .addFilterBefore(jwtAuthenticationFilter,
                         UsernamePasswordAuthenticationFilter.class);
 
