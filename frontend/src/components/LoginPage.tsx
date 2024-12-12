@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
-const LoginPage = () => {
+interface LoginPageProps {
+  onLoginSuccess: () => void;
+}
+
+const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,8 +35,9 @@ const LoginPage = () => {
       );
       setError("");
       console.log("Logged in:", response.data);
-      localStorage.setItem("token", response.data.token);
-      navigate("/attendance");
+      localStorage.setItem("JWT-TOKEN", response.data.token);
+      // ログイン状態の更新
+      onLoginSuccess();
     } catch (error) {
       console.error("Login failed:", error);
       setError(

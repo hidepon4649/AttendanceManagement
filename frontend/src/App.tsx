@@ -1,10 +1,5 @@
-import React from "react";
-import {
-  BrowserRouter as Router,
-  Route,
-  Routes,
-  useNavigate,
-} from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 import LoginPage from "./components/LoginPage";
 import AttendanceForm from "./components/AttendanceForm";
@@ -22,23 +17,37 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import LogoutIcon from "@mui/icons-material/Logout";
 
 const App = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    return localStorage.getItem("isLoggedIn") === "true";
+  });
+
+  const handleLoginSuccess = () => {
+    setIsLoggedIn(true);
+    localStorage.setItem("isLoggedIn", "true");
+  };
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    localStorage.setItem("isLoggedIn", "false");
+  };
+
+  console.log("App.tsx is rendered. isLoggedIn:", isLoggedIn);
 
   return (
-    <Router>
-      <div className="container">
-        <nav className="navbar bg-primary">
-          <ul className="nav nav-tabs mx-3">
-            <li className="nav-item">
-              <Button
-                className="nav-link text-light"
-                size="medium"
-                href="/"
-                variant="outlined"
-                startIcon={<HomeIcon />}
-              >
-                ホーム
-              </Button>
-            </li>
+    <div className="container">
+      <nav className="navbar bg-primary">
+        <ul className="nav nav-tabs mx-3">
+          <li className="nav-item">
+            <Button
+              className="nav-link text-light"
+              size="medium"
+              href="/"
+              variant="outlined"
+              startIcon={<HomeIcon />}
+            >
+              ホーム
+            </Button>
+          </li>
+          {isLoggedIn && (
             <li className="nav-item">
               <Button
                 className="nav-link text-light"
@@ -50,6 +59,8 @@ const App = () => {
                 社員一覧
               </Button>
             </li>
+          )}
+          {isLoggedIn && (
             <li className="nav-item">
               <Button
                 className="nav-link text-light"
@@ -61,6 +72,8 @@ const App = () => {
                 社員登録
               </Button>
             </li>
+          )}
+          {isLoggedIn && (
             <li className="nav-item">
               <Button
                 className="nav-link text-light"
@@ -72,6 +85,8 @@ const App = () => {
                 出退勤管理
               </Button>
             </li>
+          )}
+          {isLoggedIn && (
             <li className="nav-item">
               <Button
                 className="nav-link text-light"
@@ -83,25 +98,38 @@ const App = () => {
                 月末帳票出力
               </Button>
             </li>
+          )}
+          {isLoggedIn && (
             <li className="nav-item">
-              <LogoutButton />
+              <LogoutButton onLogout={handleLogout} />
             </li>
-          </ul>
-        </nav>
+          )}
+        </ul>
+      </nav>
 
-        <Routes>
-          <Route path="/" element={<LoginPage />} />
+      <Routes>
+        <Route
+          path="/"
+          element={<LoginPage onLoginSuccess={handleLoginSuccess} />}
+        />
+        {isLoggedIn && (
           <Route path="/employees/list" element={<EmployeeList />} />
+        )}
+        {isLoggedIn && (
           <Route
             path="/employees/register"
             element={<RegisterEmployeeForm />}
           />
+        )}
+        {isLoggedIn && (
           <Route path="/attendance" element={<AttendanceForm />} />
-          <Route path="/report" element={<MonthlyReport />} />
+        )}
+        {isLoggedIn && <Route path="/report" element={<MonthlyReport />} />}
+        {isLoggedIn && (
           <Route path="/employees/edit/:id" element={<EmployeeEdit />} />
-        </Routes>
-      </div>
-    </Router>
+        )}
+      </Routes>
+    </div>
   );
 };
 

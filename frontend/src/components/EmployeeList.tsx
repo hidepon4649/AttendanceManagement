@@ -9,7 +9,7 @@ const EmployeeList = () => {
   const navigate = useNavigate();
 
   const fetchList = async () => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("JWT-TOKEN");
     const response = await axios.get("http://localhost:8080/api/employees", {
       headers: { Authorization: `Bearer ${token}` },
     });

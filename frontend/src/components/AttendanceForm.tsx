@@ -23,7 +23,7 @@ const AttendanceForm = () => {
   const [dates, setDates] = useState<string[]>([]);
 
   const fetchAttendanceRecords = async () => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("JWT-TOKEN");
     if (employeeId) {
       try {
         setAttendanceRecords([] as Attendance[]); // ID切り替え時に初期化
@@ -65,7 +65,7 @@ const AttendanceForm = () => {
 
   useEffect(() => {
     const fetchEmployees = async () => {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("JWT-TOKEN");
       try {
         const response = await axios.get(
           "http://localhost:8080/api/employees",
@@ -89,7 +89,7 @@ const AttendanceForm = () => {
   }, [employeeId, targetMonth]);
 
   const handleClockIn = async () => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("JWT-TOKEN");
     const csrftoken = localStorage.getItem("CSRF-TOKEN");
     if (employeeId) {
       try {
@@ -115,7 +115,7 @@ const AttendanceForm = () => {
   };
 
   const handleClockOut = async () => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("JWT-TOKEN");
     const csrfToken = localStorage.getItem("CSRF-TOKEN");
     if (employeeId) {
       try {
