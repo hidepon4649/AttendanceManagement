@@ -1,127 +1,136 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { useParams } from 'react-router-dom';
-import { Employee } from '../models/Employee';
+import React, { useEffect, useState } from "react";
+import api from "../services/api";
+import { useParams } from "react-router-dom";
+import { Employee } from "../models/Employee";
 
 const EmployeeEdit = (props: any) => {
+  const { id } = useParams<{ id: string }>();
+  const [employee, setEmployee] = useState({} as Employee);
 
-    const { id } = useParams<{ id: string }>();
-    const [employee, setEmployee] = useState({} as Employee);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errors, setErrors] = useState<Errors>({});
 
-    const [successMessage, setSuccessMessage] = useState('');
-    const [errors, setErrors] = useState<Errors>({});
-
-    useEffect(() => {
-        const fetchEmployee = async () => {
-            const response = await axios.get(`http://localhost:8080/api/employees/${id}`);
-            setEmployee(response.data);
-        };
-        fetchEmployee();
-    }, [id]);
-
-    const handleEdit = async () => {
-        try {
-            const response = await axios.post(`http://localhost:8080/api/employees/${id}`,
-                { ...employee }
-            );
-            setSuccessMessage('社員の編集が成功しました！');
-            setErrors({});
-            // setEmployee({} as Employee);
-
-        } catch (error: any) {
-            if (error.response && error.response.data) {
-                setErrors({
-                    fieldErrors: error.response.data, // フィールドエラー
-                    generalError: '社員の編集に失敗しました。' // 一般的なエラーメッセージ
-                });
-            } else {
-                setErrors({
-                    generalError: '社員の編集に失敗しました。'  // 一般的なエラーメッセージ
-                });
-            }
-        }
+  useEffect(() => {
+    const fetchEmployee = async () => {
+      const response = await api.get(`/employees/${id}`);
+      setEmployee(response.data);
     };
+    fetchEmployee();
+  }, [id]);
 
-    function handleOnChange(event: React.ChangeEvent<HTMLInputElement>) {
-        const { name, value, type, checked } = event.target;
+  const handleEdit = async () => {
+    try {
+      const response = await api.post(`/employees/${id}`, { ...employee });
+      setSuccessMessage("社員の編集が成功しました！");
+      setErrors({});
+    } catch (error: any) {
+      if (error.response && error.response.data) {
+        setErrors({
+          fieldErrors: error.response.data, // フィールドエラー
+          generalError: "社員の編集に失敗しました。", // 一般的なエラーメッセージ
+        });
+      } else {
+        setErrors({
+          generalError: "社員の編集に失敗しました。", // 一般的なエラーメッセージ
+        });
+      }
+    }
+  };
 
-        setEmployee((prevValue) => {
-            return {
-                ...prevValue,
-                [name]: type === 'checkbox' ? checked : value
-            } as Employee;
-        })
-    };
+  function handleOnChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const { name, value, type, checked } = event.target;
 
-    return (
-        <div className="mx-3 mt-3">
-            <h2>社員編集</h2>
-            {successMessage && <p className="text-success">{successMessage}</p>}
-            {errors.generalError && <p className="text-danger">{errors.generalError}</p>}
-            <div className="mb-3 mt-3">
-                <label className="form-label" htmlFor="name">名前:</label>
-                <input
-                    type="text"
-                    className="form-control"
-                    name="name"
-                    autoComplete="username"
-                    value={employee.name}
-                    onChange={handleOnChange}
-                    placeholder="名前"
-                />
-                {errors.fieldErrors && errors.fieldErrors.name && <p className="text-danger">{errors.fieldErrors.name}</p>}
+    setEmployee((prevValue) => {
+      return {
+        ...prevValue,
+        [name]: type === "checkbox" ? checked : value,
+      } as Employee;
+    });
+  }
 
-            </div>
-            <div className="mb-3">
-                <label className="form-label" htmlFor="email">メールアドレス:</label>
-                <input
-                    type="email"
-                    className="form-control"
-                    name="email"
-                    autoComplete="email"
-                    value={employee.email}
-                    onChange={handleOnChange}
-                    placeholder="メールアドレス"
-                />
-                {errors.fieldErrors && errors.fieldErrors.email && <p className="text-danger">{errors.fieldErrors.email}</p>}
-
-            </div>
-            <div className="mb-3">
-                <label className="form-label" htmlFor="password">パスワード:</label>
-                <input
-                    type="password"
-                    className="form-control"
-                    name="password"
-                    value={employee.password}
-                    onChange={handleOnChange}
-                    placeholder="パスワード"
-                />
-                {errors.fieldErrors && errors.fieldErrors.password && <p className="text-danger">{errors.fieldErrors.password}</p>}
-
-            </div>
-            <div className="mb-3">
-                <label className="form-label" htmlFor="isAdmin">管理者権限:</label>
-                <input
-                    type="checkbox"
-                    name="isAdmin"
-                    className="form-check-input"
-                    checked={employee.isAdmin}
-                    onChange={handleOnChange}
-                />
-            </div>
-            <button className="btn btn-primary" onClick={handleEdit}>更新</button>
-        </div>
-    );
+  return (
+    <div className="mx-3 mt-3">
+      <h2>社員編集</h2>
+      {successMessage && <p className="text-success">{successMessage}</p>}
+      {errors.generalError && (
+        <p className="text-danger">{errors.generalError}</p>
+      )}
+      <div className="mb-3 mt-3">
+        <label className="form-label" htmlFor="name">
+          名前:
+        </label>
+        <input
+          type="text"
+          className="form-control"
+          name="name"
+          autoComplete="username"
+          value={employee.name}
+          onChange={handleOnChange}
+          placeholder="名前"
+        />
+        {errors.fieldErrors && errors.fieldErrors.name && (
+          <p className="text-danger">{errors.fieldErrors.name}</p>
+        )}
+      </div>
+      <div className="mb-3">
+        <label className="form-label" htmlFor="email">
+          メールアドレス:
+        </label>
+        <input
+          type="email"
+          className="form-control"
+          name="email"
+          autoComplete="email"
+          value={employee.email}
+          onChange={handleOnChange}
+          placeholder="メールアドレス"
+        />
+        {errors.fieldErrors && errors.fieldErrors.email && (
+          <p className="text-danger">{errors.fieldErrors.email}</p>
+        )}
+      </div>
+      <div className="mb-3">
+        <label className="form-label" htmlFor="password">
+          パスワード:
+        </label>
+        <input
+          type="password"
+          className="form-control"
+          name="password"
+          value={employee.password}
+          onChange={handleOnChange}
+          placeholder="パスワード"
+        />
+        {errors.fieldErrors && errors.fieldErrors.password && (
+          <p className="text-danger">{errors.fieldErrors.password}</p>
+        )}
+      </div>
+      <div className="mb-3">
+        <label className="form-label" htmlFor="isAdmin">
+          管理者権限:
+        </label>
+        <input
+          type="checkbox"
+          name="isAdmin"
+          className="form-check-input"
+          checked={employee.isAdmin}
+          onChange={handleOnChange}
+        />
+      </div>
+      <button className="btn btn-primary" onClick={handleEdit}>
+        更新
+      </button>
+    </div>
+  );
 };
 
-
 interface FieldErrors {
-    [key: string]: string;
+  [key: string]: string;
 }
 
 interface Errors {
-    fieldErrors?: FieldErrors;
-    generalError?: string;
+  fieldErrors?: FieldErrors;
+  generalError?: string;
 }
 
 export default EmployeeEdit;

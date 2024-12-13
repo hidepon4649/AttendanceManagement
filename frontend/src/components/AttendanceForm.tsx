@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import api from "../services/api";
 import { Employee } from "../models/Employee";
 import { Attendance } from "../models/Attendance";
 import Stack from "@mui/material/Stack";
@@ -10,8 +10,6 @@ import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 
 const AttendanceForm = () => {
-  // tokenの設定を一番外側(ココ)に移動する事も要検討。
-
   const [employeeId, setEmployeeId] = useState("");
   const [employees, setEmployees] = useState([] as Employee[]);
   const [attendanceRecords, setAttendanceRecords] = useState(
@@ -23,17 +21,11 @@ const AttendanceForm = () => {
   const [dates, setDates] = useState<string[]>([]);
 
   const fetchAttendanceRecords = async () => {
-    const token = localStorage.getItem("JWT-TOKEN");
     if (employeeId) {
       try {
         setAttendanceRecords([] as Attendance[]); // ID切り替え時に初期化
-        const response = await axios.get(
-          `http://localhost:8080/api/attendance/${employeeId}/${targetMonth}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
+        const response = await api.get(
+          `/attendance/${employeeId}/${targetMonth}`
         );
         setAttendanceRecords(response.data);
         console.log("Attendance records:", attendanceRecords);
@@ -65,16 +57,8 @@ const AttendanceForm = () => {
 
   useEffect(() => {
     const fetchEmployees = async () => {
-      const token = localStorage.getItem("JWT-TOKEN");
       try {
-        const response = await axios.get(
-          "http://localhost:8080/api/employees",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await api.get("/employees");
         setEmployees(response.data);
       } catch (error) {
         console.error("Failed to fetch employees:", error);
@@ -89,21 +73,13 @@ const AttendanceForm = () => {
   }, [employeeId, targetMonth]);
 
   const handleClockIn = async () => {
-    const token = localStorage.getItem("JWT-TOKEN");
-    const csrftoken = localStorage.getItem("CSRF-TOKEN");
     if (employeeId) {
       try {
-        const response = await axios.post(
-          `http://localhost:8080/api/attendance/${employeeId}/clock-in`,
-          {}, // 空のリクエストボディ
-          {
-            withCredentials: true,
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "X-CSRF-TOKEN": `${csrftoken}`,
-            },
-          }
+        const response = await api.post(
+          `/attendance/${employeeId}/clock-in`,
+          {}
         );
+
         console.log("Clocked in:", response.data);
 
         // 出勤記録を再取得して更新
@@ -119,16 +95,9 @@ const AttendanceForm = () => {
     const csrfToken = localStorage.getItem("CSRF-TOKEN");
     if (employeeId) {
       try {
-        const response = await axios.post(
-          `http://localhost:8080/api/attendance/${employeeId}/clock-out`,
-          {}, // 空のリクエストボディ
-          {
-            withCredentials: true,
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "X-CSRF-TOKEN": `${csrfToken}`,
-            },
-          }
+        const response = await api.post(
+          `/attendance/${employeeId}/clock-out`,
+          {}
         );
         console.log("Clocked out:", response.data);
 

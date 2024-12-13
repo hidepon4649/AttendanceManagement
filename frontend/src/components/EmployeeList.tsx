@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import api from "../services/api";
 import { useNavigate } from "react-router-dom";
 import "../css/EmployeeList.css";
 import { Employee } from "../models/Employee";
@@ -9,10 +9,7 @@ const EmployeeList = () => {
   const navigate = useNavigate();
 
   const fetchList = async () => {
-    const token = localStorage.getItem("JWT-TOKEN");
-    const response = await axios.get("http://localhost:8080/api/employees", {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const response = await api.get("/employees");
     setList(response.data);
   };
 

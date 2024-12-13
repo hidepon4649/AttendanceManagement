@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import api from "../services/api";
 
 interface LoginPageProps {
   onLoginSuccess: (roles: string[]) => void;
@@ -17,31 +17,17 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
     localStorage.clear();
 
     try {
-      const responseCsrf = await axios.post(
-        "http://localhost:8080/api/csrf/token",
-        {},
-        {
-          withCredentials: true,
-        }
-      );
+      const responseCsrf = await api.get("/csrf/token");
       console.log("CSRF token:", responseCsrf.data.token);
       localStorage.setItem("CSRF-TOKEN", responseCsrf.data.token);
+      const response = await api.post("/auth/login", { email, password });
 
-      const response = await axios.post(
-        "http://localhost:8080/api/auth/login",
-        { email, password },
-        {
-          withCredentials: true,
-          headers: {
-            "X-CSRF-TOKEN": localStorage.getItem("CSRF-TOKEN"),
-          },
-        }
-      );
       setError("");
       console.log("Logged in:", response.data);
       localStorage.setItem("USER-NAME", response.data.username);
       localStorage.setItem("USER-ROLES", response.data.roles);
       localStorage.setItem("JWT-TOKEN", response.data.token);
+
       // ログイン状態の更新
       onLoginSuccess(response.data.roles);
     } catch (error) {

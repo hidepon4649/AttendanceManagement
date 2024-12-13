@@ -36,7 +36,9 @@ const App = () => {
 
   const handleLogout = () => {
     setIsLoggedIn(false);
+    setIsAdmin(false);
     localStorage.setItem("isLoggedIn", "false");
+    localStorage.setItem("isAdmin", "false");
   };
 
   console.log("App.tsx is rendered. isLoggedIn:", isLoggedIn);
