@@ -16,7 +16,7 @@ import com.example.attendancemanager.model.Attendance;
 import com.example.attendancemanager.service.AttendanceService;
 
 @RestController
-@CrossOrigin(origins = "${app.cors.allowed.origins}")
+@CrossOrigin(origins = "${frontend.url}")
 @RequestMapping("/api/attendance")
 public class AttendanceController {
 

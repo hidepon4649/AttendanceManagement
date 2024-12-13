@@ -24,7 +24,7 @@ import com.example.attendancemanager.model.Employee;
 import com.example.attendancemanager.service.EmployeeService;
 
 @RestController
-@CrossOrigin(origins = "${app.cors.allowed.origins}")
+@CrossOrigin(origins = "${frontend.url}")
 @RequestMapping("/api/employees")
 public class EmployeeController {
 
