@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 
 interface LoginPageProps {
-  onLoginSuccess: () => void;
+  onLoginSuccess: (roles: string[]) => void;
 }
 
 const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
@@ -12,6 +12,10 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // ログイン時には一旦 localStorage をクリアする
+    localStorage.clear();
+
     try {
       const responseCsrf = await axios.post(
         "http://localhost:8080/api/csrf/token",
@@ -35,9 +39,11 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
       );
       setError("");
       console.log("Logged in:", response.data);
+      localStorage.setItem("USER-NAME", response.data.username);
+      localStorage.setItem("USER-ROLES", response.data.roles);
       localStorage.setItem("JWT-TOKEN", response.data.token);
       // ログイン状態の更新
-      onLoginSuccess();
+      onLoginSuccess(response.data.roles);
     } catch (error) {
       console.error("Login failed:", error);
       setError(

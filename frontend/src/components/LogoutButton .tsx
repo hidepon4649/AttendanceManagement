@@ -27,9 +27,7 @@ const LogoutButton: React.FC<LogoutPageProps> = ({ onLogout }) => {
       // ログイン状態の更新
       onLogout();
 
-      localStorage.removeItem("JWT-TOKEN");
-      localStorage.removeItem("CSRF-TOKEN");
-      localStorage.removeItem("isLoggedIn");
+      localStorage.clear();
 
       navigate("/");
     } catch (error) {

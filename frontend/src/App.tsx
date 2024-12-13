@@ -20,11 +20,20 @@ const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
     return localStorage.getItem("isLoggedIn") === "true";
   });
+  const [isAdmin, setIsAdmin] = useState(() => {
+    return localStorage.getItem("isAdmin") === "true";
+  });
 
-  const handleLoginSuccess = () => {
+  const handleLoginSuccess = (roles: string[]) => {
+    const wkIsAdmin = roles.includes("ROLE_ADMIN");
+
     setIsLoggedIn(true);
     localStorage.setItem("isLoggedIn", "true");
+
+    setIsAdmin(wkIsAdmin);
+    localStorage.setItem("isAdmin", wkIsAdmin ? "true" : "false");
   };
+
   const handleLogout = () => {
     setIsLoggedIn(false);
     localStorage.setItem("isLoggedIn", "false");
@@ -47,7 +56,7 @@ const App = () => {
               ホーム
             </Button>
           </li>
-          {isLoggedIn && (
+          {isLoggedIn && isAdmin && (
             <li className="nav-item">
               <Button
                 className="nav-link text-light"
@@ -60,7 +69,7 @@ const App = () => {
               </Button>
             </li>
           )}
-          {isLoggedIn && (
+          {isLoggedIn && isAdmin && (
             <li className="nav-item">
               <Button
                 className="nav-link text-light"
