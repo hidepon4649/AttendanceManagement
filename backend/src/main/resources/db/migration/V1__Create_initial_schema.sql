@@ -24,9 +24,11 @@ CREATE TABLE IF NOT EXISTS roles (
     CONSTRAINT roles_fk_1 FOREIGN KEY (email) REFERENCES employee (email)
 );
 
-CREATE TABLE IF NOT EXISTS sql_logs (
+CREATE TABLE IF NOT EXISTS access_log (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(255),
-    timestamp TIMESTAMP,
-    sql_str TEXT
+    method_name VARCHAR(255),
+    method_params TEXT,
+    user_roles VARCHAR(255),
+    access_time TIMESTAMP
 );
