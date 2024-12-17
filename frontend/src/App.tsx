@@ -59,61 +59,59 @@ const App = () => {
             </Button>
           </li>
           {isLoggedIn && isAdmin && (
-            <li className="nav-item">
-              <Button
-                className="nav-link text-light"
-                size="medium"
-                href="/employees/list"
-                variant="outlined"
-                startIcon={<PeopleIcon />}
-              >
-                社員一覧
-              </Button>
-            </li>
-          )}
-          {isLoggedIn && isAdmin && (
-            <li className="nav-item">
-              <Button
-                className="nav-link text-light"
-                size="medium"
-                href="/employees/register"
-                variant="outlined"
-                startIcon={<BadgeIcon />}
-              >
-                社員登録
-              </Button>
-            </li>
-          )}
-          {isLoggedIn && (
-            <li className="nav-item">
-              <Button
-                className="nav-link text-light"
-                size="medium"
-                href="/attendance"
-                variant="outlined"
-                startIcon={<PunchClockIcon />}
-              >
-                出退勤管理
-              </Button>
-            </li>
+            <>
+              <li className="nav-item">
+                <Button
+                  className="nav-link text-light"
+                  size="medium"
+                  href="/employees/list"
+                  variant="outlined"
+                  startIcon={<PeopleIcon />}
+                >
+                  社員一覧
+                </Button>
+              </li>
+              <li className="nav-item">
+                <Button
+                  className="nav-link text-light"
+                  size="medium"
+                  href="/employees/register"
+                  variant="outlined"
+                  startIcon={<BadgeIcon />}
+                >
+                  社員登録
+                </Button>
+              </li>
+            </>
           )}
           {isLoggedIn && (
-            <li className="nav-item">
-              <Button
-                className="nav-link text-light"
-                size="medium"
-                href="/report"
-                variant="outlined"
-                startIcon={<CalendarMonthIcon />}
-              >
-                月末帳票出力
-              </Button>
-            </li>
-          )}
-          {isLoggedIn && (
-            <li className="nav-item">
-              <LogoutButton onLogout={handleLogout} />
-            </li>
+            <>
+              <li className="nav-item">
+                <Button
+                  className="nav-link text-light"
+                  size="medium"
+                  href="/attendance"
+                  variant="outlined"
+                  startIcon={<PunchClockIcon />}
+                >
+                  出退勤管理
+                </Button>
+              </li>
+              <li className="nav-item">
+                <Button
+                  className="nav-link text-light"
+                  size="medium"
+                  href="/report"
+                  variant="outlined"
+                  startIcon={<CalendarMonthIcon />}
+                >
+                  月末帳票出力
+                </Button>
+              </li>
+              <li className="nav-item">
+                <LogoutButton onLogout={handleLogout} />
+              </li>
+            </>
           )}
         </ul>
       </nav>
@@ -124,20 +122,16 @@ const App = () => {
           element={<LoginPage onLoginSuccess={handleLoginSuccess} />}
         />
         {isLoggedIn && (
-          <Route path="/employees/list" element={<EmployeeList />} />
-        )}
-        {isLoggedIn && (
-          <Route
-            path="/employees/register"
-            element={<RegisterEmployeeForm />}
-          />
-        )}
-        {isLoggedIn && (
-          <Route path="/attendance" element={<AttendanceForm />} />
-        )}
-        {isLoggedIn && <Route path="/report" element={<MonthlyReport />} />}
-        {isLoggedIn && (
-          <Route path="/employees/edit/:id" element={<EmployeeEdit />} />
+          <>
+            <Route path="/employees/list" element={<EmployeeList />} />
+            <Route
+              path="/employees/register"
+              element={<RegisterEmployeeForm />}
+            />
+            <Route path="/attendance" element={<AttendanceForm />} />
+            <Route path="/report" element={<MonthlyReport />} />
+            <Route path="/employees/edit/:id" element={<EmployeeEdit />} />
+          </>
         )}
       </Routes>
     </div>
