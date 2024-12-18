@@ -6,7 +6,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 @Entity
@@ -23,12 +22,8 @@ public class Employee {
     @Email(message = "メールアドレスが不正です")
     private String email;
     @NotBlank(message = "パスワードは必須です")
-    @Pattern(regexp = "^[a-zA-Z0-9_]{8,24}$", message = "パスワードは半角英数で8文字以上、24文字以下です")
     private String password;
     private boolean isAdmin;
-
-    // @Enumerated(EnumType.STRING)
-    // private Role role = Role.USER; // デフォルト値を設定
 
     public Long getId() {
         return id;
@@ -69,14 +64,5 @@ public class Employee {
     public void setAdmin(boolean isAdmin) {
         this.isAdmin = isAdmin;
     }
-
-    // public Role getRole() {
-    // return role;
-    // }
-
-    // public void setRole(Role role) {
-    // this.role = role;
-    // }
-    // Getters and Setters
 
 }

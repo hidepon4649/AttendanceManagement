@@ -3,12 +3,15 @@ package com.example.attendancemanager.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -28,8 +31,13 @@ import com.example.attendancemanager.service.EmployeeService;
 @RequestMapping("/api/employees")
 public class EmployeeController {
 
+    private static final String PASSWORD_PATTERN = "^[a-zA-Z0-9_]{8,24}$";
+
     @Autowired
     private EmployeeService employeeService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @GetMapping
     public List<Employee> getAllEmployees(@AuthenticationPrincipal UserDetails userDetails) {
@@ -56,6 +64,14 @@ public class EmployeeController {
             return ResponseEntity.badRequest().body(errors);
 
         }
+        // 暗号化前のパスワードに対してサイズ制限をチェック
+        if (!validatePassword(employee.getPassword())) {
+
+            Map<String, String> errors = new HashMap<>();
+            errors.put("password", "Password size must be between 8 and 24 characters");
+            return ResponseEntity.badRequest().body(errors);
+        }
+        employee.setPassword(passwordEncoder.encode(employee.getPassword()));
 
         Employee newEmployee = employeeService.saveEmployee(employee);
         return ResponseEntity.status(HttpStatus.CREATED).body(newEmployee);
@@ -73,8 +89,16 @@ public class EmployeeController {
 
         }
 
+        // 暗号化前のパスワードに対してサイズ制限をチェック
+        if (!validatePassword(updateEmployee.getPassword())) {
+            Map<String, String> errors = new HashMap<>();
+            errors.put("password", "Password size must be between 8 and 24 characters");
+            return ResponseEntity.badRequest().body(errors);
+        }
+
         Employee existignEmployee = employeeService.getEmployeeById(id);
         if (existignEmployee != null) {
+            updateEmployee.setPassword(passwordEncoder.encode(updateEmployee.getPassword()));
             updateEmployee.setId(id);
             employeeService.saveEmployee(updateEmployee);
             return ResponseEntity.ok(updateEmployee);
@@ -94,6 +118,12 @@ public class EmployeeController {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Employee not found");
         }
+    }
+
+    private static boolean validatePassword(String password) {
+        Pattern pattern = Pattern.compile(PASSWORD_PATTERN);
+        Matcher matcher = pattern.matcher(password);
+        return matcher.matches();
     }
 
 }

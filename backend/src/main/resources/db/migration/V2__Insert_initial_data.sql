@@ -7,14 +7,6 @@ INSERT INTO employee (id, email, is_admin, name, password) VALUES
 (4, 'matsukatamasayoshi@email.com', b'0', '松方正義', '$2a$12$9S./kSh2vC6VqFPQLg1ege7gWPmJ556aCDBO2Qg/tj5ZWEiBoRb1i'),
 (5, 'ohkumashigenobu@email.com', b'0', '大隈重信', '$2a$12$9S./kSh2vC6VqFPQLg1ege7gWPmJ556aCDBO2Qg/tj5ZWEiBoRb1i');
 
-INSERT INTO roles (email, role) VALUES
-('itohtohirofumi@email.com','ROLE_USER'),
-('itohtohirofumi@email.com','ROLE_ADMIN'),
-('kurodakiyotaka@email.com','ROLE_USER'),
-('yamagataaritomo@email.com','ROLE_USER'),
-('matsukatamasayoshi@email.com','ROLE_USER'),
-('ohkumashigenobu@email.com','ROLE_USER');
-
 INSERT INTO attendance (clock_in_time, clock_out_time, date, employee_id) VALUES
 ('2024-10-01 08:25:00.000000', '2024-10-01 18:10:00.000000', '2024-10-01', 1),
 ('2024-10-02 08:25:00.000000', '2024-10-02 18:10:00.000000', '2024-10-02', 1),

@@ -17,13 +17,6 @@ CREATE TABLE IF NOT EXISTS attendance (
     FOREIGN KEY (employee_id) REFERENCES employee (id)
 );
 
-CREATE TABLE IF NOT EXISTS roles (
-    email VARCHAR(255) NOT NULL,
-    role varchar(50) NOT NULL,
-    UNIQUE KEY roles_idx_1 (email, role),
-    CONSTRAINT roles_fk_1 FOREIGN KEY (email) REFERENCES employee (email)
-);
-
 CREATE TABLE IF NOT EXISTS access_log (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(255),
