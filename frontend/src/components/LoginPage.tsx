@@ -17,25 +17,31 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
     localStorage.clear();
 
     try {
-      const responseCsrf = await api.get("/csrf/token");
-      console.log("CSRF token:", responseCsrf.data.token);
-      localStorage.setItem("CSRF-TOKEN", responseCsrf.data.token);
-      const response = await api.post("/auth/login", { email, password });
-
-      setError("");
-      console.log("Logged in:", response.data);
-      localStorage.setItem("USER-NAME", response.data.username);
-      localStorage.setItem("USER-ROLES", response.data.roles);
-      localStorage.setItem("JWT-TOKEN", response.data.token);
-
-      // ログイン状態の更新
-      onLoginSuccess(response.data.roles);
+      await fetchCsrfToken();
+      await loginUser();
     } catch (error) {
       console.error("Login failed:", error);
       setError(
         "ログインに失敗しました。ユーザー名とパスワードを確認してください。"
       );
     }
+  };
+  const fetchCsrfToken = async () => {
+    const responseCsrf = await api.get("/csrf/token");
+    console.log("CSRF token:", responseCsrf.data.token);
+    localStorage.setItem("CSRF-TOKEN", responseCsrf.data.token);
+  };
+
+  const loginUser = async () => {
+    const response = await api.post("/auth/login", { email, password });
+    setError("");
+    console.log("Logged in:", response.data);
+    localStorage.setItem("USER-NAME", response.data.username);
+    localStorage.setItem("USER-ROLES", response.data.roles);
+    localStorage.setItem("JWT-TOKEN", response.data.token);
+
+    // ログイン状態の更新
+    onLoginSuccess(response.data.roles);
   };
 
   return (
