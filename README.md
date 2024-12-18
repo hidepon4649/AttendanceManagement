@@ -6,11 +6,11 @@
 
 ## 使用技術
 
-- **フロントエンド**: React, Bootstrap
+- **フロントエンド**: React, axios, Bootstrap
 - **バックエンド**: Spring Boot, Gradle
 - **データベース**: MySQL
 - **インフラ**: Docker(コンテナ化), Docker Compose
-- **認証認可**: Spring Security, JWT, CSRF
+- **認証認可**: Spring Security, JWT, BCrypt, CSRF
 
 ## セットアップ手順
 
