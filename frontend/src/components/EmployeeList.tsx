@@ -3,7 +3,6 @@ import api from "../services/api";
 import { useNavigate } from "react-router-dom";
 import "../css/EmployeeList.css";
 import { Employee } from "../models/Employee";
-import axios from "axios";
 import { Alert } from "react-bootstrap";
 
 const EmployeeList = () => {
@@ -31,7 +30,6 @@ const EmployeeList = () => {
       await api.delete(`/employees/${id}`);
       setList(list.filter((employee: Employee) => employee.id !== id));
       setAlert({ type: "success", message: "削除が成功しました" });
-      // ここでリストを更新するためのコードを追加することができます
     } catch (error) {
       console.error("削除に失敗しました", error);
       setAlert({ type: "danger", message: "削除に失敗しました" });
@@ -57,7 +55,6 @@ const EmployeeList = () => {
           </tr>
         </thead>
         <tbody>
-          {/* {list.map((employee: { id: number; name: string; email: string; isAdmin: boolean }) => ( */}
           {list.map((employee: Employee) => (
             <tr className="row" key={employee.id}>
               <td className="col">{employee.name}</td>

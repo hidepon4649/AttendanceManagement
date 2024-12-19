@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import api from "../services/api";
 import { useParams } from "react-router-dom";
 import { Employee } from "../models/Employee";
+import { Alert } from "react-bootstrap";
 
 const EmployeeEdit = (props: any) => {
   const { id } = useParams<{ id: string }>();
@@ -9,8 +10,10 @@ const EmployeeEdit = (props: any) => {
     new Employee(0, "", "", "", false)
   );
 
-  const [successMessage, setSuccessMessage] = useState("");
   const [errors, setErrors] = useState<Errors>({});
+  const [alert, setAlert] = useState<{ type: string; message: string } | null>(
+    null
+  );
 
   useEffect(() => {
     const fetchEmployee = async () => {
@@ -21,21 +24,17 @@ const EmployeeEdit = (props: any) => {
   }, [id]);
 
   const handleEdit = async () => {
+    setErrors({});
     try {
       const response = await api.put(`/employees/${id}`, { ...employee });
-      setSuccessMessage("社員の編集が成功しました！");
-      setErrors({});
+      setAlert({ type: "success", message: "編集が成功しました" });
     } catch (error: any) {
       if (error.response && error.response.data) {
         setErrors({
           fieldErrors: error.response.data, // フィールドエラー
-          generalError: "社員の編集に失敗しました。", // 一般的なエラーメッセージ
-        });
-      } else {
-        setErrors({
-          generalError: "社員の編集に失敗しました。", // 一般的なエラーメッセージ
         });
       }
+      setAlert({ type: "danger", message: "編集が失敗しました" });
     }
   };
 
@@ -55,10 +54,12 @@ const EmployeeEdit = (props: any) => {
   return (
     <div className="mx-3 mt-3">
       <h2>社員編集</h2>
-      {successMessage && <p className="text-success">{successMessage}</p>}
-      {errors.generalError && (
-        <p className="text-danger">{errors.generalError}</p>
+      {alert && (
+        <Alert variant={alert.type} onClose={() => setAlert(null)} dismissible>
+          {alert.message}
+        </Alert>
       )}
+
       <div className="mb-3 mt-3">
         <label className="form-label" htmlFor="name">
           名前:
@@ -134,7 +135,6 @@ interface FieldErrors {
 
 interface Errors {
   fieldErrors?: FieldErrors;
-  generalError?: string;
 }
 
 export default EmployeeEdit;
