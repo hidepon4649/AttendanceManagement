@@ -98,14 +98,14 @@ const RegisterEmployeeForm = () => {
         )}
       </div>
       <div className="mb-3">
-        <label className="form-label" htmlFor="isAdmin">
+        <label className="form-label" htmlFor="admin">
           管理者権限:
         </label>
         <input
           type="checkbox"
-          name="isAdmin"
+          name="admin"
           className="form-check-input"
-          checked={employee.isAdmin}
+          checked={employee.admin}
           onChange={handleOnChange}
         />
       </div>

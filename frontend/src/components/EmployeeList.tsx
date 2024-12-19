@@ -41,7 +41,7 @@ const EmployeeList = () => {
                 {employee.name}
               </td>
               <td className="col">{employee.email}</td>
-              <td className="col">{employee.isAdmin ? "管理者" : "一般"}</td>
+              <td className="col">{employee.admin ? "管理者" : "一般"}</td>
             </tr>
           ))}
         </tbody>

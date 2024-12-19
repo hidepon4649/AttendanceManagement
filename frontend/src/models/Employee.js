@@ -2,12 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Employee = void 0;
 class Employee {
-    constructor(_id, _name, _email, _password, _isAdmin) {
+    constructor(_id, _name, _email, _password, _admin) {
         this._id = _id;
         this._name = _name;
         this._email = _email;
         this._password = _password;
-        this._isAdmin = _isAdmin;
+        this._admin = _admin;
     }
     get id() {
         return this._id;
@@ -27,11 +27,11 @@ class Employee {
     set email(value) {
         this._email = value;
     }
-    get isAdmin() {
-        return this._isAdmin;
+    get admin() {
+        return this._admin;
     }
-    set isAdmin(value) {
-        this._isAdmin = value;
+    set admin(value) {
+        this._admin = value;
     }
     get password() {
         return this._password;

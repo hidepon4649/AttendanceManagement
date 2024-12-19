@@ -5,7 +5,9 @@ import { Employee } from "../models/Employee";
 
 const EmployeeEdit = (props: any) => {
   const { id } = useParams<{ id: string }>();
-  const [employee, setEmployee] = useState({} as Employee);
+  const [employee, setEmployee] = useState<Employee>(
+    new Employee(0, "", "", "", false)
+  );
 
   const [successMessage, setSuccessMessage] = useState("");
   const [errors, setErrors] = useState<Errors>({});
@@ -20,7 +22,7 @@ const EmployeeEdit = (props: any) => {
 
   const handleEdit = async () => {
     try {
-      const response = await api.post(`/employees/${id}`, { ...employee });
+      const response = await api.put(`/employees/${id}`, { ...employee });
       setSuccessMessage("社員の編集が成功しました！");
       setErrors({});
     } catch (error: any) {
@@ -41,10 +43,12 @@ const EmployeeEdit = (props: any) => {
     const { name, value, type, checked } = event.target;
 
     setEmployee((prevValue) => {
-      return {
+      const newValue = {
         ...prevValue,
         [name]: type === "checkbox" ? checked : value,
       } as Employee;
+
+      return newValue;
     });
   }
 
@@ -106,14 +110,14 @@ const EmployeeEdit = (props: any) => {
         )}
       </div>
       <div className="mb-3">
-        <label className="form-label" htmlFor="isAdmin">
+        <label className="form-label" htmlFor="admin">
           管理者権限:
         </label>
         <input
           type="checkbox"
-          name="isAdmin"
+          name="admin"
           className="form-check-input"
-          checked={employee.isAdmin}
+          checked={employee.admin}
           onChange={handleOnChange}
         />
       </div>
