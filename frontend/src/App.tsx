@@ -41,6 +41,19 @@ const App = () => {
     localStorage.setItem("isAdmin", "false");
   };
 
+  // アンロードする際にLocalStorageのクリアを行う
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      localStorage.clear();
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
+
   console.log("App.tsx is rendered. isLoggedIn:", isLoggedIn);
 
   return (
