@@ -2,14 +2,16 @@ package com.example.attendancemanager.security;
 
 import java.util.List;
 
+import com.example.attendancemanager.model.Employee;
+
 public class JwtResponse {
 
     private String token;
-    private String username;
+    private Employee employee;
     private List<String> roles;
 
-    public JwtResponse(String username, List<String> roles, String token) {
-        this.username = username;
+    public JwtResponse(Employee employee, List<String> roles, String token) {
+        this.employee = employee;
         this.roles = roles;
         this.token = token;
     }
@@ -22,20 +24,20 @@ public class JwtResponse {
         this.token = token;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public List<String> getRoles() {
         return roles;
     }
 
     public void setRoles(List<String> roles) {
         this.roles = roles;
+    }
+
+    public Employee getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
     }
 
 }

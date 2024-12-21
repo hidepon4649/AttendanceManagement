@@ -19,9 +19,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.attendancemanager.model.Employee;
 import com.example.attendancemanager.security.JwtRequest;
 import com.example.attendancemanager.security.JwtResponse;
 import com.example.attendancemanager.security.JwtUtils;
+import com.example.attendancemanager.service.EmployeeService;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -29,6 +31,9 @@ public class AuthController {
 
     @Autowired
     private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private EmployeeService employeeService;
 
     @Autowired
     private JwtUtils jwtUtils;
@@ -56,7 +61,10 @@ public class AuthController {
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
 
-        JwtResponse response = new JwtResponse(userDetails.getUsername(), roles, jwtToken);
+        // ログインしたユーザーの情報を取得(Employee.idを取得するため)
+        Employee employee = employeeService.findByEmail(jwtRequest.getEmail());
+
+        JwtResponse response = new JwtResponse(employee, roles, jwtToken);
         return ResponseEntity.ok(response);
 
     }

@@ -41,18 +41,18 @@ const App = () => {
     localStorage.setItem("isAdmin", "false");
   };
 
-  // アンロードする際にLocalStorageのクリアを行う
-  useEffect(() => {
-    const handleBeforeUnload = () => {
-      localStorage.clear();
-    };
+  // // アンロードする際にLocalStorageのクリアを行う
+  // useEffect(() => {
+  //   const handleUnload = () => {
+  //     localStorage.clear();
+  //   };
 
-    window.addEventListener("beforeunload", handleBeforeUnload);
+  //   window.addEventListener("unload", handleUnload);
 
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, []);
+  //   return () => {
+  //     window.removeEventListener("unload", handleUnload);
+  //   };
+  // }, []);
 
   console.log("App.tsx is rendered. isLoggedIn:", isLoggedIn);
 

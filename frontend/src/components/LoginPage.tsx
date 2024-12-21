@@ -36,12 +36,18 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
     const response = await api.post("/auth/login", { email, password });
     setError("");
     console.log("Logged in:", response.data);
-    localStorage.setItem("USER-NAME", response.data.username);
-    localStorage.setItem("USER-ROLES", response.data.roles);
+    localStorage.setItem("USER", makeUserInfo(response.data));
     localStorage.setItem("JWT-TOKEN", response.data.token);
 
     // ログイン状態の更新
     onLoginSuccess(response.data.roles);
+  };
+
+  const makeUserInfo = (data: any) => {
+    const userinfo = { ...data.employee };
+    delete userinfo.password; // パスワードは保存しない
+    userinfo.roles = data.roles; // ロール情報を追加
+    return JSON.stringify(userinfo);
   };
 
   return (
