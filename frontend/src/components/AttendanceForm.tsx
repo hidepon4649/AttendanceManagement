@@ -10,7 +10,20 @@ import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 
 const AttendanceForm = () => {
-  const [employeeId, setEmployeeId] = useState("");
+  const [isAdmin, setIsAdmin] = useState(() => {
+    return localStorage.getItem("isAdmin") === "true";
+  });
+
+  const getMyId = () => {
+    const userinfo = localStorage.getItem("USER");
+    // ログイン後は必ずユーザ情報が存在するため、本来ならnullチェックは不要
+    const id = userinfo ? JSON.parse(userinfo).id : 0;
+    return id;
+  };
+
+  const [employeeId, setEmployeeId] = useState(() => {
+    return getMyId();
+  });
   const [employees, setEmployees] = useState([] as Employee[]);
   const [attendanceRecords, setAttendanceRecords] = useState(
     [] as Attendance[]
@@ -57,11 +70,14 @@ const AttendanceForm = () => {
 
   useEffect(() => {
     const fetchEmployees = async () => {
-      try {
-        const response = await api.get("/employees");
-        setEmployees(response.data);
-      } catch (error) {
-        console.error("Failed to fetch employees:", error);
+      // 管理者の場合のみ社員情報を取得
+      if (isAdmin) {
+        try {
+          const response = await api.get("/employees");
+          setEmployees(response.data);
+        } catch (error) {
+          console.error("Failed to fetch employees:", error);
+        }
       }
     };
     fetchEmployees();
@@ -136,6 +152,12 @@ const AttendanceForm = () => {
     return date.toTimeString().split(" ")[0]; // "HH:MM:SS"形式で取得
   };
 
+  const isCurrentMonth = () => {
+    const currentMonth = new Date().toISOString().slice(0, 7);
+    console.log(`currentMonth:${currentMonth}, targetMonth:${targetMonth}`);
+    return currentMonth === targetMonth;
+  };
+
   return (
     <div className="mx-3 mt-3">
       <div className="row">
@@ -163,27 +185,33 @@ const AttendanceForm = () => {
         </div>
       </div>
       <div className="align-items-center mt-3">
-        <label className="me-2" htmlFor="id">
-          社員ID
-        </label>
-        <select
-          className="me-2"
-          name="id"
-          value={employeeId}
-          onChange={handleEmployeeIdChange}
-        >
-          <option value="">社員IDを選択</option>
-          {employees.map((employee) => (
-            <option key={employee.id} value={employee.id}>
-              {employee.name}
-            </option>
-          ))}
-        </select>
+        {/* 管理者の場合、出退勤管理する社員を選択可能 */}
+        {isAdmin && (
+          <>
+            <label className="me-2" htmlFor="id">
+              社員を選択
+            </label>
+            <select
+              className="me-2"
+              name="id"
+              value={employeeId}
+              onChange={handleEmployeeIdChange}
+            >
+              <option value="">社員IDを選択</option>
+              {employees.map((employee) => (
+                <option key={employee.id} value={employee.id}>
+                  {employee.name}
+                </option>
+              ))}
+            </select>
+          </>
+        )}
         <Button
           className="mx-3 btn btn-primary"
           size="large"
           onClick={handleClockIn}
           variant="outlined"
+          disabled={!isCurrentMonth()}
           startIcon={<PunchClockIcon />}
         >
           出社
@@ -193,6 +221,7 @@ const AttendanceForm = () => {
           size="large"
           onClick={handleClockOut}
           variant="outlined"
+          disabled={!isCurrentMonth()}
           startIcon={<PunchClockIcon />}
         >
           退社
