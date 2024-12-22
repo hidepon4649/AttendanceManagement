@@ -14,7 +14,6 @@ import PeopleIcon from "@mui/icons-material/People";
 import BadgeIcon from "@mui/icons-material/Badge";
 import PunchClockIcon from "@mui/icons-material/PunchClock";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import LogoutIcon from "@mui/icons-material/Logout";
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
@@ -22,6 +21,16 @@ const App = () => {
   });
   const [isAdmin, setIsAdmin] = useState(() => {
     return localStorage.getItem("isAdmin") === "true";
+  });
+
+  const getMyName = () => {
+    const userinfo = localStorage.getItem("USER");
+    const name = userinfo ? JSON.parse(userinfo).name : "";
+    return name;
+  };
+
+  const [myName, setMyName] = useState(() => {
+    return getMyName();
   });
 
   const handleLoginSuccess = (roles: string[]) => {
@@ -32,11 +41,14 @@ const App = () => {
 
     setIsAdmin(wkIsAdmin);
     localStorage.setItem("isAdmin", wkIsAdmin ? "true" : "false");
+
+    setMyName(getMyName());
   };
 
   const handleLogout = () => {
     setIsLoggedIn(false);
     setIsAdmin(false);
+    setMyName("");
     localStorage.setItem("isLoggedIn", "false");
     localStorage.setItem("isAdmin", "false");
   };
@@ -60,6 +72,11 @@ const App = () => {
     <div className="container">
       <nav className="navbar bg-primary">
         <ul className="nav nav-tabs mx-3">
+          {myName && (
+            <li className="nav-item bg-light">
+              <span className="nav-link text-primary">{myName}さん</span>
+            </li>
+          )}
           <li className="nav-item">
             <Button
               className="nav-link text-light"
