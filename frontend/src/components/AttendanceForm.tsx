@@ -2,27 +2,20 @@ import React, { useState, useEffect } from "react";
 import api from "../services/api";
 import { Employee } from "../models/Employee";
 import { Attendance } from "../models/Attendance";
-import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import PunchClockIcon from "@mui/icons-material/PunchClock";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import { lsIsAdmin, lsGetMyId } from "../utils/localStorageUtils";
 
 const AttendanceForm = () => {
   const [isAdmin, setIsAdmin] = useState(() => {
-    return localStorage.getItem("isAdmin") === "true";
+    return lsIsAdmin();
   });
 
-  const getMyId = () => {
-    const userinfo = localStorage.getItem("USER");
-    // ログイン後は必ずユーザ情報が存在するため、本来ならnullチェックは不要
-    const id = userinfo ? JSON.parse(userinfo).id : 0;
-    return id;
-  };
-
   const [employeeId, setEmployeeId] = useState(() => {
-    return getMyId();
+    return lsGetMyId();
   });
   const [employees, setEmployees] = useState([] as Employee[]);
   const [attendanceRecords, setAttendanceRecords] = useState(
@@ -107,8 +100,6 @@ const AttendanceForm = () => {
   };
 
   const handleClockOut = async () => {
-    const token = localStorage.getItem("JWT-TOKEN");
-    const csrfToken = localStorage.getItem("CSRF-TOKEN");
     if (employeeId) {
       try {
         const response = await api.post(
@@ -126,7 +117,7 @@ const AttendanceForm = () => {
   };
 
   const handleEmployeeIdChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setEmployeeId(e.target.value);
+    setEmployeeId(Number(e.target.value));
   };
 
   const updateMonth = (offset: number) => {

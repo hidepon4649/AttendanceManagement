@@ -14,57 +14,47 @@ import PeopleIcon from "@mui/icons-material/People";
 import BadgeIcon from "@mui/icons-material/Badge";
 import PunchClockIcon from "@mui/icons-material/PunchClock";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import {
+  lsIsLoggedIn,
+  lsIsAdmin,
+  lsGetMyName,
+  lsSetIsLoggedIn,
+  lsSetIsAdmin,
+} from "./utils/localStorageUtils";
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    return localStorage.getItem("isLoggedIn") === "true";
+    return lsIsLoggedIn();
   });
   const [isAdmin, setIsAdmin] = useState(() => {
-    return localStorage.getItem("isAdmin") === "true";
+    return lsIsAdmin();
   });
 
-  const getMyName = () => {
-    const userinfo = localStorage.getItem("USER");
-    const name = userinfo ? JSON.parse(userinfo).name : "";
-    return name;
-  };
-
   const [myName, setMyName] = useState(() => {
-    return getMyName();
+    return lsGetMyName();
   });
 
   const handleLoginSuccess = (roles: string[]) => {
     const wkIsAdmin = roles.includes("ROLE_ADMIN");
 
     setIsLoggedIn(true);
-    localStorage.setItem("isLoggedIn", "true");
-
     setIsAdmin(wkIsAdmin);
-    localStorage.setItem("isAdmin", wkIsAdmin ? "true" : "false");
+    setMyName(lsGetMyName());
 
-    setMyName(getMyName());
+    // ローカルストレージの更新
+    lsSetIsLoggedIn(true);
+    lsSetIsAdmin(wkIsAdmin);
   };
 
   const handleLogout = () => {
     setIsLoggedIn(false);
     setIsAdmin(false);
     setMyName("");
-    localStorage.setItem("isLoggedIn", "false");
-    localStorage.setItem("isAdmin", "false");
+
+    // ローカルストレージの更新
+    lsSetIsLoggedIn(false);
+    lsSetIsAdmin(false);
   };
-
-  // // アンロードする際にLocalStorageのクリアを行う
-  // useEffect(() => {
-  //   const handleUnload = () => {
-  //     localStorage.clear();
-  //   };
-
-  //   window.addEventListener("unload", handleUnload);
-
-  //   return () => {
-  //     window.removeEventListener("unload", handleUnload);
-  //   };
-  // }, []);
 
   console.log("App.tsx is rendered. isLoggedIn:", isLoggedIn);
 

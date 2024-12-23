@@ -1,5 +1,11 @@
 import React, { useState } from "react";
 import api from "../services/api";
+import {
+  lsClear,
+  lsSetCsrfToken,
+  lsSetJwtToken,
+  lsSetUser,
+} from "../utils/localStorageUtils";
 
 interface LoginPageProps {
   onLoginSuccess: (roles: string[]) => void;
@@ -13,14 +19,13 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // ログイン時には一旦 localStorage をクリアする
-    localStorage.clear();
+    // ログイン時には一旦 ローカルストレージ をクリアする
+    lsClear();
 
     try {
       await fetchCsrfToken();
       await loginUser();
     } catch (error) {
-      console.error("Login failed:", error);
       setError(
         "ログインに失敗しました。ユーザー名とパスワードを確認してください。"
       );
@@ -28,26 +33,17 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
   };
   const fetchCsrfToken = async () => {
     const responseCsrf = await api.get("/csrf/token");
-    console.log("CSRF token:", responseCsrf.data.token);
-    localStorage.setItem("CSRF-TOKEN", responseCsrf.data.token);
+    lsSetCsrfToken(responseCsrf.data.token);
   };
 
   const loginUser = async () => {
     const response = await api.post("/auth/login", { email, password });
     setError("");
-    console.log("Logged in:", response.data);
-    localStorage.setItem("USER", makeUserInfo(response.data));
-    localStorage.setItem("JWT-TOKEN", response.data.token);
+    lsSetUser(response.data);
+    lsSetJwtToken(response.data.token);
 
     // ログイン状態の更新
     onLoginSuccess(response.data.roles);
-  };
-
-  const makeUserInfo = (data: any) => {
-    const userinfo = { ...data.employee };
-    delete userinfo.password; // パスワードは保存しない
-    userinfo.roles = data.roles; // ロール情報を追加
-    return JSON.stringify(userinfo);
   };
 
   return (

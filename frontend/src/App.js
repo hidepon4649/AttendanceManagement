@@ -19,46 +19,34 @@ const People_1 = __importDefault(require("@mui/icons-material/People"));
 const Badge_1 = __importDefault(require("@mui/icons-material/Badge"));
 const PunchClock_1 = __importDefault(require("@mui/icons-material/PunchClock"));
 const CalendarMonth_1 = __importDefault(require("@mui/icons-material/CalendarMonth"));
+const localStorageUtils_1 = require("./utils/localStorageUtils");
 const App = () => {
     const [isLoggedIn, setIsLoggedIn] = (0, react_1.useState)(() => {
-        return localStorage.getItem("isLoggedIn") === "true";
+        return (0, localStorageUtils_1.lsIsLoggedIn)();
     });
     const [isAdmin, setIsAdmin] = (0, react_1.useState)(() => {
-        return localStorage.getItem("isAdmin") === "true";
+        return (0, localStorageUtils_1.lsIsAdmin)();
     });
-    const getMyName = () => {
-        const userinfo = localStorage.getItem("USER");
-        const name = userinfo ? JSON.parse(userinfo).name : "";
-        return name;
-    };
     const [myName, setMyName] = (0, react_1.useState)(() => {
-        return getMyName();
+        return (0, localStorageUtils_1.lsGetMyName)();
     });
     const handleLoginSuccess = (roles) => {
         const wkIsAdmin = roles.includes("ROLE_ADMIN");
         setIsLoggedIn(true);
-        localStorage.setItem("isLoggedIn", "true");
         setIsAdmin(wkIsAdmin);
-        localStorage.setItem("isAdmin", wkIsAdmin ? "true" : "false");
-        setMyName(getMyName());
+        setMyName((0, localStorageUtils_1.lsGetMyName)());
+        // ローカルストレージの更新
+        (0, localStorageUtils_1.lsSetIsLoggedIn)(true);
+        (0, localStorageUtils_1.lsSetIsAdmin)(wkIsAdmin);
     };
     const handleLogout = () => {
         setIsLoggedIn(false);
         setIsAdmin(false);
         setMyName("");
-        localStorage.setItem("isLoggedIn", "false");
-        localStorage.setItem("isAdmin", "false");
+        // ローカルストレージの更新
+        (0, localStorageUtils_1.lsSetIsLoggedIn)(false);
+        (0, localStorageUtils_1.lsSetIsAdmin)(false);
     };
-    // // アンロードする際にLocalStorageのクリアを行う
-    // useEffect(() => {
-    //   const handleUnload = () => {
-    //     localStorage.clear();
-    //   };
-    //   window.addEventListener("unload", handleUnload);
-    //   return () => {
-    //     window.removeEventListener("unload", handleUnload);
-    //   };
-    // }, []);
     console.log("App.tsx is rendered. isLoggedIn:", isLoggedIn);
     return ((0, jsx_runtime_1.jsxs)("div", Object.assign({ className: "container" }, { children: [(0, jsx_runtime_1.jsx)("nav", Object.assign({ className: "navbar bg-primary" }, { children: (0, jsx_runtime_1.jsxs)("ul", Object.assign({ className: "nav nav-tabs mx-3" }, { children: [myName && ((0, jsx_runtime_1.jsx)("li", Object.assign({ className: "nav-item bg-light" }, { children: (0, jsx_runtime_1.jsxs)("span", Object.assign({ className: "nav-link text-primary" }, { children: [myName, "\u3055\u3093"] })) }))), (0, jsx_runtime_1.jsx)("li", Object.assign({ className: "nav-item" }, { children: (0, jsx_runtime_1.jsx)(Button_1.default, Object.assign({ className: "nav-link text-light", size: "medium", href: "/", variant: "outlined", startIcon: (0, jsx_runtime_1.jsx)(Home_1.default, {}) }, { children: "\u30DB\u30FC\u30E0" })) })), isLoggedIn && isAdmin && ((0, jsx_runtime_1.jsxs)(jsx_runtime_1.Fragment, { children: [(0, jsx_runtime_1.jsx)("li", Object.assign({ className: "nav-item" }, { children: (0, jsx_runtime_1.jsx)(Button_1.default, Object.assign({ className: "nav-link text-light", size: "medium", href: "/employees/list", variant: "outlined", startIcon: (0, jsx_runtime_1.jsx)(People_1.default, {}) }, { children: "\u793E\u54E1\u4E00\u89A7" })) })), (0, jsx_runtime_1.jsx)("li", Object.assign({ className: "nav-item" }, { children: (0, jsx_runtime_1.jsx)(Button_1.default, Object.assign({ className: "nav-link text-light", size: "medium", href: "/employees/register", variant: "outlined", startIcon: (0, jsx_runtime_1.jsx)(Badge_1.default, {}) }, { children: "\u793E\u54E1\u767B\u9332" })) }))] })), isLoggedIn && ((0, jsx_runtime_1.jsxs)(jsx_runtime_1.Fragment, { children: [(0, jsx_runtime_1.jsx)("li", Object.assign({ className: "nav-item" }, { children: (0, jsx_runtime_1.jsx)(Button_1.default, Object.assign({ className: "nav-link text-light", size: "medium", href: "/attendance", variant: "outlined", startIcon: (0, jsx_runtime_1.jsx)(PunchClock_1.default, {}) }, { children: "\u51FA\u9000\u52E4\u7BA1\u7406" })) })), (0, jsx_runtime_1.jsx)("li", Object.assign({ className: "nav-item" }, { children: (0, jsx_runtime_1.jsx)(Button_1.default, Object.assign({ className: "nav-link text-light", size: "medium", href: "/report", variant: "outlined", startIcon: (0, jsx_runtime_1.jsx)(CalendarMonth_1.default, {}) }, { children: "\u6708\u672B\u5E33\u7968\u51FA\u529B" })) })), (0, jsx_runtime_1.jsx)("li", Object.assign({ className: "nav-item" }, { children: (0, jsx_runtime_1.jsx)(LogoutButton_1.default, { onLogout: handleLogout }) }))] }))] })) })), (0, jsx_runtime_1.jsxs)(react_router_dom_1.Routes, { children: [(0, jsx_runtime_1.jsx)(react_router_dom_1.Route, { path: "/", element: (0, jsx_runtime_1.jsx)(LoginPage_1.default, { onLoginSuccess: handleLoginSuccess }) }), isLoggedIn && ((0, jsx_runtime_1.jsxs)(jsx_runtime_1.Fragment, { children: [(0, jsx_runtime_1.jsx)(react_router_dom_1.Route, { path: "/employees/list", element: (0, jsx_runtime_1.jsx)(EmployeeList_1.default, {}) }), (0, jsx_runtime_1.jsx)(react_router_dom_1.Route, { path: "/employees/register", element: (0, jsx_runtime_1.jsx)(EmployeeRegisterForm_1.default, {}) }), (0, jsx_runtime_1.jsx)(react_router_dom_1.Route, { path: "/attendance", element: (0, jsx_runtime_1.jsx)(AttendanceForm_1.default, {}) }), (0, jsx_runtime_1.jsx)(react_router_dom_1.Route, { path: "/report", element: (0, jsx_runtime_1.jsx)(MonthlyReport_1.default, {}) }), (0, jsx_runtime_1.jsx)(react_router_dom_1.Route, { path: "/employees/edit/:id", element: (0, jsx_runtime_1.jsx)(EmployeeEdit_1.default, {}) })] }))] })] })));
 };

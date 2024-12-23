@@ -3,6 +3,7 @@ import api from "../services/api";
 import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import LogoutIcon from "@mui/icons-material/Logout";
+import { lsClear } from "../utils/localStorageUtils";
 
 interface LogoutPageProps {
   onLogout: () => void;
@@ -10,14 +11,13 @@ interface LogoutPageProps {
 const LogoutButton: React.FC<LogoutPageProps> = ({ onLogout }) => {
   const navigate = useNavigate();
   const handleLogout = async () => {
-    console.log("ログアウトボタンがクリックされました");
-
     try {
       const response = await api.post("/auth/logout", {});
       // ログイン状態の更新
       onLogout();
 
-      localStorage.clear();
+      // ローカルストレージのクリア
+      lsClear();
 
       navigate("/");
     } catch (error) {
