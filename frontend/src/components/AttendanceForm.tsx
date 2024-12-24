@@ -149,6 +149,14 @@ const AttendanceForm = () => {
     return currentMonth === targetMonth;
   };
 
+  const getYoubi = (date: string) => {
+    const youbi = new Date(date).getDay();
+    const youbiList = ["(日)", "(月)", "(火)", "(水)", "(木)", "(金)", "(土)"];
+    const colorClass =
+      youbi === 0 ? "text-danger" : youbi === 6 ? "text-primary" : "text-dark";
+    return <span className={colorClass}>{youbiList[youbi]}</span>;
+  };
+
   return (
     <div className="mx-3 mt-3">
       <div className="row">
@@ -233,7 +241,10 @@ const AttendanceForm = () => {
               : null;
             return (
               <tr key={date}>
-                <td>{date}</td>
+                <td>
+                  {date}
+                  {getYoubi(date)}
+                </td>
                 <td>{record ? formatTime(record.clockInTime) : "-"}</td>
                 <td>{record ? formatTime(record.clockOutTime) : "-"}</td>
               </tr>
