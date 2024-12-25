@@ -1,6 +1,7 @@
 package com.example.attendancemanager.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -49,6 +51,15 @@ public class AttendanceController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
         return ResponseEntity.ok(attendances);
+    }
+
+    @PostMapping("/{employeeId}/{date}/remarks")
+    public ResponseEntity<Attendance> remark(@PathVariable Long employeeId, @PathVariable String date,
+            @RequestBody Map<String, String> requestBody) {
+        String remarks = requestBody.get("remarks");
+        // date は "YYYY-MM-DD" 形式で受け取ります
+        Attendance attendance = attendanceService.remarks(employeeId, date, remarks);
+        return ResponseEntity.ok(attendance);
     }
 
 }

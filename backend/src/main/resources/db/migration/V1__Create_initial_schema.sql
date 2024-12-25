@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS attendance (
     clock_out_time DATETIME(6),
     date DATE,
     employee_id BIGINT,
+    remarks TEXT,
     FOREIGN KEY (employee_id) REFERENCES employee (id)
 );
 

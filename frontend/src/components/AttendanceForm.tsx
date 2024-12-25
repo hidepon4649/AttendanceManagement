@@ -8,6 +8,7 @@ import PunchClockIcon from "@mui/icons-material/PunchClock";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { lsIsAdmin, lsGetMyId } from "../utils/localStorageUtils";
+import { Bikou } from "./Bikou";
 
 const AttendanceForm = () => {
   const [isAdmin, setIsAdmin] = useState(() => {
@@ -156,7 +157,6 @@ const AttendanceForm = () => {
       youbi === 0 ? "text-danger" : youbi === 6 ? "text-primary" : "text-dark";
     return <span className={colorClass}>{youbiList[youbi]}</span>;
   };
-
   return (
     <div className="mx-3 mt-3">
       <div className="row">
@@ -232,6 +232,7 @@ const AttendanceForm = () => {
             <th>日付</th>
             <th>出勤時間</th>
             <th>退勤時間</th>
+            <th>備考</th>
           </tr>
         </thead>
         <tbody>
@@ -245,8 +246,27 @@ const AttendanceForm = () => {
                   {date}
                   {getYoubi(date)}
                 </td>
-                <td>{record ? formatTime(record.clockInTime) : "-"}</td>
-                <td>{record ? formatTime(record.clockOutTime) : "-"}</td>
+                <td>
+                  {record
+                    ? record.clockInTime
+                      ? formatTime(record.clockInTime)
+                      : "-"
+                    : "-"}
+                </td>
+                <td>
+                  {record
+                    ? record.clockOutTime
+                      ? formatTime(record.clockOutTime)
+                      : "-"
+                    : "-"}
+                </td>
+                <td>
+                  <Bikou
+                    employeeId={employeeId}
+                    date={date}
+                    remarks={record ? record.remarks : ""}
+                  />
+                </td>
               </tr>
             );
           })}

@@ -4,4 +4,5 @@ export interface Attendance {
     clockOutTime: string;
     date: string;
     employeeId: number;
+    remarks: string;
   }

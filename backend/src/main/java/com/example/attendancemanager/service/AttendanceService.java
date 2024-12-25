@@ -3,7 +3,9 @@ package com.example.attendancemanager.service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -57,6 +59,32 @@ public class AttendanceService {
 
         // 既に退勤記録が存在する場合は現在時刻で上書きします
         attendance.setClockOutTime(LocalDateTime.now(japanZoneId));
+        return attendanceRepository.save(attendance);
+    }
+
+    // 備考の記録
+    @Transactional
+    public Attendance remarks(Long employeeId, String date, String remarks) {
+
+        Optional<Employee> optionalEmployee = employeeRepository.findById(employeeId);
+        if (!optionalEmployee.isPresent()) {
+            throw new RuntimeException("社員が見つかりません");
+        }
+        Employee employee = optionalEmployee.get();
+
+        // String型の日付をLocalDate型に変換
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate localDate = LocalDate.parse(date, formatter);
+
+        // 当日の出勤記録が存在しない場合は新規作成し、存在する場合は更新します
+        Attendance attendance = attendanceRepository.findByEmployeeIdAndDate(employeeId, localDate);
+        if (attendance == null) {
+            attendance = new Attendance();
+            attendance.setEmployee(employee);
+            attendance.setDate(localDate);
+        }
+
+        attendance.setRemarks(remarks);
         return attendanceRepository.save(attendance);
     }
 
