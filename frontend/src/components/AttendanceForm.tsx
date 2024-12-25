@@ -232,7 +232,7 @@ const AttendanceForm = () => {
             <th>日付</th>
             <th>出勤時間</th>
             <th>退勤時間</th>
-            <th>備考</th>
+            <th>備考 (簡潔に入力して下さい)</th>
           </tr>
         </thead>
         <tbody>

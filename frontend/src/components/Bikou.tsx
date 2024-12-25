@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import api from "../services/api";
+import { Alert } from "react-bootstrap";
 
 export const Bikou = (props: {
   employeeId: number;
@@ -7,13 +8,21 @@ export const Bikou = (props: {
   remarks: string;
 }) => {
   const [remarks, setRemarks] = useState(props.remarks);
+  const [isButtonVisible, setIsButtonVisible] = useState(false);
+  const [alert, setAlert] = useState<{ type: string; message: string } | null>(
+    null
+  );
 
   useEffect(() => {
     setRemarks(props.remarks);
   }, [props.remarks]);
 
   const handleRemarksChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRemarks(event.target.value);
+    const newValue = event.target.value;
+    if (remarks !== newValue) {
+      setRemarks(newValue);
+      setIsButtonVisible(true);
+    }
   };
 
   const handleRemarksSubmit = async () => {
@@ -23,25 +32,42 @@ export const Bikou = (props: {
         date: props.date,
         remarks: remarks,
       });
-      alert("備考が登録されました");
+      setAlert({ type: "success", message: "備考が登録されました" });
     } catch (error) {
-      console.error("備考の登録に失敗しました", error);
-      alert("備考の登録に失敗しました");
+      setAlert({ type: "danger", message: "備考の登録に失敗しました" });
     }
   };
   return (
-    <div className="input-group">
-      <input
-        type="text"
-        className="form-control"
-        value={remarks}
-        onChange={handleRemarksChange}
-        maxLength={100}
-        placeholder="説明事項があれば簡潔に入力して下さい"
-      />
-      <button className="btn btn-secondary mx-1" onClick={handleRemarksSubmit}>
-        登録
-      </button>
-    </div>
+    <>
+      {alert && (
+        <Alert
+          variant={alert.type}
+          onClose={() => {
+            setAlert(null);
+            setIsButtonVisible(false);
+          }}
+          dismissible
+        >
+          {alert.message}
+        </Alert>
+      )}
+      <div className="input-group">
+        <input
+          type="text"
+          className="form-control"
+          value={remarks}
+          onChange={handleRemarksChange}
+          maxLength={100}
+        />
+        {isButtonVisible && (
+          <button
+            className="btn btn-secondary mx-1"
+            onClick={handleRemarksSubmit}
+          >
+            登録
+          </button>
+        )}
+      </div>
+    </>
   );
 };
