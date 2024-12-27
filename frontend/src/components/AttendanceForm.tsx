@@ -9,6 +9,8 @@ import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { lsIsAdmin, lsGetMyId } from "../utils/localStorageUtils";
 import { Bikou } from "./Bikou";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { ClockInOutEditSave } from "./ClockInOutEditSave";
 
 const AttendanceForm = () => {
   const [isAdmin, setIsAdmin] = useState(() => {
@@ -139,11 +141,6 @@ const AttendanceForm = () => {
     setTargetMonth(newMonth);
   };
 
-  const formatTime = (dateTimeString: string) => {
-    const date = new Date(dateTimeString);
-    return date.toTimeString().split(" ")[0]; // "HH:MM:SS"形式で取得
-  };
-
   const isCurrentMonth = () => {
     const currentMonth = new Date().toISOString().slice(0, 7);
     console.log(`currentMonth:${currentMonth}, targetMonth:${targetMonth}`);
@@ -157,6 +154,7 @@ const AttendanceForm = () => {
       youbi === 0 ? "text-danger" : youbi === 6 ? "text-primary" : "text-dark";
     return <span className={colorClass}>{youbiList[youbi]}</span>;
   };
+
   return (
     <div className="mx-3 mt-3">
       <div className="row">
@@ -237,8 +235,8 @@ const AttendanceForm = () => {
         </thead>
         <tbody>
           {dates.map((date) => {
-            const record = attendanceRecords.length
-              ? attendanceRecords.find((record) => record.date === date)
+            const record: Attendance | null = attendanceRecords.length
+              ? attendanceRecords.find((record) => record.date === date) || null
               : null;
             return (
               <tr key={date}>
@@ -246,20 +244,7 @@ const AttendanceForm = () => {
                   {date}
                   {getYoubi(date)}
                 </td>
-                <td>
-                  {record
-                    ? record.clockInTime
-                      ? formatTime(record.clockInTime)
-                      : "-"
-                    : "-"}
-                </td>
-                <td>
-                  {record
-                    ? record.clockOutTime
-                      ? formatTime(record.clockOutTime)
-                      : "-"
-                    : "-"}
-                </td>
+                <ClockInOutEditSave isAdmin={isAdmin} record={record} />
                 <td>
                   <Bikou
                     employeeId={employeeId}
