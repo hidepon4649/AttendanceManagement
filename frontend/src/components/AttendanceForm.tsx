@@ -37,7 +37,7 @@ const AttendanceForm = () => {
           `/attendance/${employeeId}/${targetMonth}`
         );
         setAttendanceRecords(response.data);
-        console.log("Attendance records:", attendanceRecords);
+        console.log("Attendance records:", response.data);
       } catch (error) {
         console.error("Failed to fetch attendance records:", error);
       }

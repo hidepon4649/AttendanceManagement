@@ -41,7 +41,6 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        // TODO: 管理者権限とユーザー権限の切り分け
         http
                 .csrf(csrf -> csrf.ignoringRequestMatchers("/api/csrf/token"))
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
@@ -50,6 +49,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/csrf/token").permitAll()
                         .requestMatchers("/api/public/**").permitAll()
                         .requestMatchers("/api/employees/**").hasRole("ADMIN")
+                        .requestMatchers("/api/attendance/maintenance/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthEntryPoint))
                 .addFilterBefore(jwtAuthenticationFilter,

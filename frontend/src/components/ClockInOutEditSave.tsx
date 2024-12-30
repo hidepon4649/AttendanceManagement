@@ -4,21 +4,29 @@ import { formatShortTime, padFrontZero } from "../utils/formatTimeUtils";
 import { Attendance } from "../models/Attendance";
 import api from "../services/api";
 import { Alert, Modal, Button } from "react-bootstrap";
-// import { useNavigate } from "react-router-dom";
 
 export const ClockInOutEditSave = (props: {
   isAdmin: boolean;
   record: Attendance | null;
 }) => {
   const [editRecordId, setEditRecordId] = useState<string | null>(null);
-  const [clockInTime, setClockInTime] = useState<string | null>(null);
-  const [clockOutTime, setClockOutTime] = useState<string | null>(null);
+  const [clockInTime, setClockInTime] = useState(
+    props.record ? formatShortTime(props.record.clockInTime) : ""
+  );
+  const [clockOutTime, setClockOutTime] = useState(
+    props.record ? formatShortTime(props.record.clockOutTime) : ""
+  );
+  useEffect(() => {
+    if (props.record) {
+      setClockInTime(formatShortTime(props.record.clockInTime));
+      setClockOutTime(formatShortTime(props.record.clockOutTime));
+    }
+  }, [props.record]);
 
   const [showModal, setShowModal] = useState(false);
   const [alert, setAlert] = useState<{ type: string; message: string } | null>(
     null
   );
-  // const navigate = useNavigate();
 
   const handleSaveClick = async () => {
     if (!props.record) {
@@ -35,7 +43,7 @@ export const ClockInOutEditSave = (props: {
         Math.floor((parseInt(clockInTime) % 3600) / 60),
         2
       );
-      inTime = `${inTimeHours}:${inTimeMinutes}:00`;
+      inTime = `${inTimeHours}:${inTimeMinutes}`;
     }
     // 時刻がint型の場合は、時刻を文字列に変換
     let outTime = clockOutTime ? clockOutTime : "00:00:00";
@@ -48,10 +56,13 @@ export const ClockInOutEditSave = (props: {
         Math.floor((parseInt(clockOutTime) % 3600) / 60),
         2
       );
-      outTime = `${outTimeHours}:${outTimeMinutes}:00`;
+      outTime = `${outTimeHours}:${outTimeMinutes}`;
     }
 
     try {
+      setClockInTime(inTime);
+      setClockOutTime(outTime);
+
       await api.put(`/attendance/maintenance/${props.record.id}`, {
         attendanceId: props.record.id,
         clockInTime: inTime,
@@ -67,32 +78,15 @@ export const ClockInOutEditSave = (props: {
 
   const handleEditClick = (id: string) => {
     setEditRecordId(id);
-    setClockInTime(
-      props.record ? formatShortTime(props.record.clockInTime) : null
-    );
-    setClockOutTime(
-      props.record ? formatShortTime(props.record.clockOutTime) : null
-    );
   };
 
   const handleClockInTimeChange = (value: number) => {
-    console.log("clockInTime, newValue", clockInTime, value);
     setClockInTime(value.toString());
   };
 
   const handleClockOutTimeChange = (value: number) => {
-    console.log("clockOutTime, newValue", clockOutTime, value);
     setClockOutTime(value.toString());
   };
-
-  // useEffect(() => {
-  //   console.log("finish.");
-  //   console.log("editRecordId", editRecordId);
-  //   if (editRecordId !== props.record?.id.toString()) {
-  //     setClockInTime(null);
-  //     setClockOutTime(null);
-  //   }
-  // }, [editRecordId]);
 
   return (
     <>
@@ -129,11 +123,9 @@ export const ClockInOutEditSave = (props: {
             </>
           ) : props.record.clockInTime ? (
             <>
+              <td className="align-middle">{clockInTime}</td>
               <td className="align-middle">
-                {formatShortTime(props.record.clockInTime)}
-              </td>
-              <td className="align-middle">
-                {formatShortTime(props.record.clockOutTime)}
+                {clockOutTime}
                 {props.isAdmin && (
                   <button
                     className="btn btn-secondary mx-3"
@@ -164,7 +156,6 @@ export const ClockInOutEditSave = (props: {
         show={showModal}
         onHide={() => {
           setShowModal(false);
-          // navigate("/attendance");
         }}
       >
         <Modal.Header closeButton>
@@ -178,7 +169,6 @@ export const ClockInOutEditSave = (props: {
             variant="secondary"
             onClick={() => {
               setShowModal(false);
-              // navigate("/attendance");
             }}
           >
             閉じる
