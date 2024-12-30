@@ -7,6 +7,7 @@ import IconButton from "@mui/material/IconButton";
 import PunchClockIcon from "@mui/icons-material/PunchClock";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { lsIsAdmin, lsGetMyId } from "../utils/localStorageUtils";
 import { Bikou } from "./Bikou";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -119,6 +120,20 @@ const AttendanceForm = () => {
     }
   };
 
+  const handleOutputReport = async () => {
+    if (employeeId) {
+      try {
+        const response = await api.get(
+          `/attendance/report/${employeeId}/${targetMonth}`,
+          {}
+        );
+        console.log("output report success:", response.data);
+      } catch (error) {
+        console.error("output report failed:", error);
+      }
+    }
+  };
+
   const handleEmployeeIdChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setEmployeeId(Number(e.target.value));
   };
@@ -222,6 +237,15 @@ const AttendanceForm = () => {
           startIcon={<PunchClockIcon />}
         >
           退社
+        </Button>
+        <Button
+          className="btn btn-info mx-5"
+          size="large"
+          onClick={handleOutputReport}
+          variant="outlined"
+          startIcon={<CalendarMonthIcon />}
+        >
+          帳票出力
         </Button>
       </div>
       <table className="table table-striped table-hover mt-3">
