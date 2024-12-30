@@ -70,3 +70,6 @@ frontend/src/components/**/*.js
 # TypeScript ファイル（TSX）は必要なら無視しないようにする
 !frontend/src/components/*.tsx
 !frontend/src/components/**/*.tsx
+
+# Dockerお掃除シェル
+cleanup_docker.zsh
