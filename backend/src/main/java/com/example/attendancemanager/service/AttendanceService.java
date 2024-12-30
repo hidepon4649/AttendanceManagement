@@ -88,6 +88,32 @@ public class AttendanceService {
         return attendanceRepository.save(attendance);
     }
 
+    // 打刻の修正
+    @Transactional
+    public Attendance edit(Long attendanceId, String newClockInTime, String newClockOutTime) {
+
+        // 当日の勤怠記録が存在しない場合はエラー
+        Optional<Attendance> optionalAttendance = attendanceRepository.findById(attendanceId);
+        if (optionalAttendance == null) {
+            throw new RuntimeException("修正対象日の勤怠が見つかりません");
+        }
+        Attendance attendance = optionalAttendance.get();
+
+        // 打刻時間の更新
+        if (newClockInTime != null) {
+            LocalDateTime newInValue = LocalDateTime.parse(
+                    attendance.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + "T" + newClockInTime);
+            attendance.setClockInTime(newInValue);
+        }
+        if (newClockOutTime != null) {
+            LocalDateTime newOutValue = LocalDateTime.parse(
+                    attendance.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + "T" + newClockOutTime);
+            attendance.setClockOutTime(newOutValue);
+        }
+
+        return attendanceRepository.save(attendance);
+    }
+
     // 月次レポートの取得
     public List<Attendance> getMonthlyReportByEmployeeId(Long employeeId, int year, int month) {
         return attendanceRepository.findByEmployeeIdAndYearAndMonth(employeeId, year, month);

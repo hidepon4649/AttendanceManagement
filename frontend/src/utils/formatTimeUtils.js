@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.formatShortTime = exports.formatTime = void 0;
+exports.padFrontZero = exports.formatShortTime = exports.formatTime = void 0;
 const formatTime = (dateTimeString) => {
     const date = new Date(dateTimeString);
     return date.toTimeString().split(" ")[0]; // "HH:MM:SS"形式で取得
@@ -13,3 +13,5 @@ const formatShortTime = (dateTimeString) => {
     return shorttime; // "HH:MM"形式で取得
 };
 exports.formatShortTime = formatShortTime;
+const padFrontZero = (num, size) => String(num).padStart(size, '0');
+exports.padFrontZero = padFrontZero;

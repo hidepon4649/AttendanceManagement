@@ -16,14 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.attendancemanager.model.Attendance;
 import com.example.attendancemanager.service.AttendanceService;
+import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
 @CrossOrigin(origins = "${frontend.url}")
 @RequestMapping("/api/attendance")
 public class AttendanceController {
-
-    // TODO:過去日付の打刻を禁止する。
-    // TODO:過去日付の打刻修正は管理者のみ可能とする。
 
     @Autowired
     private AttendanceService attendanceService;
@@ -59,6 +57,18 @@ public class AttendanceController {
         String remarks = requestBody.get("remarks");
         // date は "YYYY-MM-DD" 形式で受け取ります
         Attendance attendance = attendanceService.remarks(employeeId, date, remarks);
+        return ResponseEntity.ok(attendance);
+    }
+
+    @PutMapping("/maintenance/{attendanceId}")
+    public ResponseEntity<Attendance> edit(@PathVariable Long attendanceId,
+            @RequestBody Map<String, String> requestBody) {
+
+        String newClockInTime = requestBody.get("clockInTime");
+        String newClockOutTime = requestBody.get("clockOutTime");
+        // date は "YYYY-MM-DD" 形式で受け取ります
+        Attendance attendance = attendanceService.edit(attendanceId, newClockInTime, newClockOutTime);
+
         return ResponseEntity.ok(attendance);
     }
 
