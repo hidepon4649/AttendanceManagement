@@ -12,6 +12,8 @@ import { lsIsAdmin, lsGetMyId } from "../utils/localStorageUtils";
 import { Bikou } from "./Bikou";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { ClockInOutEditSave } from "./ClockInOutEditSave";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 
 const AttendanceForm = () => {
   const [isAdmin, setIsAdmin] = useState(() => {
@@ -123,11 +125,43 @@ const AttendanceForm = () => {
   const handleOutputReport = async () => {
     if (employeeId) {
       try {
-        const response = await api.get(
-          `/attendance/report/${employeeId}/${targetMonth}`,
-          {}
-        );
-        console.log("output report success:", response.data);
+        const doc = new jsPDF();
+        const tableColumn = ["Property", "Value"];
+        let startY = 20;
+
+        attendanceRecords.forEach((json, index) => {
+          const tableRows = [];
+
+          for (const [key, value] of Object.entries(json)) {
+            if (typeof value === "object") {
+              for (const [subKey, subValue] of Object.entries(value)) {
+                tableRows.push([`${key}.${subKey}`, subValue]);
+              }
+            } else {
+              tableRows.push([key, value]);
+            }
+          }
+
+          doc.autoTable({
+            head: [tableColumn],
+            body: tableRows,
+            startY: startY,
+          });
+          startY = doc.lastAutoTable.finalY + 10; // Adjust startY for the next table
+        });
+
+        doc.text("Attendance Report", 14, 15);
+        const pdfBlob = doc.output("blob");
+
+        const url = window.URL.createObjectURL(pdfBlob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "report.pdf";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+        console.log("output report success");
       } catch (error) {
         console.error("output report failed:", error);
       }

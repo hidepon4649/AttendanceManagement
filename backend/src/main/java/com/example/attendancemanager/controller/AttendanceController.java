@@ -72,17 +72,4 @@ public class AttendanceController {
         return ResponseEntity.ok(attendance);
     }
 
-    @GetMapping("/report/{employeeId}/{month}")
-    public ResponseEntity<List<Attendance>> getMethodName(@PathVariable Long employeeId, @PathVariable String month) {
-        // month は "YYYY-MM" 形式で受け取ります
-        List<Attendance> attendances = attendanceService.getMonthlyReportByEmployeeId(employeeId,
-                Integer.parseInt(month.split("-")[0]),
-                Integer.parseInt(month.split("-")[1]));
-
-        if (attendances.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-        return ResponseEntity.ok(attendances);
-    }
-
 }
