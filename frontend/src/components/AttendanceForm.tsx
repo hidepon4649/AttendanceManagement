@@ -14,6 +14,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { ClockInOutEditSave } from "./ClockInOutEditSave";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
+import NotoSansJP from "../fonts/NotoSansJP-Regular-base64.js";
 
 const AttendanceForm = () => {
   const [isAdmin, setIsAdmin] = useState(() => {
@@ -126,6 +127,12 @@ const AttendanceForm = () => {
     if (employeeId) {
       try {
         const doc = new jsPDF();
+
+        // フォントの追加
+        doc.addFileToVFS("NotoSansJP-Regular.ttf", NotoSansJP);
+        doc.addFont("NotoSansJP-Regular.ttf", "NotoSansJP", "normal");
+        doc.setFont("NotoSansJP");
+
         const tableColumn = [
           "ID",
           "Date",
@@ -138,7 +145,7 @@ const AttendanceForm = () => {
 
         attendanceRecords.forEach((json, index) => {
           const { id, date, clockInTime, clockOutTime, remarks } = json;
-          const row = [id, date, clockInTime, clockOutTime, remarks];
+          const row = [id, date, clockInTime, clockOutTime, remarks || ""];
           tableRows.push(row);
         });
 
@@ -146,6 +153,7 @@ const AttendanceForm = () => {
           head: isFirstRecord ? [tableColumn] : undefined, // 1レコード目だけヘッダを出力
           body: tableRows,
           startY: 20,
+          styles: { font: "NotoSansJP" },
         });
         isFirstRecord = false;
 
