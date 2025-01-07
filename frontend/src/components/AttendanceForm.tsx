@@ -126,29 +126,28 @@ const AttendanceForm = () => {
     if (employeeId) {
       try {
         const doc = new jsPDF();
-        const tableColumn = ["Property", "Value"];
-        let startY = 20;
+        const tableColumn = [
+          "ID",
+          "Date",
+          "Clock In Time",
+          "Clock Out Time",
+          "Remarks",
+        ];
+        const tableRows: any = [];
+        let isFirstRecord = true;
 
         attendanceRecords.forEach((json, index) => {
-          const tableRows = [];
-
-          for (const [key, value] of Object.entries(json)) {
-            if (typeof value === "object") {
-              for (const [subKey, subValue] of Object.entries(value)) {
-                tableRows.push([`${key}.${subKey}`, subValue]);
-              }
-            } else {
-              tableRows.push([key, value]);
-            }
-          }
-
-          doc.autoTable({
-            head: [tableColumn],
-            body: tableRows,
-            startY: startY,
-          });
-          startY = doc.lastAutoTable.finalY + 10; // Adjust startY for the next table
+          const { id, date, clockInTime, clockOutTime, remarks } = json;
+          const row = [id, date, clockInTime, clockOutTime, remarks];
+          tableRows.push(row);
         });
+
+        doc.autoTable({
+          head: isFirstRecord ? [tableColumn] : undefined, // 1レコード目だけヘッダを出力
+          body: tableRows,
+          startY: 20,
+        });
+        isFirstRecord = false;
 
         doc.text("Attendance Report", 14, 15);
         const pdfBlob = doc.output("blob");
