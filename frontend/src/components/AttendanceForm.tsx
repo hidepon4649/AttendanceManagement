@@ -12,7 +12,7 @@ import { Bikou } from "./Bikou";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { ClockInOutEditSave } from "./ClockInOutEditSave";
 import OutputReportButton from "./OutputReportButton";
-import { getYoubi } from "../utils/dateTimeUtils";
+import { getYoubi, getDefaultRecords } from "../utils/dateTimeUtils";
 
 const AttendanceForm = () => {
   const [isAdmin, setIsAdmin] = useState(() => {
@@ -38,7 +38,13 @@ const AttendanceForm = () => {
         const response = await api.get(
           `/attendance/${employeeId}/${targetMonth}`
         );
-        setAttendanceRecords(response.data);
+        // setAttendanceRecords(response.data);
+        setAttendanceRecords(
+          response.data.map((record: any) => ({
+            ...record,
+            employeeName: record.employee.name,
+          }))
+        );
         console.log("Attendance records:", response.data);
       } catch (error) {
         console.error("Failed to fetch attendance records:", error);
@@ -47,23 +53,7 @@ const AttendanceForm = () => {
   };
 
   const targetMonthDefaultRecords = async () => {
-    const [year, month] = targetMonth.split("-").map(Number);
-    const lastDay = new Date(year, month, 0).getDate(); // 月の最終日を取得(月は0ベース)
-
-    // 日付の配列を作成. 1日から月末までの日付を格納.
-    // ロケール指定をしなかった場合に月初日付がずれる場合があるため ja-JPを指定
-    const daysArray = Array.from({ length: lastDay }, (_, i) =>
-      new Date(year, month - 1, i + 1)
-        .toLocaleDateString("ja-JP", {
-          year: "numeric",
-          month: "2-digit",
-          day: "2-digit",
-          timeZone: "Asia/Tokyo",
-        })
-        .replace(/\//g, "-")
-    );
-
-    setDates(daysArray);
+    setDates(getDefaultRecords(targetMonth));
   };
 
   useEffect(() => {
@@ -226,6 +216,7 @@ const AttendanceForm = () => {
         </Button>
         <OutputReportButton
           employeeId={employeeId}
+          targetMonth={targetMonth}
           attendanceRecords={attendanceRecords}
         />
       </div>

@@ -5,4 +5,5 @@ export interface Attendance {
     date: string;
     employeeId: number;
     remarks: string;
+    employeeName: string;
   }
