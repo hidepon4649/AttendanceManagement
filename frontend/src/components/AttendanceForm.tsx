@@ -7,15 +7,12 @@ import IconButton from "@mui/material/IconButton";
 import PunchClockIcon from "@mui/icons-material/PunchClock";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { lsIsAdmin, lsGetMyId } from "../utils/localStorageUtils";
 import { Bikou } from "./Bikou";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { ClockInOutEditSave } from "./ClockInOutEditSave";
-import jsPDF from "jspdf";
-import "jspdf-autotable";
-import NotoSansJP from "../fonts/NotoSansJP-Regular-base64.js";
-import { formatShortTime } from "../utils/formatTimeUtils";
+import OutputReportButton from "./OutputReportButton";
+import { getYoubi } from "../utils/dateTimeUtils";
 
 const AttendanceForm = () => {
   const [isAdmin, setIsAdmin] = useState(() => {
@@ -124,58 +121,6 @@ const AttendanceForm = () => {
     }
   };
 
-  const handleOutputReport = async () => {
-    if (employeeId) {
-      try {
-        const doc = new jsPDF();
-
-        // フォントの追加
-        doc.addFileToVFS("NotoSansJP-Regular.ttf", NotoSansJP);
-        doc.addFont("NotoSansJP-Regular.ttf", "NotoSansJP", "normal");
-        doc.setFont("NotoSansJP");
-
-        const tableColumn = ["ID", "日付", "出勤時間", "退勤時間", "備考"];
-        const tableRows: any = [];
-        let isFirstRecord = true;
-
-        attendanceRecords.forEach((json, index) => {
-          const { id, date, clockInTime, clockOutTime, remarks } = json;
-          const row = [
-            id,
-            date + " " + getYoubi(date),
-            formatShortTime(clockInTime),
-            formatShortTime(clockOutTime),
-            remarks || "",
-          ];
-          tableRows.push(row);
-        });
-
-        doc.autoTable({
-          head: isFirstRecord ? [tableColumn] : undefined, // 1レコード目だけヘッダを出力
-          body: tableRows,
-          startY: 20,
-          styles: { font: "NotoSansJP" },
-        });
-        isFirstRecord = false;
-
-        doc.text("Attendance Report", 14, 15);
-        const pdfBlob = doc.output("blob");
-
-        const url = window.URL.createObjectURL(pdfBlob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "report.pdf";
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        window.URL.revokeObjectURL(url);
-        console.log("output report success");
-      } catch (error) {
-        console.error("output report failed:", error);
-      }
-    }
-  };
-
   const handleEmployeeIdChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setEmployeeId(Number(e.target.value));
   };
@@ -204,11 +149,6 @@ const AttendanceForm = () => {
     return currentMonth === targetMonth;
   };
 
-  const youbiList = ["(日)", "(月)", "(火)", "(水)", "(木)", "(金)", "(土)"];
-  const getYoubi = (date: string) => {
-    const youbi = new Date(date).getDay();
-    return youbiList[youbi];
-  };
   const getYoubiHtml = (date: string) => {
     const youbi = new Date(date).getDay();
     const colorClass =
@@ -284,15 +224,10 @@ const AttendanceForm = () => {
         >
           退社
         </Button>
-        <Button
-          className="btn btn-info mx-5"
-          size="large"
-          onClick={handleOutputReport}
-          variant="outlined"
-          startIcon={<CalendarMonthIcon />}
-        >
-          帳票出力
-        </Button>
+        <OutputReportButton
+          employeeId={employeeId}
+          attendanceRecords={attendanceRecords}
+        />
       </div>
       <table className="table table-striped table-hover mt-3">
         <thead>
@@ -319,7 +254,8 @@ const AttendanceForm = () => {
                   <Bikou
                     employeeId={employeeId}
                     date={date}
-                    remarks={record ? record.remarks : ""}
+                    initalRemarks={record ? record.remarks : ""}
+                    callback={fetchAttendanceRecords}
                   />
                 </td>
               </tr>

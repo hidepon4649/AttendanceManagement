@@ -2,20 +2,28 @@ import React, { useState, useEffect } from "react";
 import api from "../services/api";
 import { Alert } from "react-bootstrap";
 
-export const Bikou = (props: {
+interface BikouProps {
   employeeId: number;
   date: string;
-  remarks: string;
+  initalRemarks: string;
+  callback: () => void;
+}
+
+export const Bikou: React.FC<BikouProps> = ({
+  employeeId,
+  date,
+  initalRemarks,
+  callback,
 }) => {
-  const [remarks, setRemarks] = useState(props.remarks);
+  const [remarks, setRemarks] = useState(initalRemarks);
   const [isButtonVisible, setIsButtonVisible] = useState(false);
   const [alert, setAlert] = useState<{ type: string; message: string } | null>(
     null
   );
 
   useEffect(() => {
-    setRemarks(props.remarks);
-  }, [props.remarks]);
+    setRemarks(initalRemarks);
+  }, [initalRemarks]);
 
   const handleRemarksChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
@@ -27,12 +35,13 @@ export const Bikou = (props: {
 
   const handleRemarksSubmit = async () => {
     try {
-      await api.post(`/attendance/${props.employeeId}/${props.date}/remarks`, {
-        employeeId: props.employeeId,
-        date: props.date,
+      await api.post(`/attendance/${employeeId}/${date}/remarks`, {
+        employeeId: employeeId,
+        date: date,
         remarks: remarks,
       });
       setAlert({ type: "success", message: "備考が登録されました" });
+      callback();
     } catch (error) {
       setAlert({ type: "danger", message: "備考の登録に失敗しました" });
     }

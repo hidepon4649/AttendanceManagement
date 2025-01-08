@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import TimePicker from "react-bootstrap-time-picker";
-import { formatShortTime, padFrontZero } from "../utils/formatTimeUtils";
+import { formatShortTime, padFrontZero } from "../utils/dateTimeUtils";
 import { Attendance } from "../models/Attendance";
 import api from "../services/api";
 import { Alert, Modal, Button } from "react-bootstrap";
