@@ -15,6 +15,7 @@ import { ClockInOutEditSave } from "./ClockInOutEditSave";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import NotoSansJP from "../fonts/NotoSansJP-Regular-base64.js";
+import { formatShortTime } from "../utils/formatTimeUtils";
 
 const AttendanceForm = () => {
   const [isAdmin, setIsAdmin] = useState(() => {
@@ -133,19 +134,19 @@ const AttendanceForm = () => {
         doc.addFont("NotoSansJP-Regular.ttf", "NotoSansJP", "normal");
         doc.setFont("NotoSansJP");
 
-        const tableColumn = [
-          "ID",
-          "Date",
-          "Clock In Time",
-          "Clock Out Time",
-          "Remarks",
-        ];
+        const tableColumn = ["ID", "日付", "出勤時間", "退勤時間", "備考"];
         const tableRows: any = [];
         let isFirstRecord = true;
 
         attendanceRecords.forEach((json, index) => {
           const { id, date, clockInTime, clockOutTime, remarks } = json;
-          const row = [id, date, clockInTime, clockOutTime, remarks || ""];
+          const row = [
+            id,
+            date + " " + getYoubi(date),
+            formatShortTime(clockInTime),
+            formatShortTime(clockOutTime),
+            remarks || "",
+          ];
           tableRows.push(row);
         });
 
@@ -203,12 +204,16 @@ const AttendanceForm = () => {
     return currentMonth === targetMonth;
   };
 
+  const youbiList = ["(日)", "(月)", "(火)", "(水)", "(木)", "(金)", "(土)"];
   const getYoubi = (date: string) => {
     const youbi = new Date(date).getDay();
-    const youbiList = ["(日)", "(月)", "(火)", "(水)", "(木)", "(金)", "(土)"];
+    return youbiList[youbi];
+  };
+  const getYoubiHtml = (date: string) => {
+    const youbi = new Date(date).getDay();
     const colorClass =
       youbi === 0 ? "text-danger" : youbi === 6 ? "text-primary" : "text-dark";
-    return <span className={colorClass}>{youbiList[youbi]}</span>;
+    return <span className={colorClass}>{getYoubi(date)}</span>;
   };
 
   return (
@@ -307,7 +312,7 @@ const AttendanceForm = () => {
               <tr key={date}>
                 <td>
                   {date}
-                  {getYoubi(date)}
+                  {getYoubiHtml(date)}
                 </td>
                 <ClockInOutEditSave isAdmin={isAdmin} record={record} />
                 <td>
