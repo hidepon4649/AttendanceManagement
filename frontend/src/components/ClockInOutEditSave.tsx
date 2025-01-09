@@ -36,7 +36,7 @@ export const ClockInOutEditSave = (props: {
       setClockInTime(formatShortTime(sTime));
       setClockOutTime(formatShortTime(eTime));
       setBreakMinutes(bMins);
-      setStartEndGap(getStartEndGap(sTime, eTime, bMins));
+      setStartEndGap(getStartEndGap(sTime, eTime, bMins).hhmm);
     }
   }, [props.record]);
 

@@ -55,6 +55,6 @@ const getStartEndGap = (start, end, breakMinutes = 0) => {
     const hours = (0, exports.padFrontZero)(Math.floor(totalMinutes / 60), 2);
     const minutes = (0, exports.padFrontZero)(totalMinutes % 60, 2);
     const formattedTimeDifference = `${hours}:${minutes}`;
-    return formattedTimeDifference;
+    return { minutes: totalMinutes, hhmm: formattedTimeDifference };
 };
 exports.getStartEndGap = getStartEndGap;

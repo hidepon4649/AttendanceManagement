@@ -12,11 +12,7 @@ import { Bikou } from "./Bikou";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { ClockInOutEditSave } from "./ClockInOutEditSave";
 import OutputReportButton from "./OutputReportButton";
-import {
-  getYoubi,
-  getDefaultRecords,
-  getStartEndGap,
-} from "../utils/dateTimeUtils";
+import { getYoubi, getDefaultRecords } from "../utils/dateTimeUtils";
 
 const AttendanceForm = () => {
   const [isAdmin, setIsAdmin] = useState(() => {

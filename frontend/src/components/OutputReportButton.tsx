@@ -61,7 +61,7 @@ const OutputReportButton: React.FC<OutputReportButtonProps> = ({
                     record.clockInTime,
                     record.clockOutTime,
                     record.breakMinutes
-                  )
+                  ).hhmm
                 : "",
               record ? record.remarks || "" : "",
             ];
