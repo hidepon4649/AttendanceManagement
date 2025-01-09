@@ -13,6 +13,7 @@ export const ClockInOutEditSave = (props: {
   isAdmin: boolean;
   record: Attendance | null;
   callback: () => void;
+  setTotalMinutes: (update: (preTotalMinutes: number) => number) => void;
 }) => {
   const [editRecordId, setEditRecordId] = useState<string | null>(null);
   const [clockInTime, setClockInTime] = useState(
@@ -37,6 +38,10 @@ export const ClockInOutEditSave = (props: {
       setClockOutTime(formatShortTime(eTime));
       setBreakMinutes(bMins);
       setStartEndGap(getStartEndGap(sTime, eTime, bMins).hhmm);
+      const addMinutes = getStartEndGap(sTime, eTime, bMins).minutes;
+      props.setTotalMinutes(
+        (preTotalMinutes: number) => (preTotalMinutes += addMinutes)
+      );
     }
   }, [props.record]);
 
@@ -109,9 +114,7 @@ export const ClockInOutEditSave = (props: {
 
   const handleBreakMinutes = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    if (value.match(/^[0-9]+$/)) {
-      setBreakMinutes(parseInt(value));
-    }
+    setBreakMinutes(parseInt(value));
   };
 
   return (
@@ -139,6 +142,7 @@ export const ClockInOutEditSave = (props: {
               <td className="align-middle">
                 <input
                   type="number"
+                  className="form-control"
                   value={breakMinutes}
                   onChange={handleBreakMinutes}
                 />

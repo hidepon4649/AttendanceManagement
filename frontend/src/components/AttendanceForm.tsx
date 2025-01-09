@@ -12,7 +12,11 @@ import { Bikou } from "./Bikou";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { ClockInOutEditSave } from "./ClockInOutEditSave";
 import OutputReportButton from "./OutputReportButton";
-import { getYoubi, getDefaultRecords } from "../utils/dateTimeUtils";
+import {
+  getYoubi,
+  getDefaultRecords,
+  minutesToHHMM,
+} from "../utils/dateTimeUtils";
 
 const AttendanceForm = () => {
   const [isAdmin, setIsAdmin] = useState(() => {
@@ -31,10 +35,15 @@ const AttendanceForm = () => {
   ); // YYYY-MM形式で年月を取得
   const [dates, setDates] = useState<string[]>([]);
 
+  const [totalMinutes, setTotalMinutes] = useState(0); // 当月作業時間の合計(分)
+
   const fetchAttendanceRecords = async () => {
     if (employeeId) {
       try {
-        setAttendanceRecords([] as Attendance[]); // ID切り替え時に初期化
+        // 初期化
+        setAttendanceRecords([] as Attendance[]);
+        setTotalMinutes(0);
+
         const response = await api.get(
           `/attendance/${employeeId}/${targetMonth}`
         );
@@ -220,6 +229,9 @@ const AttendanceForm = () => {
           attendanceRecords={attendanceRecords}
         />
       </div>
+      <div className="mt-3 bg-primary text-white p-2">
+        当月作業時間の合計: {minutesToHHMM(totalMinutes)}
+      </div>
       <table className="table table-striped table-hover mt-3">
         <thead>
           <tr>
@@ -246,6 +258,7 @@ const AttendanceForm = () => {
                   isAdmin={isAdmin}
                   record={record}
                   callback={fetchAttendanceRecords}
+                  setTotalMinutes={setTotalMinutes}
                 />
                 <td>
                   <Bikou

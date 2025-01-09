@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getStartEndGap = exports.getYearMonthForPrint = exports.getDefaultRecords = exports.getYoubi = exports.padFrontZero = exports.formatShortTime = exports.formatTime = void 0;
+exports.minutesToHHMM = exports.getStartEndGap = exports.getYearMonthForPrint = exports.getDefaultRecords = exports.getYoubi = exports.padFrontZero = exports.formatShortTime = exports.formatTime = void 0;
 const formatTime = (dateTimeString) => {
     const date = new Date(dateTimeString);
     return date.toTimeString().split(" ")[0]; // "HH:MM:SS"形式で取得
@@ -58,3 +58,9 @@ const getStartEndGap = (start, end, breakMinutes = 0) => {
     return { minutes: totalMinutes, hhmm: formattedTimeDifference };
 };
 exports.getStartEndGap = getStartEndGap;
+const minutesToHHMM = (minutes) => {
+    const hours = (0, exports.padFrontZero)(Math.floor(minutes / 60), 2);
+    const mins = (0, exports.padFrontZero)(minutes % 60, 2);
+    return `${hours}:${mins}`;
+};
+exports.minutesToHHMM = minutesToHHMM;
