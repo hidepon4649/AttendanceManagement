@@ -8,6 +8,7 @@ import { Alert, Modal, Button } from "react-bootstrap";
 export const ClockInOutEditSave = (props: {
   isAdmin: boolean;
   record: Attendance | null;
+  callback: () => void;
 }) => {
   const [editRecordId, setEditRecordId] = useState<string | null>(null);
   const [clockInTime, setClockInTime] = useState(
@@ -74,6 +75,7 @@ export const ClockInOutEditSave = (props: {
     }
     setShowModal(true);
     setEditRecordId(null);
+    props.callback();
   };
 
   const handleEditClick = (id: string) => {

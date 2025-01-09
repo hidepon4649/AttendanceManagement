@@ -44,3 +44,14 @@ export const getYearMonthForPrint = (targetMonth: string) => {
   return `${dispYear}年${dispMonth}月`;
 
 };
+
+export const getStartEndGap = (start: string, end: string) => {
+  const clockInTime = new Date(start);
+  const clockOutTime = new Date(end);
+  const timeDifference = clockOutTime.getTime() - clockInTime.getTime();
+  const totalMinutes = Math.floor(timeDifference / (1000 * 60));
+  const hours = padFrontZero(Math.floor(totalMinutes / 60),2);
+  const minutes = padFrontZero(totalMinutes % 60,2) ;
+  const formattedTimeDifference = `${hours}:${minutes}`;
+  return formattedTimeDifference;
+}

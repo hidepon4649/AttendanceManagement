@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getYearMonthForPrint = exports.getDefaultRecords = exports.getYoubi = exports.padFrontZero = exports.formatShortTime = exports.formatTime = void 0;
+exports.getStartEndGap = exports.getYearMonthForPrint = exports.getDefaultRecords = exports.getYoubi = exports.padFrontZero = exports.formatShortTime = exports.formatTime = void 0;
 const formatTime = (dateTimeString) => {
     const date = new Date(dateTimeString);
     return date.toTimeString().split(" ")[0]; // "HH:MM:SS"形式で取得
@@ -44,3 +44,14 @@ const getYearMonthForPrint = (targetMonth) => {
     return `${dispYear}年${dispMonth}月`;
 };
 exports.getYearMonthForPrint = getYearMonthForPrint;
+const getStartEndGap = (start, end) => {
+    const clockInTime = new Date(start);
+    const clockOutTime = new Date(end);
+    const timeDifference = clockOutTime.getTime() - clockInTime.getTime();
+    const totalMinutes = Math.floor(timeDifference / (1000 * 60));
+    const hours = (0, exports.padFrontZero)(Math.floor(totalMinutes / 60), 2);
+    const minutes = (0, exports.padFrontZero)(totalMinutes % 60, 2);
+    const formattedTimeDifference = `${hours}:${minutes}`;
+    return formattedTimeDifference;
+};
+exports.getStartEndGap = getStartEndGap;

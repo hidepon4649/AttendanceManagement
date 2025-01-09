@@ -12,7 +12,11 @@ import { Bikou } from "./Bikou";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { ClockInOutEditSave } from "./ClockInOutEditSave";
 import OutputReportButton from "./OutputReportButton";
-import { getYoubi, getDefaultRecords } from "../utils/dateTimeUtils";
+import {
+  getYoubi,
+  getDefaultRecords,
+  getStartEndGap,
+} from "../utils/dateTimeUtils";
 
 const AttendanceForm = () => {
   const [isAdmin, setIsAdmin] = useState(() => {
@@ -226,6 +230,7 @@ const AttendanceForm = () => {
             <th>日付</th>
             <th>出勤時間</th>
             <th>退勤時間</th>
+            <th>作業時間</th>
             <th>備考 (簡潔に入力して下さい)</th>
           </tr>
         </thead>
@@ -240,7 +245,15 @@ const AttendanceForm = () => {
                   {date}
                   {getYoubiHtml(date)}
                 </td>
-                <ClockInOutEditSave isAdmin={isAdmin} record={record} />
+                <ClockInOutEditSave
+                  isAdmin={isAdmin}
+                  record={record}
+                  callback={fetchAttendanceRecords}
+                />
+                <td>
+                  {record &&
+                    getStartEndGap(record.clockInTime, record.clockOutTime)}
+                </td>
                 <td>
                   <Bikou
                     employeeId={employeeId}
