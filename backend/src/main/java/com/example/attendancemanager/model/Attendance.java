@@ -25,6 +25,7 @@ public class Attendance {
     private LocalDateTime clockOutTime;
     private LocalDate date;
     private String remarks;
+    private int breakMinutes;
 
     public Long getId() {
         return id;
@@ -72,6 +73,14 @@ public class Attendance {
 
     public void setRemarks(String remarks) {
         this.remarks = remarks;
+    }
+
+    public int getBreakMinutes() {
+        return breakMinutes;
+    }
+
+    public void setBreakMinutes(int breakMinutes) {
+        this.breakMinutes = breakMinutes;
     }
 
 }

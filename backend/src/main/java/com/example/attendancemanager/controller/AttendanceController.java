@@ -67,7 +67,11 @@ public class AttendanceController {
         String newClockInTime = requestBody.get("clockInTime");
         String newClockOutTime = requestBody.get("clockOutTime");
         // date は "YYYY-MM-DD" 形式で受け取ります
-        Attendance attendance = attendanceService.edit(attendanceId, newClockInTime, newClockOutTime);
+
+        String temp = requestBody.get("breakMinutes");
+        int breakMinutes = Integer.parseInt(temp == null ? "0" : temp);
+
+        Attendance attendance = attendanceService.edit(attendanceId, newClockInTime, newClockOutTime, breakMinutes);
 
         return ResponseEntity.ok(attendance);
     }

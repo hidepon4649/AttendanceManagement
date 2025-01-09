@@ -90,7 +90,7 @@ public class AttendanceService {
 
     // 打刻の修正
     @Transactional
-    public Attendance edit(Long attendanceId, String newClockInTime, String newClockOutTime) {
+    public Attendance edit(Long attendanceId, String newClockInTime, String newClockOutTime, int breakMinutes) {
 
         // 当日の勤怠記録が存在しない場合はエラー
         Optional<Attendance> optionalAttendance = attendanceRepository.findById(attendanceId);
@@ -110,6 +110,7 @@ public class AttendanceService {
                     attendance.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + "T" + newClockOutTime);
             attendance.setClockOutTime(newOutValue);
         }
+        attendance.setBreakMinutes(breakMinutes);
 
         return attendanceRepository.save(attendance);
     }

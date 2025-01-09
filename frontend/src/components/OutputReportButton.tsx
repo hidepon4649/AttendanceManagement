@@ -37,6 +37,7 @@ const OutputReportButton: React.FC<OutputReportButtonProps> = ({
           "日付",
           "出勤時間",
           "退勤時間",
+          "休憩(分)",
           "作業時間",
           "備考",
         ];
@@ -54,8 +55,13 @@ const OutputReportButton: React.FC<OutputReportButtonProps> = ({
               date + " " + getYoubi(date),
               record ? formatShortTime(record.clockInTime) : "",
               record ? formatShortTime(record.clockOutTime) : "",
+              record ? record.breakMinutes : "",
               record
-                ? getStartEndGap(record.clockInTime, record.clockOutTime)
+                ? getStartEndGap(
+                    record.clockInTime,
+                    record.clockOutTime,
+                    record.breakMinutes
+                  )
                 : "",
               record ? record.remarks || "" : "",
             ];

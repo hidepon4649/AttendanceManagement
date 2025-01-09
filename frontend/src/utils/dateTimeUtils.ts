@@ -45,11 +45,14 @@ export const getYearMonthForPrint = (targetMonth: string) => {
 
 };
 
-export const getStartEndGap = (start: string, end: string) => {
+export const getStartEndGap = (start: string, end: string, breakMinutes: number = 0) => {
+  if(typeof breakMinutes === 'string') {
+    breakMinutes = parseInt(breakMinutes);
+  }
   const clockInTime = new Date(start);
   const clockOutTime = new Date(end);
   const timeDifference = clockOutTime.getTime() - clockInTime.getTime();
-  const totalMinutes = Math.floor(timeDifference / (1000 * 60));
+  const totalMinutes = Math.floor(timeDifference / (1000 * 60)) - breakMinutes;
   const hours = padFrontZero(Math.floor(totalMinutes / 60),2);
   const minutes = padFrontZero(totalMinutes % 60,2) ;
   const formattedTimeDifference = `${hours}:${minutes}`;

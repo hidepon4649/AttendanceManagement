@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import TimePicker from "react-bootstrap-time-picker";
-import { formatShortTime, padFrontZero } from "../utils/dateTimeUtils";
+import {
+  formatShortTime,
+  padFrontZero,
+  getStartEndGap,
+} from "../utils/dateTimeUtils";
 import { Attendance } from "../models/Attendance";
 import api from "../services/api";
 import { Alert, Modal, Button } from "react-bootstrap";
@@ -12,15 +16,27 @@ export const ClockInOutEditSave = (props: {
 }) => {
   const [editRecordId, setEditRecordId] = useState<string | null>(null);
   const [clockInTime, setClockInTime] = useState(
-    props.record ? formatShortTime(props.record.clockInTime) : ""
+    props.record?.clockInTime || ""
   );
   const [clockOutTime, setClockOutTime] = useState(
-    props.record ? formatShortTime(props.record.clockOutTime) : ""
+    props.record?.clockOutTime || ""
   );
+  const [breakMinutes, setBreakMinutes] = useState(
+    props.record?.breakMinutes || 0
+  );
+
+  const [startEndGap, setStartEndGap] = useState("");
+
   useEffect(() => {
     if (props.record) {
-      setClockInTime(formatShortTime(props.record.clockInTime));
-      setClockOutTime(formatShortTime(props.record.clockOutTime));
+      const sTime = props.record.clockInTime;
+      const eTime = props.record.clockOutTime;
+      const bMins = props.record.breakMinutes;
+
+      setClockInTime(formatShortTime(sTime));
+      setClockOutTime(formatShortTime(eTime));
+      setBreakMinutes(bMins);
+      setStartEndGap(getStartEndGap(sTime, eTime, bMins));
     }
   }, [props.record]);
 
@@ -68,6 +84,7 @@ export const ClockInOutEditSave = (props: {
         attendanceId: props.record.id,
         clockInTime: inTime,
         clockOutTime: outTime,
+        breakMinutes: breakMinutes,
       });
       setAlert({ type: "success", message: "勤怠が修正されました" });
     } catch (error) {
@@ -90,6 +107,13 @@ export const ClockInOutEditSave = (props: {
     setClockOutTime(value.toString());
   };
 
+  const handleBreakMinutes = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value.match(/^[0-9]+$/)) {
+      setBreakMinutes(parseInt(value));
+    }
+  };
+
   return (
     <>
       {props.record ? (
@@ -105,44 +129,62 @@ export const ClockInOutEditSave = (props: {
                 />
               </td>
               <td className="align-middle">
+                <TimePicker
+                  value={clockOutTime}
+                  step={1}
+                  format={24}
+                  onChange={handleClockOutTimeChange}
+                />
+              </td>
+              <td className="align-middle">
+                <input
+                  type="number"
+                  value={breakMinutes}
+                  onChange={handleBreakMinutes}
+                />
+              </td>
+              <td className="align-middle">
                 <span>
                   <div className="d-inline-block">
-                    <TimePicker
-                      value={clockOutTime}
-                      step={1}
-                      format={24}
-                      onChange={handleClockOutTimeChange}
-                    />
+                    {props.record && startEndGap}
+                    <button
+                      className="btn btn-primary mx-3 d-inline-block"
+                      onClick={handleSaveClick}
+                    >
+                      保存
+                    </button>
                   </div>
-                  <button
-                    className="btn btn-primary mx-3 d-inline-block"
-                    onClick={handleSaveClick}
-                  >
-                    保存
-                  </button>
                 </span>
               </td>
             </>
           ) : props.record.clockInTime ? (
             <>
               <td className="align-middle">{clockInTime}</td>
+              <td className="align-middle">{clockOutTime}</td>
+              <td className="align-middle">{breakMinutes}</td>
               <td className="align-middle">
-                {clockOutTime}
-                {props.isAdmin && (
-                  <button
-                    className="btn btn-secondary mx-3"
-                    onClick={() =>
-                      props.record &&
-                      handleEditClick(props.record.id.toString())
-                    }
-                  >
-                    修正
-                  </button>
-                )}
+                <span>
+                  <div className="d-inline-block">
+                    {props.record && startEndGap}
+                    {props.isAdmin && (
+                      <button
+                        className="btn btn-secondary mx-3"
+                        onClick={() =>
+                          props.record &&
+                          handleEditClick(props.record.id.toString())
+                        }
+                      >
+                        修正
+                      </button>
+                    )}
+                  </div>
+                </span>
               </td>
             </>
           ) : (
             <>
+              <td>-</td>
+              <td>-</td>
               <td>-</td>
               <td>-</td>
             </>
@@ -150,6 +192,8 @@ export const ClockInOutEditSave = (props: {
         </>
       ) : (
         <>
+          <td>-</td>
+          <td>-</td>
           <td>-</td>
           <td>-</td>
         </>

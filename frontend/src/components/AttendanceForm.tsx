@@ -230,6 +230,7 @@ const AttendanceForm = () => {
             <th>日付</th>
             <th>出勤時間</th>
             <th>退勤時間</th>
+            <th>休憩(分)</th>
             <th>作業時間</th>
             <th>備考 (簡潔に入力して下さい)</th>
           </tr>
@@ -250,10 +251,6 @@ const AttendanceForm = () => {
                   record={record}
                   callback={fetchAttendanceRecords}
                 />
-                <td>
-                  {record &&
-                    getStartEndGap(record.clockInTime, record.clockOutTime)}
-                </td>
                 <td>
                   <Bikou
                     employeeId={employeeId}
