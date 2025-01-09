@@ -227,6 +227,7 @@ const AttendanceForm = () => {
           employeeId={employeeId}
           targetMonth={targetMonth}
           attendanceRecords={attendanceRecords}
+          totalMinutes={totalMinutes}
         />
       </div>
       <div className="mt-3 bg-primary text-white p-2">

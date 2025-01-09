@@ -10,6 +10,7 @@ import {
   getDefaultRecords,
   getYearMonthForPrint,
   getStartEndGap,
+  minutesToHHMM,
 } from "../utils/dateTimeUtils.js";
 import { Attendance } from "../models/Attendance.js";
 
@@ -17,11 +18,13 @@ interface OutputReportButtonProps {
   employeeId: number;
   targetMonth: string;
   attendanceRecords: Attendance[];
+  totalMinutes: number;
 }
 const OutputReportButton: React.FC<OutputReportButtonProps> = ({
   employeeId,
   targetMonth,
   attendanceRecords,
+  totalMinutes,
 }) => {
   const handleOutputReport = async () => {
     if (employeeId) {
@@ -81,10 +84,21 @@ const OutputReportButton: React.FC<OutputReportButtonProps> = ({
         });
 
         const pageWidth = doc.internal.pageSize.width;
-        const textWidth = doc.getTextWidth(`${employeeName} 様`);
 
-        doc.text(`${getYearMonthForPrint(targetMonth)} 勤怠表`, 14, 15);
-        doc.text(`${employeeName} 様`, pageWidth - textWidth - 14, 15); // 右寄せの計算
+        const titleText = `${getYearMonthForPrint(
+          targetMonth
+        )} 勤怠表　${employeeName} 様`;
+        const timeText = `当月作業時間の合計: ${minutesToHHMM(totalMinutes)}`;
+
+        const w1 = doc.getTextWidth(titleText);
+
+        doc.text(titleText, 14, 15);
+        doc.text(
+          timeText,
+          pageWidth - w1, // 右寄せ計算
+          15
+        );
+
         const pdfBlob = doc.output("blob");
 
         const url = window.URL.createObjectURL(pdfBlob);
