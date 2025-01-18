@@ -9,7 +9,6 @@ import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { lsIsAdmin, lsGetMyId } from "../utils/localStorageUtils";
 import { Bikou } from "./Bikou";
-import "bootstrap/dist/css/bootstrap.min.css";
 import { ClockInOutEditSave } from "./ClockInOutEditSave";
 import OutputReportButton from "./OutputReportButton";
 import {
@@ -230,7 +229,7 @@ const AttendanceForm = () => {
           totalMinutes={totalMinutes}
         />
       </div>
-      <div className="mt-3 bg-primary text-white p-2">
+      <div className="mt-3 bg-info text-body p-2">
         当月作業時間の合計: {minutesToHHMM(totalMinutes)}
       </div>
       <table className="table table-striped table-hover mt-3">
