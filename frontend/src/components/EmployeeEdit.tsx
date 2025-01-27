@@ -20,7 +20,7 @@ const EmployeeEdit = (props: any) => {
       const response = await api.get(`/employees/${id}`);
       setEmployee(response.data);
     };
-    fetchEmployee();
+    fetchEmployee().catch((error) => console.error(error));
   }, [id]);
 
   const handleEdit = async () => {

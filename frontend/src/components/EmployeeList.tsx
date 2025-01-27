@@ -18,7 +18,7 @@ const EmployeeList = () => {
   };
 
   useEffect(() => {
-    fetchList();
+    fetchList().catch((error) => console.error(error));
   }, []); // 空の配列を第2引数に渡すことで、初回レンダリング時のみ実行される
 
   const handleEdit = (id: number) => {

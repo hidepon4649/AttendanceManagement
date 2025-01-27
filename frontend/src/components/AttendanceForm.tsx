@@ -76,12 +76,12 @@ const AttendanceForm = () => {
         }
       }
     };
-    fetchEmployees();
+    fetchEmployees().catch((error) => console.error(error));
   }, []);
 
   useEffect(() => {
-    fetchAttendanceRecords();
-    targetMonthDefaultRecords();
+    fetchAttendanceRecords().catch((error) => console.error(error));
+    targetMonthDefaultRecords().catch((error) => console.error(error));
   }, [employeeId, targetMonth]);
 
   const handleClockIn = async () => {
