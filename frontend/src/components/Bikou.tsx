@@ -38,8 +38,11 @@ export const Bikou = (props: BikouProps) => {
       });
       setAlert({ type: "success", message: "備考が登録されました" });
       callback();
-    } catch (error) {
-      setAlert({ type: "danger", message: "備考の登録に失敗しました" });
+    } catch (error: any) {
+      setAlert({
+        type: "danger",
+        message: `備考の登録に失敗しました:${error.message}`,
+      });
     }
   };
   return (

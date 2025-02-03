@@ -129,13 +129,15 @@ const AttendanceForm = () => {
     return date.toISOString().slice(0, 7); // YYYY-MM形式で返す
   };
 
-  const handlePrevMonth = (e: React.MouseEvent<HTMLButtonElement>) => {
+  // const handlePrevMonth = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handlePrevMonth = () => {
     const newMonth = updateMonth(-1); // 前の月に移動
     console.log(newMonth);
     setTargetMonth(newMonth);
   };
 
-  const handleNextMonth = (e: React.MouseEvent<HTMLButtonElement>) => {
+  // const handleNextMonth = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleNextMonth = () => {
     const newMonth = updateMonth(1); // 次の月に移動
     console.log(newMonth);
     setTargetMonth(newMonth);
