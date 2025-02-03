@@ -8,11 +8,12 @@ import { lsClear } from "../utils/localStorageUtils";
 interface LogoutPageProps {
   onLogout: () => void;
 }
-const LogoutButton: React.FC<LogoutPageProps> = ({ onLogout }) => {
+const LogoutButton = (props: LogoutPageProps) => {
+  const { onLogout } = props;
   const navigate = useNavigate();
   const handleLogout = async () => {
     try {
-      const response = await api.post("/auth/logout", {});
+      await api.post("/auth/logout", {});
       // ログイン状態の更新
       onLogout();
 

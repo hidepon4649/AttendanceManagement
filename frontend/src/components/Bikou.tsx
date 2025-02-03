@@ -9,12 +9,8 @@ interface BikouProps {
   callback: () => void;
 }
 
-export const Bikou: React.FC<BikouProps> = ({
-  employeeId,
-  date,
-  initalRemarks,
-  callback,
-}) => {
+export const Bikou = (props: BikouProps) => {
+  const { employeeId, date, initalRemarks, callback } = props;
   const [remarks, setRemarks] = useState(initalRemarks);
   const [isButtonVisible, setIsButtonVisible] = useState(false);
   const [alert, setAlert] = useState<{ type: string; message: string } | null>(

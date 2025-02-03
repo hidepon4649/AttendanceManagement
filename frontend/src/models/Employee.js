@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Employee = void 0;
-class Employee {
+export class Employee {
     constructor(_id, _name, _email, _password, _admin) {
         this._id = _id;
         this._name = _name;
@@ -40,4 +37,3 @@ class Employee {
         this._password = value;
     }
 }
-exports.Employee = Employee;

@@ -11,7 +11,8 @@ interface LoginPageProps {
   onLoginSuccess: (roles: string[]) => void;
 }
 
-const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
+const LoginPage = (props: LoginPageProps) => {
+  const { onLoginSuccess } = props;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");

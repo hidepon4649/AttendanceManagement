@@ -14,7 +14,7 @@ const RegisterEmployeeForm = () => {
   const handleRegister = async () => {
     setErrors({});
     try {
-      const response = await api.post("/employees", { ...employee });
+      await api.post("/employees", { ...employee });
       setAlert({ type: "success", message: "登録が成功しました" });
       setEmployee({} as Employee);
     } catch (error: any) {

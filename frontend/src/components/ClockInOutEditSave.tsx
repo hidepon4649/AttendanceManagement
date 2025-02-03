@@ -9,41 +9,39 @@ import { Attendance } from "../models/Attendance";
 import api from "../services/api";
 import { Alert, Modal, Button } from "react-bootstrap";
 
-export const ClockInOutEditSave = (props: {
+interface ClockInOutEditSaveProps {
   isAdmin: boolean;
   record: Attendance | null;
   callback: () => void;
   setTotalMinutes: (update: (preTotalMinutes: number) => number) => void;
-}) => {
+}
+
+export const ClockInOutEditSave = (props: ClockInOutEditSaveProps) => {
+  const { isAdmin, record, callback, setTotalMinutes } = props;
+
   const [editRecordId, setEditRecordId] = useState<string | null>(null);
-  const [clockInTime, setClockInTime] = useState(
-    props.record?.clockInTime || ""
-  );
-  const [clockOutTime, setClockOutTime] = useState(
-    props.record?.clockOutTime || ""
-  );
-  const [breakMinutes, setBreakMinutes] = useState(
-    props.record?.breakMinutes || 0
-  );
+  const [clockInTime, setClockInTime] = useState(record?.clockInTime || "");
+  const [clockOutTime, setClockOutTime] = useState(record?.clockOutTime || "");
+  const [breakMinutes, setBreakMinutes] = useState(record?.breakMinutes || 0);
 
   const [startEndGap, setStartEndGap] = useState("");
 
   useEffect(() => {
-    if (props.record) {
-      const sTime = props.record.clockInTime;
-      const eTime = props.record.clockOutTime;
-      const bMins = props.record.breakMinutes;
+    if (record) {
+      const sTime = record.clockInTime;
+      const eTime = record.clockOutTime;
+      const bMins = record.breakMinutes;
 
       setClockInTime(formatShortTime(sTime));
       setClockOutTime(formatShortTime(eTime));
       setBreakMinutes(bMins);
       setStartEndGap(getStartEndGap(sTime, eTime, bMins).hhmm);
       const addMinutes = getStartEndGap(sTime, eTime, bMins).minutes;
-      props.setTotalMinutes(
+      setTotalMinutes(
         (preTotalMinutes: number) => (preTotalMinutes += addMinutes)
       );
     }
-  }, [props.record]);
+  }, [record]);
 
   const [showModal, setShowModal] = useState(false);
   const [alert, setAlert] = useState<{ type: string; message: string } | null>(
@@ -51,7 +49,7 @@ export const ClockInOutEditSave = (props: {
   );
 
   const handleSaveClick = async () => {
-    if (!props.record) {
+    if (!record) {
       return;
     }
     // 時刻がint型の場合は、時刻を文字列に変換
@@ -85,8 +83,8 @@ export const ClockInOutEditSave = (props: {
       setClockInTime(inTime);
       setClockOutTime(outTime);
 
-      await api.put(`/attendance/maintenance/${props.record.id}`, {
-        attendanceId: props.record.id,
+      await api.put(`/attendance/maintenance/${record.id}`, {
+        attendanceId: record.id,
         clockInTime: inTime,
         clockOutTime: outTime,
         breakMinutes: breakMinutes,
@@ -97,7 +95,7 @@ export const ClockInOutEditSave = (props: {
     }
     setShowModal(true);
     setEditRecordId(null);
-    props.callback();
+    callback();
   };
 
   const handleEditClick = (id: string) => {
@@ -119,9 +117,9 @@ export const ClockInOutEditSave = (props: {
 
   return (
     <>
-      {props.record ? (
+      {record ? (
         <>
-          {editRecordId === props.record.id.toString() ? (
+          {editRecordId === record.id.toString() ? (
             <>
               <td className="align-middle">
                 <TimePicker
@@ -150,7 +148,7 @@ export const ClockInOutEditSave = (props: {
               <td className="align-middle">
                 <span>
                   <div className="d-inline-block">
-                    {props.record && startEndGap}
+                    {record && startEndGap}
                     <button
                       className="btn btn-primary mx-3 d-inline-block"
                       onClick={handleSaveClick}
@@ -161,7 +159,7 @@ export const ClockInOutEditSave = (props: {
                 </span>
               </td>
             </>
-          ) : props.record.clockInTime ? (
+          ) : record.clockInTime ? (
             <>
               <td className="align-middle">{clockInTime}</td>
               <td className="align-middle">{clockOutTime}</td>
@@ -169,13 +167,12 @@ export const ClockInOutEditSave = (props: {
               <td className="align-middle">
                 <span>
                   <div className="d-inline-block">
-                    {props.record && startEndGap}
-                    {props.isAdmin && (
+                    {record && startEndGap}
+                    {isAdmin && (
                       <button
                         className="btn btn-secondary mx-3"
                         onClick={() =>
-                          props.record &&
-                          handleEditClick(props.record.id.toString())
+                          record && handleEditClick(record.id.toString())
                         }
                       >
                         修正

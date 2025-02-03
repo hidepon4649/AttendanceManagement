@@ -1,16 +1,12 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const jsx_runtime_1 = require("react/jsx-runtime");
-const client_1 = require("react-dom/client");
-const react_router_dom_1 = require("react-router-dom");
-require("./index.css");
-const App_1 = __importDefault(require("./App"));
+import { jsxDEV as _jsxDEV } from "react/jsx-dev-runtime";
+const _jsxFileName = "/Users/hidemac1/attendance-management-app/frontend/src/index.tsx";
+import { createRoot } from "react-dom/client";
+import { BrowserRouter } from "react-router-dom";
+import "./index.css";
+import App from "./App";
 const rootElement = document.getElementById("root");
 if (rootElement) {
-    (0, client_1.createRoot)(rootElement).render((0, jsx_runtime_1.jsx)(react_router_dom_1.BrowserRouter, Object.assign({ future: { v7_startTransition: true } }, { children: (0, jsx_runtime_1.jsx)(App_1.default, {}) })));
+    createRoot(rootElement).render(_jsxDEV(BrowserRouter, { future: { v7_startTransition: true }, children: _jsxDEV(App, {}, void 0, false, { fileName: _jsxFileName, lineNumber: 11, columnNumber: 7 }, this) }, void 0, false, { fileName: _jsxFileName, lineNumber: 9, columnNumber: 34 }, this));
 }
 else {
     console.error("Failed to find the root element.");

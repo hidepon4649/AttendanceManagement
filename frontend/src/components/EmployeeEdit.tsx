@@ -26,7 +26,7 @@ const EmployeeEdit = (props: any) => {
   const handleEdit = async () => {
     setErrors({});
     try {
-      const response = await api.put(`/employees/${id}`, { ...employee });
+      await api.put(`/employees/${id}`, { ...employee });
       setAlert({ type: "success", message: "編集が成功しました" });
     } catch (error: any) {
       if (error.response && error.response.data) {

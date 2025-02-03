@@ -18,7 +18,7 @@ import {
 } from "../utils/dateTimeUtils";
 
 const AttendanceForm = () => {
-  const [isAdmin, setIsAdmin] = useState(() => {
+  const [isAdmin] = useState(() => {
     return lsIsAdmin();
   });
 

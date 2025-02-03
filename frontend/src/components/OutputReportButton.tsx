@@ -20,12 +20,8 @@ interface OutputReportButtonProps {
   attendanceRecords: Attendance[];
   totalMinutes: number;
 }
-const OutputReportButton: React.FC<OutputReportButtonProps> = ({
-  employeeId,
-  targetMonth,
-  attendanceRecords,
-  totalMinutes,
-}) => {
+const OutputReportButton = (props: OutputReportButtonProps) => {
+  const { employeeId, targetMonth, attendanceRecords, totalMinutes } = props;
   const handleOutputReport = async () => {
     if (employeeId) {
       try {
