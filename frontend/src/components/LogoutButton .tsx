@@ -1,21 +1,18 @@
-import React from "react";
+import React, { useContext } from "react";
 import api from "../services/api";
 import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { lsClear } from "../utils/localStorageUtils";
+import LoginUserContext from "src/context/LoginUserContext";
 
-interface LogoutPageProps {
-  onLogout: () => void;
-}
-const LogoutButton = (props: LogoutPageProps) => {
-  const { onLogout } = props;
+const LogoutButton = () => {
+  const { lsClear, handleLogout } = useContext(LoginUserContext);
   const navigate = useNavigate();
-  const handleLogout = async () => {
+  const logout = async () => {
     try {
       await api.post("/auth/logout", {});
       // ログイン状態の更新
-      onLogout();
+      handleLogout();
 
       // ローカルストレージのクリア
       lsClear();
@@ -32,7 +29,7 @@ const LogoutButton = (props: LogoutPageProps) => {
       size="medium"
       variant="outlined"
       startIcon={<LogoutIcon />}
-      onClick={handleLogout}
+      onClick={logout}
     >
       ログアウト
     </Button>

@@ -1,21 +1,19 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import api from "../services/api";
-import {
-  lsClear,
-  lsSetCsrfToken,
-  lsSetJwtToken,
-  lsSetUser,
-} from "../utils/localStorageUtils";
+import LoginUserContext from "src/context/LoginUserContext";
 
-interface LoginPageProps {
-  onLoginSuccess: (roles: string[]) => void;
-}
-
-const LoginPage = (props: LoginPageProps) => {
-  const { onLoginSuccess } = props;
+const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+
+  const {
+    lsClear,
+    handleLoginSuccess,
+    lsSetCsrfToken,
+    lsSetUser,
+    lsSetJwtToken,
+  } = useContext(LoginUserContext);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,7 +42,7 @@ const LoginPage = (props: LoginPageProps) => {
     lsSetJwtToken(response.data.token);
 
     // ログイン状態の更新
-    onLoginSuccess(response.data.roles);
+    handleLoginSuccess(response.data.roles);
   };
 
   return (
