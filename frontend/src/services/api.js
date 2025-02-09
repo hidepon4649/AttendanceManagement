@@ -1,5 +1,5 @@
 import axios from "axios";
-import { lsGetCsrfToken, lsGetJwtToken, lsSetCsrfToken } from "../utils/localStorageUtils";
+import { lsGetJwtToken, lsGetCsrfToken, lsSetCsrfToken, } from "src/utils/localStorageUtils";
 console.log("API URL:", process.env.REACT_APP_API_URL);
 // Create an Axios instance
 const api = axios.create({
@@ -21,7 +21,8 @@ api.interceptors.request.use(async (config) => {
         try {
             const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/csrf/token`, { withCredentials: true });
             csrfToken = response.data.token;
-            csrfToken && lsSetCsrfToken(csrfToken);
+            if (csrfToken)
+                lsSetCsrfToken(csrfToken);
         }
         catch (error) {
             console.error("Failed to fetch CSRF token", error);

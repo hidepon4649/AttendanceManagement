@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import api from "../services/api";
 import { Employee } from "../models/Employee";
 import { Attendance } from "../models/Attendance";
@@ -7,7 +7,8 @@ import IconButton from "@mui/material/IconButton";
 import PunchClockIcon from "@mui/icons-material/PunchClock";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
-import { lsIsAdmin, lsGetMyId } from "../utils/localStorageUtils";
+import { lsGetMyId } from "../utils/localStorageUtils";
+
 import { Bikou } from "./Bikou";
 import { ClockInOutEditSave } from "./ClockInOutEditSave";
 import OutputReportButton from "./OutputReportButton";
@@ -16,11 +17,10 @@ import {
   getDefaultRecords,
   minutesToHHMM,
 } from "../utils/dateTimeUtils";
+import LoginUserContext from "src/context/LoginUserContext";
 
 const AttendanceForm = () => {
-  const [isAdmin] = useState(() => {
-    return lsIsAdmin();
-  });
+  const { isAdmin } = useContext(LoginUserContext);
 
   const [employeeId, setEmployeeId] = useState(() => {
     return lsGetMyId();
@@ -46,7 +46,6 @@ const AttendanceForm = () => {
         const response = await api.get(
           `/attendance/${employeeId}/${targetMonth}`
         );
-        // setAttendanceRecords(response.data);
         setAttendanceRecords(
           response.data.map((record: any) => ({
             ...record,
@@ -129,14 +128,12 @@ const AttendanceForm = () => {
     return date.toISOString().slice(0, 7); // YYYY-MM形式で返す
   };
 
-  // const handlePrevMonth = (e: React.MouseEvent<HTMLButtonElement>) => {
   const handlePrevMonth = () => {
     const newMonth = updateMonth(-1); // 前の月に移動
     console.log(newMonth);
     setTargetMonth(newMonth);
   };
 
-  // const handleNextMonth = (e: React.MouseEvent<HTMLButtonElement>) => {
   const handleNextMonth = () => {
     const newMonth = updateMonth(1); // 次の月に移動
     console.log(newMonth);

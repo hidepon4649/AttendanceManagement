@@ -1,6 +1,12 @@
 import React, { useContext, useState } from "react";
 import api from "../services/api";
 import LoginUserContext from "src/context/LoginUserContext";
+import {
+  lsClear,
+  lsSetCsrfToken,
+  lsSetUser,
+  lsSetJwtToken,
+} from "src/utils/localStorageUtils";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -8,11 +14,7 @@ const LoginPage = () => {
   const [error, setError] = useState("");
 
   const {
-    lsClear,
     handleLoginSuccess,
-    lsSetCsrfToken,
-    lsSetUser,
-    lsSetJwtToken,
   } = useContext(LoginUserContext);
 
   const handleSubmit = async (e: React.FormEvent) => {

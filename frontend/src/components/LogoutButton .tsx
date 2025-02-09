@@ -4,9 +4,10 @@ import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import LogoutIcon from "@mui/icons-material/Logout";
 import LoginUserContext from "src/context/LoginUserContext";
+import { lsClear } from "src/utils/localStorageUtils";
 
 const LogoutButton = () => {
-  const { lsClear, handleLogout } = useContext(LoginUserContext);
+  const { handleLogout } = useContext(LoginUserContext);
   const navigate = useNavigate();
   const logout = async () => {
     try {

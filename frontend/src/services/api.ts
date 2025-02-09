@@ -1,5 +1,10 @@
 import axios from "axios";
-import { lsGetCsrfToken, lsGetJwtToken, lsSetCsrfToken } from "../utils/localStorageUtils";
+
+import {
+  lsGetJwtToken,
+  lsGetCsrfToken,
+  lsSetCsrfToken,
+} from "src/utils/localStorageUtils";
 
 console.log("API URL:", process.env.REACT_APP_API_URL);
 
@@ -30,7 +35,7 @@ api.interceptors.request.use(
         );
 
         csrfToken = response.data.token;
-        csrfToken && lsSetCsrfToken(csrfToken);
+        if (csrfToken) lsSetCsrfToken(csrfToken);
       } catch (error) {
         console.error("Failed to fetch CSRF token", error);
       }
@@ -46,5 +51,4 @@ api.interceptors.request.use(
     return Promise.reject(error);
   }
 );
-
 export default api;
