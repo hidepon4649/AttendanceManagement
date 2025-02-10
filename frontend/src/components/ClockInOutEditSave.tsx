@@ -101,6 +101,15 @@ export const ClockInOutEditSave = (props: ClockInOutEditSaveProps) => {
   const handleEditClick = (id: string) => {
     setEditRecordId(id);
   };
+  const handleDeleteClick = async (id: string) => {
+    try {
+      await api.delete(`/attendance/maintenance/${id}`);
+      setAlert({ type: "success", message: "勤怠が削除されました" });
+      callback();
+    } catch (error) {
+      setAlert({ type: "danger", message: "勤怠の削除に失敗しました" });
+    }
+  };
 
   const handleClockInTimeChange = (value: number) => {
     setClockInTime(value.toString());
@@ -169,14 +178,24 @@ export const ClockInOutEditSave = (props: ClockInOutEditSaveProps) => {
                   <div className="d-inline-block">
                     {record && startEndGap}
                     {isAdmin && (
-                      <button
-                        className="btn btn-secondary mx-3"
-                        onClick={() =>
-                          record && handleEditClick(record.id.toString())
-                        }
-                      >
-                        修正
-                      </button>
+                      <>
+                        <button
+                          className="btn btn-secondary mx-3"
+                          onClick={() =>
+                            record && handleEditClick(record.id.toString())
+                          }
+                        >
+                          修正
+                        </button>
+                        <button
+                          className="btn btn-danger"
+                          onClick={() =>
+                            record && handleDeleteClick(record.id.toString())
+                          }
+                        >
+                          削除
+                        </button>
+                      </>
                     )}
                   </div>
                 </span>

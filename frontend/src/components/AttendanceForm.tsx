@@ -153,6 +153,34 @@ const AttendanceForm = () => {
     return <span className={colorClass}>{getYoubi(date)}</span>;
   };
 
+  const attendanceList = dates.map((date) => {
+    const record: Attendance | null = attendanceRecords.length
+      ? attendanceRecords.find((record) => record.date === date) || null
+      : null;
+    return (
+      <tr key={date}>
+        <td>
+          {date}
+          {getYoubiHtml(date)}
+        </td>
+        <ClockInOutEditSave
+          isAdmin={isAdmin}
+          record={record}
+          callback={fetchAttendanceRecords}
+          setTotalMinutes={setTotalMinutes}
+        />
+        <td>
+          <Bikou
+            employeeId={employeeId}
+            date={date}
+            initalRemarks={record ? record.remarks : ""}
+            callback={fetchAttendanceRecords}
+          />
+        </td>
+      </tr>
+    );
+  });
+
   return (
     <div className="mx-3 mt-3">
       <div className="row">
@@ -242,35 +270,7 @@ const AttendanceForm = () => {
             <th>備考 (簡潔に入力して下さい)</th>
           </tr>
         </thead>
-        <tbody>
-          {dates.map((date) => {
-            const record: Attendance | null = attendanceRecords.length
-              ? attendanceRecords.find((record) => record.date === date) || null
-              : null;
-            return (
-              <tr key={date}>
-                <td>
-                  {date}
-                  {getYoubiHtml(date)}
-                </td>
-                <ClockInOutEditSave
-                  isAdmin={isAdmin}
-                  record={record}
-                  callback={fetchAttendanceRecords}
-                  setTotalMinutes={setTotalMinutes}
-                />
-                <td>
-                  <Bikou
-                    employeeId={employeeId}
-                    date={date}
-                    initalRemarks={record ? record.remarks : ""}
-                    callback={fetchAttendanceRecords}
-                  />
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
+        <tbody>{attendanceList}</tbody>
       </table>
     </div>
   );

@@ -115,6 +115,17 @@ public class AttendanceService {
         return attendanceRepository.save(attendance);
     }
 
+    // 勤怠記録の削除
+    @Transactional
+    public Attendance delete(Long attendanceId) {
+        Optional<Attendance> optionalAttendance = attendanceRepository.findById(attendanceId);
+        if (optionalAttendance == null) {
+            throw new RuntimeException("削除対象日の勤怠が見つかりません");
+        }
+        attendanceRepository.deleteById(attendanceId);
+        return optionalAttendance.get();
+    }
+
     // 月次レポートの取得
     public List<Attendance> getMonthlyReportByEmployeeId(Long employeeId, int year, int month) {
         return attendanceRepository.findByEmployeeIdAndYearAndMonth(employeeId, year, month);
