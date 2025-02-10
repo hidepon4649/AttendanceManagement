@@ -2,6 +2,7 @@ package com.example.attendancemanager.service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -65,6 +66,16 @@ public class AttendanceService {
     // 備考の記録
     @Transactional
     public Attendance remarks(Long employeeId, String date, String remarks) {
+        return add(employeeId, date, remarks);
+    }
+    // 勤怠の追加
+    @Transactional
+    public Attendance add(Long employeeId, String date) {
+        return add(employeeId, date, null);
+    }
+    // 勤怠の追加
+    @Transactional
+    public Attendance add(Long employeeId, String date, String remarks) {
 
         Optional<Employee> optionalEmployee = employeeRepository.findById(employeeId);
         if (!optionalEmployee.isPresent()) {
@@ -76,16 +87,26 @@ public class AttendanceService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate localDate = LocalDate.parse(date, formatter);
 
-        // 当日の出勤記録が存在しない場合は新規作成し、存在する場合は更新します
         Attendance attendance = attendanceRepository.findByEmployeeIdAndDate(employeeId, localDate);
+
+        // 当日の出勤記録が存在しない場合は新規作成し、初期値を設定。
         if (attendance == null) {
             attendance = new Attendance();
             attendance.setEmployee(employee);
             attendance.setDate(localDate);
+            // 出勤時間,退勤時間,休憩時間を0で初期化
+            attendance.setClockInTime(LocalDateTime.of(localDate, LocalTime.of(0, 0)));
+            attendance.setClockOutTime(LocalDateTime.of(localDate, LocalTime.of(0, 0)));
+            attendance.setBreakMinutes(0);
         }
 
-        attendance.setRemarks(remarks);
+        // 備考の設定
+        if(remarks != null) {
+            attendance.setRemarks(remarks);
+        }
+        
         return attendanceRepository.save(attendance);
+
     }
 
     // 打刻の修正

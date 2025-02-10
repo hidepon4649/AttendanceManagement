@@ -14,10 +14,11 @@ interface ClockInOutEditSaveProps {
   record: Attendance | null;
   callback: () => void;
   setTotalMinutes: (update: (preTotalMinutes: number) => number) => void;
+  addRecord: () => void;
 }
 
 export const ClockInOutEditSave = (props: ClockInOutEditSaveProps) => {
-  const { isAdmin, record, callback, setTotalMinutes } = props;
+  const { isAdmin, record, callback, setTotalMinutes, addRecord } = props;
 
   const [editRecordId, setEditRecordId] = useState<string | null>(null);
   const [clockInTime, setClockInTime] = useState(record?.clockInTime || "");
@@ -97,18 +98,33 @@ export const ClockInOutEditSave = (props: ClockInOutEditSaveProps) => {
     setEditRecordId(null);
     callback();
   };
-
+  const handleAddClick = async () => {
+    try {
+      await addRecord();
+      setAlert({ type: "success", message: "勤怠が追加されました" });
+    } catch (error) {
+      setAlert({ type: "danger", message: "勤怠の追加に失敗しました" });
+    }
+    setShowModal(true);
+    setEditRecordId(null);
+    callback();
+  };
   const handleEditClick = (id: string) => {
     setEditRecordId(id);
   };
-  const handleDeleteClick = async (id: string) => {
+  const handleDeleteClick = async () => {
+    if (!record) {
+      return;
+    }
     try {
-      await api.delete(`/attendance/maintenance/${id}`);
+      await api.delete(`/attendance/maintenance/${record.id}`);
       setAlert({ type: "success", message: "勤怠が削除されました" });
-      callback();
     } catch (error) {
       setAlert({ type: "danger", message: "勤怠の削除に失敗しました" });
     }
+    setShowModal(true);
+    setEditRecordId(null);
+    callback();
   };
 
   const handleClockInTimeChange = (value: number) => {
@@ -156,58 +172,61 @@ export const ClockInOutEditSave = (props: ClockInOutEditSaveProps) => {
               </td>
               <td className="align-middle">
                 <span>
+                  <div className="d-inline-block">{record && startEndGap}</div>
+                </span>
+              </td>
+              <td className="align-middle text-end">
+                <span>
                   <div className="d-inline-block">
-                    {record && startEndGap}
                     <button
                       className="btn btn-primary mx-3 d-inline-block"
                       onClick={handleSaveClick}
                     >
                       保存
                     </button>
-                  </div>
-                </span>
-              </td>
-            </>
-          ) : record.clockInTime ? (
-            <>
-              <td className="align-middle">{clockInTime}</td>
-              <td className="align-middle">{clockOutTime}</td>
-              <td className="align-middle">{breakMinutes}</td>
-              <td className="align-middle">
-                <span>
-                  <div className="d-inline-block">
-                    {record && startEndGap}
-                    {isAdmin && (
-                      <>
-                        <button
-                          className="btn btn-secondary mx-3"
-                          onClick={() =>
-                            record && handleEditClick(record.id.toString())
-                          }
-                        >
-                          修正
-                        </button>
-                        <button
-                          className="btn btn-danger"
-                          onClick={() =>
-                            record && handleDeleteClick(record.id.toString())
-                          }
-                        >
-                          削除
-                        </button>
-                      </>
-                    )}
+                    <button
+                      className="btn btn-danger d-inline-block"
+                      onClick={handleDeleteClick}
+                    >
+                      削除
+                    </button>
                   </div>
                 </span>
               </td>
             </>
           ) : (
-            <>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-            </>
+            record.clockInTime && (
+              <>
+                <td className="align-middle">{clockInTime}</td>
+                <td className="align-middle">{clockOutTime}</td>
+                <td className="align-middle">{breakMinutes}</td>
+                <td className="align-middle">
+                  <span>
+                    <div className="d-inline-block">
+                      {record && startEndGap}
+                    </div>
+                  </span>
+                </td>
+                <td className="align-middle text-end">
+                  <span>
+                    <div className="d-inline-block">
+                      {isAdmin && (
+                        <>
+                          <button
+                            className="btn btn-secondary mx-3"
+                            onClick={() =>
+                              record && handleEditClick(record.id.toString())
+                            }
+                          >
+                            修正
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  </span>
+                </td>
+              </>
+            )
           )}
         </>
       ) : (
@@ -216,6 +235,22 @@ export const ClockInOutEditSave = (props: ClockInOutEditSaveProps) => {
           <td>-</td>
           <td>-</td>
           <td>-</td>
+          <td className="align-middle text-end">
+            <span>
+              <div className="d-inline-block">
+                {isAdmin && (
+                  <>
+                    <button
+                      className="btn btn-primary mx-3"
+                      onClick={() => handleAddClick()}
+                    >
+                      追加
+                    </button>
+                  </>
+                )}
+              </div>
+            </span>
+          </td>
         </>
       )}
       <Modal

@@ -60,6 +60,12 @@ public class AttendanceController {
         Attendance attendance = attendanceService.remarks(employeeId, date, remarks);
         return ResponseEntity.ok(attendance);
     }
+    @PostMapping("/{employeeId}/{date}")
+    public ResponseEntity<Attendance> add(@PathVariable Long employeeId, @PathVariable String date) {
+        // date は "YYYY-MM-DD" 形式で受け取ります
+        Attendance attendance = attendanceService.add(employeeId, date);
+        return ResponseEntity.ok(attendance);
+    }
 
     @PutMapping("/maintenance/{attendanceId}")
     public ResponseEntity<Attendance> edit(@PathVariable Long attendanceId,

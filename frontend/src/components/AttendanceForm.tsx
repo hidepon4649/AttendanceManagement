@@ -36,6 +36,25 @@ const AttendanceForm = () => {
 
   const [totalMinutes, setTotalMinutes] = useState(0); // 当月作業時間の合計(分)
 
+  const addRecord = async (date: string) => {
+    if (employeeId) {
+      try {
+        const response = await api.post(`/attendance/${employeeId}/${date}`, {
+          employeeId,
+          date,
+        });
+        // setAlert({ type: "success", message: "勤怠が追加されました" });
+        console.log("Record added:", response.data);
+      } catch (error) {
+        // setAlert({
+        //   type: "danger",
+        //   message: `勤怠の追加に失敗しました:${error.message}`,
+        // });
+        console.error("Failed to add record:", error);
+      }
+    }
+  };
+
   const fetchAttendanceRecords = async () => {
     if (employeeId) {
       try {
@@ -168,6 +187,7 @@ const AttendanceForm = () => {
           record={record}
           callback={fetchAttendanceRecords}
           setTotalMinutes={setTotalMinutes}
+          addRecord={() => addRecord(date)}
         />
         <td>
           <Bikou
@@ -267,6 +287,7 @@ const AttendanceForm = () => {
             <th>退勤時間</th>
             <th>休憩(分)</th>
             <th>作業時間</th>
+            <th>操作</th>
             <th>備考 (簡潔に入力して下さい)</th>
           </tr>
         </thead>
