@@ -1,5 +1,6 @@
+import React from "react";
 import api from "../services/api";
-import { getDefaultRecords, getYoubi } from "./dateTimeUtils";
+import { getDefaultRecords } from "./dateTimeUtils";
 import { Attendance } from "../models/Attendance";
 
 export const handleApiError = (error: any, message: string) => {

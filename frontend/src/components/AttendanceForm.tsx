@@ -16,9 +16,10 @@ import {
 import { Bikou } from "./Bikou";
 import { ClockInOutEditSave } from "./ClockInOutEditSave";
 import OutputReportButton from "./OutputReportButton";
-import { getYoubi, minutesToHHMM } from "../utils/dateTimeUtils";
+import { minutesToHHMM } from "../utils/dateTimeUtils";
 import MonthNavigation from "./MonthNavigation";
 import useLoginUserContext from "src/hooks/useLoginUserContext";
+import { Youbi } from "./Youbi";
 
 const AttendanceForm = () => {
   const { isAdmin } = useLoginUserContext();
@@ -122,12 +123,6 @@ const AttendanceForm = () => {
     console.log(newMonth);
     setTargetMonth(newMonth);
   };
-  const getYoubiHtml = (date: string) => {
-    const youbi = new Date(date).getDay();
-    const colorClass =
-      youbi === 0 ? "text-danger" : youbi === 6 ? "text-primary" : "text-dark";
-    return <span className={colorClass}>{getYoubi(date)}</span>;
-  };
 
   const attendanceList = dates.map((date) => {
     const record: Attendance | null = attendanceRecords.length
@@ -137,7 +132,7 @@ const AttendanceForm = () => {
       <tr key={date}>
         <td>
           {date}
-          {getYoubiHtml(date)}
+          <Youbi date={date} />
         </td>
         <ClockInOutEditSave
           record={record}
