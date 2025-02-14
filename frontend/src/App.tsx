@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import LoginPage from "./components/LoginPage";
 import AttendanceForm from "./components/AttendanceForm";
@@ -11,10 +11,10 @@ import HomeIcon from "@mui/icons-material/Home";
 import PeopleIcon from "@mui/icons-material/People";
 import BadgeIcon from "@mui/icons-material/Badge";
 import PunchClockIcon from "@mui/icons-material/PunchClock";
-import LoginUserContext from "./context/LoginUserContext";
+import useLoginUserContext from "./hooks/useLoginUserContext";
 
 const App = () => {
-  const { isLoggedIn, isAdmin, myName } = useContext(LoginUserContext);
+  const { isLoggedIn, isAdmin, myName } = useLoginUserContext();
 
   console.log("App.tsx is rendered. isLoggedIn:", isLoggedIn);
 

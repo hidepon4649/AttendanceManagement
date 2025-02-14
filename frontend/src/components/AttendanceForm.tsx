@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import api from "../services/api";
 import { Employee } from "../models/Employee";
 import { Attendance } from "../models/Attendance";
@@ -17,11 +17,11 @@ import { Bikou } from "./Bikou";
 import { ClockInOutEditSave } from "./ClockInOutEditSave";
 import OutputReportButton from "./OutputReportButton";
 import { getYoubi, minutesToHHMM } from "../utils/dateTimeUtils";
-import LoginUserContext from "src/context/LoginUserContext";
 import MonthNavigation from "./MonthNavigation";
+import useLoginUserContext from "src/hooks/useLoginUserContext";
 
 const AttendanceForm = () => {
-  const { isAdmin } = useContext(LoginUserContext);
+  const { isAdmin } = useLoginUserContext();
 
   const [employeeId, setEmployeeId] = useState(() => {
     return lsGetMyId();

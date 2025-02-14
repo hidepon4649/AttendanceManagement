@@ -1,13 +1,13 @@
-import React, { useContext } from "react";
+import React from "react";
 import api from "../services/api";
 import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import LogoutIcon from "@mui/icons-material/Logout";
-import LoginUserContext from "src/context/LoginUserContext";
 import { lsClear } from "src/utils/localStorageUtils";
+import useLoginUserContext from "src/hooks/useLoginUserContext";
 
 const LogoutButton = () => {
-  const { handleLogout } = useContext(LoginUserContext);
+  const { handleLogout } = useLoginUserContext();
   const navigate = useNavigate();
   const logout = async () => {
     try {

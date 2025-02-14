@@ -1,21 +1,19 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import api from "../services/api";
-import LoginUserContext from "src/context/LoginUserContext";
 import {
   lsClear,
   lsSetCsrfToken,
   lsSetUser,
   lsSetJwtToken,
 } from "src/utils/localStorageUtils";
+import useLoginUserContext from "src/hooks/useLoginUserContext";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const {
-    handleLoginSuccess,
-  } = useContext(LoginUserContext);
+  const { handleLoginSuccess } = useLoginUserContext();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

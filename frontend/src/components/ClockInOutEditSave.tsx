@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import TimePicker from "react-bootstrap-time-picker";
 import {
   formatShortTime,
@@ -8,7 +8,7 @@ import {
 import { Attendance } from "../models/Attendance";
 import api from "../services/api";
 import { Alert, Modal, Button } from "react-bootstrap";
-import LoginUserContext from "src/context/LoginUserContext";
+import useLoginUserContext from "src/hooks/useLoginUserContext";
 
 interface ClockInOutEditSaveProps {
   record: Attendance | null;
@@ -19,7 +19,7 @@ interface ClockInOutEditSaveProps {
 
 export const ClockInOutEditSave = (props: ClockInOutEditSaveProps) => {
   const { record, callback, setTotalMinutes, addRecord } = props;
-  const { isAdmin } = useContext(LoginUserContext);
+  const { isAdmin } = useLoginUserContext();
 
   const [editRecordId, setEditRecordId] = useState<string | null>(null);
   const [clockInTime, setClockInTime] = useState(record?.clockInTime || "");
