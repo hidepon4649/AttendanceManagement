@@ -46,9 +46,6 @@ public class AttendanceController {
         var year = Integer.parseInt(yearMonth.split("-")[0]);
         var month = Integer.parseInt(yearMonth.split("-")[1]);
         List<Attendance> attendances = attendanceService.getMonthlyReportByEmployeeId(employeeId, year, month);
-        if (attendances.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
         return ResponseEntity.ok(attendances);
     }
 

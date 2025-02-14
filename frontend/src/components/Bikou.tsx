@@ -63,7 +63,7 @@ export const Bikou = (props: BikouProps) => {
         <input
           type="text"
           className="form-control"
-          value={remarks}
+          value={remarks || ""}
           onChange={handleRemarksChange}
           maxLength={100}
         />
