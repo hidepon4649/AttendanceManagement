@@ -13,5 +13,5 @@ const formatShortTime = (dateTimeString) => {
     return shorttime; // "HH:MM"形式で取得
 };
 exports.formatShortTime = formatShortTime;
-const padFrontZero = (num, size) => String(num).padStart(size, '0');
+const padFrontZero = (num, size) => String(num).padStart(size, "0");
 exports.padFrontZero = padFrontZero;

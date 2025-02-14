@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import TimePicker from "react-bootstrap-time-picker";
 import {
   formatShortTime,
@@ -8,9 +8,9 @@ import {
 import { Attendance } from "../models/Attendance";
 import api from "../services/api";
 import { Alert, Modal, Button } from "react-bootstrap";
+import LoginUserContext from "src/context/LoginUserContext";
 
 interface ClockInOutEditSaveProps {
-  isAdmin: boolean;
   record: Attendance | null;
   callback: () => void;
   setTotalMinutes: (update: (preTotalMinutes: number) => number) => void;
@@ -18,7 +18,8 @@ interface ClockInOutEditSaveProps {
 }
 
 export const ClockInOutEditSave = (props: ClockInOutEditSaveProps) => {
-  const { isAdmin, record, callback, setTotalMinutes, addRecord } = props;
+  const { record, callback, setTotalMinutes, addRecord } = props;
+  const { isAdmin } = useContext(LoginUserContext);
 
   const [editRecordId, setEditRecordId] = useState<string | null>(null);
   const [clockInTime, setClockInTime] = useState(record?.clockInTime || "");
@@ -50,40 +51,16 @@ export const ClockInOutEditSave = (props: ClockInOutEditSaveProps) => {
   );
 
   const handleSaveClick = async () => {
-    if (!record) {
-      return;
-    }
-    // 時刻がint型の場合は、時刻を文字列に変換
-    let inTime = clockInTime ? clockInTime : "00:00:00";
-    if (clockInTime != null && !clockInTime.includes(":")) {
-      const inTimeHours = padFrontZero(
-        Math.floor(parseInt(clockInTime) / 3600),
-        2
-      );
-      const inTimeMinutes = padFrontZero(
-        Math.floor((parseInt(clockInTime) % 3600) / 60),
-        2
-      );
-      inTime = `${inTimeHours}:${inTimeMinutes}`;
-    }
-    // 時刻がint型の場合は、時刻を文字列に変換
-    let outTime = clockOutTime ? clockOutTime : "00:00:00";
-    if (clockOutTime != null && !clockOutTime.includes(":")) {
-      const outTimeHours = padFrontZero(
-        Math.floor(parseInt(clockOutTime) / 3600),
-        2
-      );
-      const outTimeMinutes = padFrontZero(
-        Math.floor((parseInt(clockOutTime) % 3600) / 60),
-        2
-      );
-      outTime = `${outTimeHours}:${outTimeMinutes}`;
-    }
+    if (!record) return;
+
+    // 時刻を文字列に変換
+    const inTime = convertToTimeString(clockInTime);
+    const outTime = convertToTimeString(clockOutTime);
+
+    setClockInTime(inTime);
+    setClockOutTime(outTime);
 
     try {
-      setClockInTime(inTime);
-      setClockOutTime(outTime);
-
       await api.put(`/attendance/maintenance/${record.id}`, {
         attendanceId: record.id,
         clockInTime: inTime,
@@ -94,9 +71,7 @@ export const ClockInOutEditSave = (props: ClockInOutEditSaveProps) => {
     } catch (error) {
       setAlert({ type: "danger", message: "勤怠の修正に失敗しました" });
     }
-    setShowModal(true);
-    setEditRecordId(null);
-    callback();
+    refresh();
   };
   const handleAddClick = async () => {
     try {
@@ -105,23 +80,23 @@ export const ClockInOutEditSave = (props: ClockInOutEditSaveProps) => {
     } catch (error) {
       setAlert({ type: "danger", message: "勤怠の追加に失敗しました" });
     }
-    setShowModal(true);
-    setEditRecordId(null);
-    callback();
+    refresh();
   };
   const handleEditClick = (id: string) => {
     setEditRecordId(id);
   };
   const handleDeleteClick = async () => {
-    if (!record) {
-      return;
-    }
+    if (!record) return;
+
     try {
       await api.delete(`/attendance/maintenance/${record.id}`);
       setAlert({ type: "success", message: "勤怠が削除されました" });
     } catch (error) {
       setAlert({ type: "danger", message: "勤怠の削除に失敗しました" });
     }
+    refresh();
+  };
+  const refresh = () => {
     setShowModal(true);
     setEditRecordId(null);
     callback();
@@ -139,6 +114,18 @@ export const ClockInOutEditSave = (props: ClockInOutEditSaveProps) => {
     const value = e.target.value;
     setBreakMinutes(parseInt(value));
   };
+  function convertToTimeString(time: string) {
+    let inTime = time ? time : "00:00:00";
+    if (time != null && !time.includes(":")) {
+      const timeHours = padFrontZero(Math.floor(parseInt(time) / 3600), 2);
+      const timeMinutes = padFrontZero(
+        Math.floor((parseInt(time) % 3600) / 60),
+        2
+      );
+      inTime = `${timeHours}:${timeMinutes}`;
+    }
+    return inTime;
+  }
 
   return (
     <>

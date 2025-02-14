@@ -3,21 +3,22 @@ import api from "../services/api";
 import { Employee } from "../models/Employee";
 import { Attendance } from "../models/Attendance";
 import Button from "@mui/material/Button";
-import IconButton from "@mui/material/IconButton";
 import PunchClockIcon from "@mui/icons-material/PunchClock";
-import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
-import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { lsGetMyId } from "../utils/localStorageUtils";
-
+import {
+  handleApiError,
+  addRecord,
+  fetchAttendanceRecords,
+  targetMonthDefaultRecords,
+  updateMonth,
+  isCurrentMonth,
+} from "../utils/attendanceUtils";
 import { Bikou } from "./Bikou";
 import { ClockInOutEditSave } from "./ClockInOutEditSave";
 import OutputReportButton from "./OutputReportButton";
-import {
-  getYoubi,
-  getDefaultRecords,
-  minutesToHHMM,
-} from "../utils/dateTimeUtils";
+import { getYoubi, minutesToHHMM } from "../utils/dateTimeUtils";
 import LoginUserContext from "src/context/LoginUserContext";
+import MonthNavigation from "./MonthNavigation";
 
 const AttendanceForm = () => {
   const { isAdmin } = useContext(LoginUserContext);
@@ -36,52 +37,6 @@ const AttendanceForm = () => {
 
   const [totalMinutes, setTotalMinutes] = useState(0); // 当月作業時間の合計(分)
 
-  const addRecord = async (date: string) => {
-    if (employeeId) {
-      try {
-        const response = await api.post(`/attendance/${employeeId}/${date}`, {
-          employeeId,
-          date,
-        });
-        // setAlert({ type: "success", message: "勤怠が追加されました" });
-        console.log("Record added:", response.data);
-      } catch (error) {
-        // setAlert({
-        //   type: "danger",
-        //   message: `勤怠の追加に失敗しました:${error.message}`,
-        // });
-        console.error("Failed to add record:", error);
-      }
-    }
-  };
-
-  const fetchAttendanceRecords = async () => {
-    if (employeeId) {
-      try {
-        // 初期化
-        setAttendanceRecords([] as Attendance[]);
-        setTotalMinutes(0);
-
-        const response = await api.get(
-          `/attendance/${employeeId}/${targetMonth}`
-        );
-        setAttendanceRecords(
-          response.data.map((record: any) => ({
-            ...record,
-            employeeName: record.employee.name,
-          }))
-        );
-        console.log("Attendance records:", response.data);
-      } catch (error) {
-        console.error("Failed to fetch attendance records:", error);
-      }
-    }
-  };
-
-  const targetMonthDefaultRecords = async () => {
-    setDates(getDefaultRecords(targetMonth));
-  };
-
   useEffect(() => {
     const fetchEmployees = async () => {
       // 管理者の場合のみ社員情報を取得
@@ -90,7 +45,7 @@ const AttendanceForm = () => {
           const response = await api.get("/employees");
           setEmployees(response.data);
         } catch (error) {
-          console.error("Failed to fetch employees:", error);
+          handleApiError(error, "Failed to fetch employees");
         }
       }
     };
@@ -98,8 +53,13 @@ const AttendanceForm = () => {
   }, []);
 
   useEffect(() => {
-    fetchAttendanceRecords().catch((error) => console.error(error));
-    targetMonthDefaultRecords().catch((error) => console.error(error));
+    fetchAttendanceRecords(
+      employeeId,
+      targetMonth,
+      setAttendanceRecords,
+      setTotalMinutes
+    ).catch((error) => console.error(error));
+    targetMonthDefaultRecords(targetMonth, setDates);
   }, [employeeId, targetMonth]);
 
   const handleClockIn = async () => {
@@ -113,9 +73,14 @@ const AttendanceForm = () => {
         console.log("Clocked in:", response.data);
 
         // 出勤記録を再取得して更新
-        await fetchAttendanceRecords();
+        await fetchAttendanceRecords(
+          employeeId,
+          targetMonth,
+          setAttendanceRecords,
+          setTotalMinutes
+        );
       } catch (error) {
-        console.error("Clock-in failed:", error);
+        handleApiError(error, "Clock-in failed");
       }
     }
   };
@@ -130,9 +95,14 @@ const AttendanceForm = () => {
         console.log("Clocked out:", response.data);
 
         // 出勤記録を再取得して更新
-        await fetchAttendanceRecords();
+        await fetchAttendanceRecords(
+          employeeId,
+          targetMonth,
+          setAttendanceRecords,
+          setTotalMinutes
+        );
       } catch (error) {
-        console.error("Clock-out failed:", error);
+        handleApiError(error, "Clock-out failed");
       }
     }
   };
@@ -141,30 +111,17 @@ const AttendanceForm = () => {
     setEmployeeId(Number(e.target.value));
   };
 
-  const updateMonth = (offset: number) => {
-    const [year, month] = targetMonth.split("-").map(Number); // 年と月を分解
-    const date = new Date(year, month + offset, 1); // 日付オブジェクト作成（0ベースの月）
-    return date.toISOString().slice(0, 7); // YYYY-MM形式で返す
-  };
-
   const handlePrevMonth = () => {
-    const newMonth = updateMonth(-1); // 前の月に移動
+    const newMonth = updateMonth(targetMonth, -1); // 前の月に移動
     console.log(newMonth);
     setTargetMonth(newMonth);
   };
 
   const handleNextMonth = () => {
-    const newMonth = updateMonth(1); // 次の月に移動
+    const newMonth = updateMonth(targetMonth, 1); // 次の月に移動
     console.log(newMonth);
     setTargetMonth(newMonth);
   };
-
-  const isCurrentMonth = () => {
-    const currentMonth = new Date().toISOString().slice(0, 7);
-    console.log(`currentMonth:${currentMonth}, targetMonth:${targetMonth}`);
-    return currentMonth === targetMonth;
-  };
-
   const getYoubiHtml = (date: string) => {
     const youbi = new Date(date).getDay();
     const colorClass =
@@ -183,18 +140,31 @@ const AttendanceForm = () => {
           {getYoubiHtml(date)}
         </td>
         <ClockInOutEditSave
-          isAdmin={isAdmin}
           record={record}
-          callback={fetchAttendanceRecords}
+          callback={() =>
+            fetchAttendanceRecords(
+              employeeId,
+              targetMonth,
+              setAttendanceRecords,
+              setTotalMinutes
+            )
+          }
           setTotalMinutes={setTotalMinutes}
-          addRecord={() => addRecord(date)}
+          addRecord={() => addRecord(employeeId, date)}
         />
         <td>
           <Bikou
             employeeId={employeeId}
             date={date}
             initalRemarks={record ? record.remarks : ""}
-            callback={fetchAttendanceRecords}
+            callback={() =>
+              fetchAttendanceRecords(
+                employeeId,
+                targetMonth,
+                setAttendanceRecords,
+                setTotalMinutes
+              )
+            }
           />
         </td>
       </tr>
@@ -208,23 +178,11 @@ const AttendanceForm = () => {
           <h2>出退勤管理</h2>
         </div>
         <div className="col-3">
-          <h3 className="d-inline-flex align-items-center">
-            <IconButton
-              aria-label="prev month"
-              name="prevMonth"
-              onClick={handlePrevMonth}
-            >
-              <NavigateBeforeIcon />
-            </IconButton>
-            {targetMonth}
-            <IconButton
-              aria-label="next month"
-              name="nextMonth"
-              onClick={handleNextMonth}
-            >
-              <NavigateNextIcon />
-            </IconButton>
-          </h3>
+          <MonthNavigation
+            targetMonth={targetMonth}
+            handlePrevMonth={handlePrevMonth}
+            handleNextMonth={handleNextMonth}
+          />
         </div>
       </div>
       <div className="align-items-center mt-3">
@@ -254,7 +212,7 @@ const AttendanceForm = () => {
           size="large"
           onClick={handleClockIn}
           variant="outlined"
-          disabled={!isCurrentMonth()}
+          disabled={!isCurrentMonth(targetMonth)}
           startIcon={<PunchClockIcon />}
         >
           出社
@@ -264,7 +222,7 @@ const AttendanceForm = () => {
           size="large"
           onClick={handleClockOut}
           variant="outlined"
-          disabled={!isCurrentMonth()}
+          disabled={!isCurrentMonth(targetMonth)}
           startIcon={<PunchClockIcon />}
         >
           退社
