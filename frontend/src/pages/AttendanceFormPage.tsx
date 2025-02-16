@@ -13,15 +13,15 @@ import {
   updateMonth,
   isCurrentMonth,
 } from "../utils/attendanceUtils";
-import { Bikou } from "./Bikou";
-import { ClockInOutEditSave } from "./ClockInOutEditSave";
-import OutputReportButton from "./OutputReportButton";
+import { Bikou } from "../components/Bikou";
+import { ClockInOutEditSave } from "../components/ClockInOutEditSave";
+import OutputReportButton from "../components/OutputReportButton";
 import { minutesToHHMM } from "../utils/dateTimeUtils";
-import MonthNavigation from "./MonthNavigation";
+import MonthNavigation from "../components/MonthNavigation";
 import useLoginUserContext from "src/hooks/useLoginUserContext";
-import { Youbi } from "./Youbi";
+import { Youbi } from "../components/Youbi";
 
-const AttendanceForm = () => {
+const AttendanceFormPage = () => {
   const { isAdmin } = useLoginUserContext();
 
   const [employeeId, setEmployeeId] = useState(() => {
@@ -250,4 +250,4 @@ const AttendanceForm = () => {
   );
 };
 
-export default AttendanceForm;
+export default AttendanceFormPage;

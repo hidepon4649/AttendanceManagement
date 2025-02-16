@@ -5,7 +5,7 @@ import "../css/EmployeeList.css";
 import { Employee } from "../models/Employee";
 import { Alert } from "react-bootstrap";
 
-const EmployeeList = () => {
+const EmployeeListPage = () => {
   const [list, setList] = useState([]);
   const [alert, setAlert] = useState<{ type: string; message: string } | null>(
     null
@@ -82,4 +82,4 @@ const EmployeeList = () => {
   );
 };
 
-export default EmployeeList;
+export default EmployeeListPage;

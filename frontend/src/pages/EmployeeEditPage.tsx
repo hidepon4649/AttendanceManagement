@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { Employee } from "../models/Employee";
 import { Alert } from "react-bootstrap";
 
-const EmployeeEdit = (props: any) => {
+const EmployeeEditPage = (props: any) => {
   const { id } = useParams<{ id: string }>();
   const [employee, setEmployee] = useState<Employee>(
     new Employee(0, "", "", "", false)
@@ -137,4 +137,4 @@ interface Errors {
   fieldErrors?: FieldErrors;
 }
 
-export default EmployeeEdit;
+export default EmployeeEditPage;

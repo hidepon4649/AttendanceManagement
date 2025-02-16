@@ -1,10 +1,10 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import LoginPage from "./components/LoginPage";
-import AttendanceForm from "./components/AttendanceForm";
-import RegisterEmployeeForm from "./components/EmployeeRegisterForm";
-import EmployeeList from "./components/EmployeeList";
-import EmployeeEdit from "./components/EmployeeEdit";
+import LoginPage from "./pages/LoginPage";
+import AttendanceForm from "./pages/AttendanceFormPage";
+import RegisterEmployeeForm from "./pages/EmployeeRegisterFormPage";
+import EmployeeList from "./pages/EmployeeListPage";
+import EmployeeEdit from "./pages/EmployeeEditPage";
 import LogoutButton from "./components/LogoutButton ";
 import Button from "@mui/material/Button";
 import HomeIcon from "@mui/icons-material/Home";

@@ -3,7 +3,7 @@ import api from "../services/api";
 import { Employee } from "../models/Employee";
 import { Alert } from "react-bootstrap";
 
-const RegisterEmployeeForm = () => {
+const RegisterEmployeeFormPage = () => {
   const [employee, setEmployee] = useState({} as Employee);
 
   const [errors, setErrors] = useState<Errors>({});
@@ -124,4 +124,4 @@ interface Errors {
   fieldErrors?: FieldErrors;
 }
 
-export default RegisterEmployeeForm;
+export default RegisterEmployeeFormPage;
