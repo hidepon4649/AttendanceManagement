@@ -235,13 +235,15 @@ const AttendanceFormPage = () => {
       <table className="table table-striped table-hover mt-3">
         <thead>
           <tr>
-            <th>日付</th>
-            <th>出勤時間</th>
-            <th>退勤時間</th>
-            <th>休憩(分)</th>
-            <th>作業時間</th>
-            <th>操作</th>
-            <th>備考 (簡潔に入力して下さい)</th>
+            <th className="align-middle p-0 m-0">日付</th>
+            <th className="align-middle p-0 m-0">出勤時間</th>
+            <th className="align-middle p-0 m-0">退勤時間</th>
+            <th className="align-middle p-0 m-0">休憩(分)</th>
+            <th className="align-middle p-0 m-0">作業時間</th>
+            <th className="align-middle p-0 m-0">操作</th>
+            <th className="align-middle p-0 m-0">
+              備考 (簡潔に入力して下さい)
+            </th>
           </tr>
         </thead>
         <tbody>{attendanceList}</tbody>

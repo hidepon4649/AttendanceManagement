@@ -120,7 +120,7 @@ export const ClockInOutEditSave = (props: ClockInOutEditSaveProps) => {
         <>
           {editRecordId === record.id.toString() ? (
             <>
-              <td className="align-middle">
+              <td className="align-middle p-0 m-0" style={{ width: "110px" }}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <TimePicker
                     ampm={false}
@@ -130,7 +130,7 @@ export const ClockInOutEditSave = (props: ClockInOutEditSaveProps) => {
                   />
                 </LocalizationProvider>
               </td>
-              <td className="align-middle">
+              <td className="align-middle p-0 m-0" style={{ width: "110px" }}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <TimePicker
                     ampm={false}
@@ -140,7 +140,7 @@ export const ClockInOutEditSave = (props: ClockInOutEditSaveProps) => {
                   />
                 </LocalizationProvider>
               </td>
-              <td className="align-middle">
+              <td className="align-middle p-0 m-0" style={{ width: "80px" }}>
                 <input
                   type="number"
                   className="form-control"
