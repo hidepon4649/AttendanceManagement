@@ -1,7 +1,7 @@
 export const formatTime = (dateTimeString: string) => {
-    const date = new Date(dateTimeString);
-    return date.toTimeString().split(" ")[0]; // "HH:MM:SS"形式で取得
-  };
+  const date = new Date(dateTimeString);
+  return date.toTimeString().split(" ")[0]; // "HH:MM:SS"形式で取得
+};
 export const formatShortTime = (dateTimeString: string) => {
   const date = new Date(dateTimeString);
   const shorttime = date.toTimeString().split(" ")[0].substring(0, 5);
@@ -9,7 +9,8 @@ export const formatShortTime = (dateTimeString: string) => {
   return shorttime; // "HH:MM"形式で取得
 };
 
-export const padFrontZero = (num: number | string, size: number) => String(num).padStart(size, '0');
+export const padFrontZero = (num: number | string, size: number) =>
+  String(num).padStart(size, "0");
 
 const youbiList = ["(日)", "(月)", "(火)", "(水)", "(木)", "(金)", "(土)"];
 export const getYoubi = (date: string) => {
@@ -42,25 +43,28 @@ export const getYearMonthForPrint = (targetMonth: string) => {
   const dispYear = padFrontZero(year, 4);
   const dispMonth = padFrontZero(month, 2);
   return `${dispYear}年${dispMonth}月`;
-
 };
 
-export const getStartEndGap = (start: string, end: string, breakMinutes: number = 0) => {
-  if(typeof breakMinutes === 'string') {
+export const getStartEndGap = (
+  start: string,
+  end: string,
+  breakMinutes: number = 0
+) => {
+  if (typeof breakMinutes === "string") {
     breakMinutes = parseInt(breakMinutes);
   }
   const clockInTime = new Date(start);
   const clockOutTime = new Date(end);
   const timeDifference = clockOutTime.getTime() - clockInTime.getTime();
   const totalMinutes = Math.floor(timeDifference / (1000 * 60)) - breakMinutes;
-  const hours = padFrontZero(Math.floor(totalMinutes / 60),2);
-  const minutes = padFrontZero(totalMinutes % 60,2) ;
+  const hours = padFrontZero(Math.floor(totalMinutes / 60), 2);
+  const minutes = padFrontZero(totalMinutes % 60, 2);
   const formattedTimeDifference = `${hours}:${minutes}`;
-  return { minutes:totalMinutes, hhmm:formattedTimeDifference };
-}
+  return { minutes: totalMinutes, hhmm: formattedTimeDifference };
+};
 
 export const minutesToHHMM = (minutes: number) => {
-  const hours = padFrontZero(Math.floor(minutes / 60),2);
-  const mins = padFrontZero(minutes % 60,2);
+  const hours = padFrontZero(Math.floor(minutes / 60), 2);
+  const mins = padFrontZero(minutes % 60, 2);
   return `${hours}:${mins}`;
-}
+};

@@ -8,7 +8,7 @@ export const formatShortTime = (dateTimeString) => {
     // console.log("shorttime:", shorttime);
     return shorttime; // "HH:MM"形式で取得
 };
-export const padFrontZero = (num, size) => String(num).padStart(size, '0');
+export const padFrontZero = (num, size) => String(num).padStart(size, "0");
 const youbiList = ["(日)", "(月)", "(火)", "(水)", "(木)", "(金)", "(土)"];
 export const getYoubi = (date) => {
     const youbi = new Date(date).getDay();
@@ -36,7 +36,7 @@ export const getYearMonthForPrint = (targetMonth) => {
     return `${dispYear}年${dispMonth}月`;
 };
 export const getStartEndGap = (start, end, breakMinutes = 0) => {
-    if (typeof breakMinutes === 'string') {
+    if (typeof breakMinutes === "string") {
         breakMinutes = parseInt(breakMinutes);
     }
     const clockInTime = new Date(start);

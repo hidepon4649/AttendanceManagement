@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import TimePicker from "react-bootstrap-time-picker";
 import {
   formatShortTime,
   padFrontZero,
@@ -9,7 +8,11 @@ import { Attendance } from "../models/Attendance";
 import api from "../services/api";
 import { Alert, Modal, Button } from "react-bootstrap";
 import useLoginUserContext from "src/hooks/useLoginUserContext";
-
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+import { formatDBStyle } from "src/utils/formatTimeUtils";
 interface ClockInOutEditSaveProps {
   record: Attendance | null;
   callback: () => void;
@@ -30,17 +33,18 @@ export const ClockInOutEditSave = (props: ClockInOutEditSaveProps) => {
 
   useEffect(() => {
     if (record) {
-      const sTime = record.clockInTime;
-      const eTime = record.clockOutTime;
-      const bMins = record.breakMinutes;
+      setClockInTime(record.clockInTime);
+      setClockOutTime(record.clockOutTime);
+      setBreakMinutes(record.breakMinutes);
 
-      setClockInTime(formatShortTime(sTime));
-      setClockOutTime(formatShortTime(eTime));
-      setBreakMinutes(bMins);
-      setStartEndGap(getStartEndGap(sTime, eTime, bMins).hhmm);
-      const addMinutes = getStartEndGap(sTime, eTime, bMins).minutes;
+      const { hhmm, minutes } = getStartEndGap(
+        record.clockInTime,
+        record.clockOutTime,
+        record.breakMinutes
+      );
+      setStartEndGap(hhmm);
       setTotalMinutes(
-        (preTotalMinutes: number) => (preTotalMinutes += addMinutes)
+        (preTotalMinutes: number) => (preTotalMinutes += minutes)
       );
     }
   }, [record]);
@@ -53,19 +57,12 @@ export const ClockInOutEditSave = (props: ClockInOutEditSaveProps) => {
   const handleSaveClick = async () => {
     if (!record) return;
 
-    // 時刻を文字列に変換
-    const inTime = convertToTimeString(clockInTime);
-    const outTime = convertToTimeString(clockOutTime);
-
-    setClockInTime(inTime);
-    setClockOutTime(outTime);
-
     try {
       await api.put(`/attendance/maintenance/${record.id}`, {
         attendanceId: record.id,
-        clockInTime: inTime,
-        clockOutTime: outTime,
-        breakMinutes: breakMinutes,
+        clockInTime: clockInTime || record.clockInTime,
+        clockOutTime: clockOutTime || record.clockOutTime,
+        breakMinutes: breakMinutes || record.breakMinutes,
       });
       setAlert({ type: "success", message: "勤怠が修正されました" });
     } catch (error) {
@@ -102,30 +99,20 @@ export const ClockInOutEditSave = (props: ClockInOutEditSaveProps) => {
     callback();
   };
 
-  const handleClockInTimeChange = (value: number) => {
-    setClockInTime(value.toString());
+  const handleClockInTimeChange = (value: any) => {
+    console.log("in value:", value);
+    setClockInTime(() => formatDBStyle(value));
   };
 
-  const handleClockOutTimeChange = (value: number) => {
-    setClockOutTime(value.toString());
+  const handleClockOutTimeChange = (value: any) => {
+    console.log("out value:", value);
+    setClockOutTime(() => formatDBStyle(value));
   };
 
   const handleBreakMinutes = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setBreakMinutes(parseInt(value));
   };
-  function convertToTimeString(time: string) {
-    let inTime = time ? time : "00:00:00";
-    if (time != null && !time.includes(":")) {
-      const timeHours = padFrontZero(Math.floor(parseInt(time) / 3600), 2);
-      const timeMinutes = padFrontZero(
-        Math.floor((parseInt(time) % 3600) / 60),
-        2
-      );
-      inTime = `${timeHours}:${timeMinutes}`;
-    }
-    return inTime;
-  }
 
   return (
     <>
@@ -134,20 +121,22 @@ export const ClockInOutEditSave = (props: ClockInOutEditSaveProps) => {
           {editRecordId === record.id.toString() ? (
             <>
               <td className="align-middle">
-                <TimePicker
-                  value={clockInTime}
-                  step={1}
-                  format={24}
-                  onChange={handleClockInTimeChange}
-                />
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <TimePicker
+                    // value={dayjs(record.clockInTime)}
+                    value={dayjs(clockInTime)}
+                    onChange={handleClockInTimeChange}
+                  />
+                </LocalizationProvider>
               </td>
               <td className="align-middle">
-                <TimePicker
-                  value={clockOutTime}
-                  step={1}
-                  format={24}
-                  onChange={handleClockOutTimeChange}
-                />
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <TimePicker
+                    // value={dayjs(record.clockOutTime)}
+                    value={dayjs(clockOutTime)}
+                    onChange={handleClockOutTimeChange}
+                  />
+                </LocalizationProvider>
               </td>
               <td className="align-middle">
                 <input
@@ -184,9 +173,13 @@ export const ClockInOutEditSave = (props: ClockInOutEditSaveProps) => {
           ) : (
             record.clockInTime && (
               <>
-                <td className="align-middle">{clockInTime}</td>
-                <td className="align-middle">{clockOutTime}</td>
-                <td className="align-middle">{breakMinutes}</td>
+                <td className="align-middle">
+                  {formatShortTime(record.clockInTime)}
+                </td>
+                <td className="align-middle">
+                  {formatShortTime(record.clockOutTime)}
+                </td>
+                <td className="align-middle">{record.breakMinutes}</td>
                 <td className="align-middle">
                   <span>
                     <div className="d-inline-block">

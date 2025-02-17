@@ -122,14 +122,10 @@ public class AttendanceService {
 
         // 打刻時間の更新
         if (newClockInTime != null) {
-            LocalDateTime newInValue = LocalDateTime.parse(
-                    attendance.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + "T" + newClockInTime);
-            attendance.setClockInTime(newInValue);
+            attendance.setClockInTime(LocalDateTime.parse(newClockInTime));
         }
         if (newClockOutTime != null) {
-            LocalDateTime newOutValue = LocalDateTime.parse(
-                    attendance.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + "T" + newClockOutTime);
-            attendance.setClockOutTime(newOutValue);
+            attendance.setClockOutTime(LocalDateTime.parse(newClockOutTime));
         }
         attendance.setBreakMinutes(breakMinutes);
 
