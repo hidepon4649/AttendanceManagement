@@ -123,7 +123,8 @@ export const ClockInOutEditSave = (props: ClockInOutEditSaveProps) => {
               <td className="align-middle">
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <TimePicker
-                    // value={dayjs(record.clockInTime)}
+                    ampm={false}
+                    timeSteps={{ hours: 1, minutes: 1 }}
                     value={dayjs(clockInTime)}
                     onChange={handleClockInTimeChange}
                   />
@@ -132,7 +133,8 @@ export const ClockInOutEditSave = (props: ClockInOutEditSaveProps) => {
               <td className="align-middle">
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <TimePicker
-                    // value={dayjs(record.clockOutTime)}
+                    ampm={false}
+                    timeSteps={{ hours: 1, minutes: 1 }}
                     value={dayjs(clockOutTime)}
                     onChange={handleClockOutTimeChange}
                   />
