@@ -1,9 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  formatShortTime,
-  padFrontZero,
-  getStartEndGap,
-} from "../utils/dateTimeUtils";
+import { formatShortTime, getStartEndGap } from "../utils/dateTimeUtils";
 import { Attendance } from "../models/Attendance";
 import api from "../services/api";
 import { Alert, Modal, Button } from "react-bootstrap";

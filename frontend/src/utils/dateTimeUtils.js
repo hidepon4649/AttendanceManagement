@@ -5,7 +5,6 @@ export const formatTime = (dateTimeString) => {
 export const formatShortTime = (dateTimeString) => {
     const date = new Date(dateTimeString);
     const shorttime = date.toTimeString().split(" ")[0].substring(0, 5);
-    // console.log("shorttime:", shorttime);
     return shorttime; // "HH:MM"形式で取得
 };
 export const padFrontZero = (num, size) => String(num).padStart(size, "0");

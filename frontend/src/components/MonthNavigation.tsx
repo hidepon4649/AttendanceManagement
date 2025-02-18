@@ -8,13 +8,11 @@ interface MonthNavigationProps {
   handlePrevMonth: () => void;
   handleNextMonth: () => void;
 }
-// const MonthNavigation = ({ props: MonthNavigationProps }) => (
 const MonthNavigation: React.FC<MonthNavigationProps> = ({
   targetMonth,
   handlePrevMonth,
   handleNextMonth,
 }) => (
-  // const { targetMonth, handlePrevMonth, handleNextMonth } = props;
   <h3 className="d-inline-flex align-items-center">
     <IconButton
       aria-label="prev month"

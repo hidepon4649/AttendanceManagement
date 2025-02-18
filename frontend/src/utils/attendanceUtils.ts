@@ -46,7 +46,7 @@ export const targetMonthDefaultRecords = (
   targetMonth: string,
   setDates: React.Dispatch<React.SetStateAction<string[]>>
 ) => {
-  setDates(getDefaultRecords(targetMonth));
+  setDates(getDefaultRecords(targetMonth) || []);
 };
 
 export const updateMonth = (targetMonth: string, offset: number) => {

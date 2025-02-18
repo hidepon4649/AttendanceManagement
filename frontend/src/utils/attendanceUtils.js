@@ -31,7 +31,7 @@ export const fetchAttendanceRecords = async (employeeId, targetMonth, setAttenda
     }
 };
 export const targetMonthDefaultRecords = (targetMonth, setDates) => {
-    setDates(getDefaultRecords(targetMonth));
+    setDates(getDefaultRecords(targetMonth) || []);
 };
 export const updateMonth = (targetMonth, offset) => {
     const [year, month] = targetMonth.split("-").map(Number);
