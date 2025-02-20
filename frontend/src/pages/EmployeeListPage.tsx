@@ -60,25 +60,14 @@ const EmployeeListPage = () => {
     );
   };
 
-  const sortById = () => {
-    const current = isAscId;
-    setIsAscId(!current);
-    handleSort("id", !current);
-  };
-  const sortByName = () => {
-    const current = isAscName;
-    setIsAscName(!current);
-    handleSort("name", !current);
-  };
-  const sortByEmail = () => {
-    const current = isAscEmail;
-    setIsAscEmail(!current);
-    handleSort("email", !current);
-  };
-  const sortByAdmin = () => {
-    const current = isAscAdmin;
-    setIsAscAdmin(!current);
-    handleSort("admin", !current);
+  const sortByColumn = (
+    colname: string,
+    currentValue: boolean,
+    setter: (asc: boolean) => void
+  ) => {
+    const newValue = !currentValue;
+    setter(newValue);
+    handleSort(colname, newValue);
   };
 
   return (
@@ -93,19 +82,39 @@ const EmployeeListPage = () => {
       <table className="table table-hover table-striped mt-3">
         <thead>
           <tr className="row">
-            <th className="col-1" onClick={sortById}>
+            <th
+              className="col-1"
+              onClick={() => {
+                sortByColumn("id", isAscId, setIsAscId);
+              }}
+            >
               <SortIcon className="me-2" />
               id
             </th>
-            <th className="col-2" onClick={sortByName}>
+            <th
+              className="col-2"
+              onClick={() => {
+                sortByColumn("name", isAscName, setIsAscName);
+              }}
+            >
               <SortIcon className="me-2" />
               名前
             </th>
-            <th className="col-5" onClick={sortByEmail}>
+            <th
+              className="col-5"
+              onClick={() => {
+                sortByColumn("email", isAscEmail, setIsAscEmail);
+              }}
+            >
               <SortIcon className="me-2" />
               メールアドレス
             </th>
-            <th className="col-1" onClick={sortByAdmin}>
+            <th
+              className="col-1"
+              onClick={() => {
+                sortByColumn("admin", isAscAdmin, setIsAscAdmin);
+              }}
+            >
               <SortIcon className="me-2" />
               権限
             </th>
