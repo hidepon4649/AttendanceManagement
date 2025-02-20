@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import "../css/EmployeeList.css";
 import { Employee } from "../models/Employee";
 import { Alert } from "react-bootstrap";
+import SortIcon from "@mui/icons-material/Sort";
 
 const EmployeeListPage = () => {
   const [list, setList] = useState([]);
@@ -36,6 +37,50 @@ const EmployeeListPage = () => {
     }
   };
 
+  const [isAscId, setIsAscId] = useState(true);
+  const [isAscName, setIsAscName] = useState(true);
+  const [isAscEmail, setIsAscEmail] = useState(true);
+  const [isAscAdmin, setIsAscAdmin] = useState(true);
+
+  const handleSort = (colname: string, asc: boolean = true) => {
+    setList(
+      [...list].sort((a: Employee, b: Employee) => {
+        const aValue: string | number | boolean = a[colname as keyof Employee];
+        const bValue: string | number | boolean = b[colname as keyof Employee];
+
+        if (typeof aValue === "string" && typeof bValue === "string") {
+          return aValue.localeCompare(bValue) * (asc ? 1 : -1);
+        } else if (typeof aValue === "number" && typeof bValue === "number") {
+          return (aValue - bValue) * (asc ? 1 : -1);
+        } else if (typeof aValue === "boolean" && typeof bValue === "boolean") {
+          return (aValue === bValue ? 0 : aValue ? -1 : 1) * (asc ? 1 : -1);
+        }
+        return 0;
+      })
+    );
+  };
+
+  const sortById = () => {
+    const current = isAscId;
+    setIsAscId(!current);
+    handleSort("id", !current);
+  };
+  const sortByName = () => {
+    const current = isAscName;
+    setIsAscName(!current);
+    handleSort("name", !current);
+  };
+  const sortByEmail = () => {
+    const current = isAscEmail;
+    setIsAscEmail(!current);
+    handleSort("email", !current);
+  };
+  const sortByAdmin = () => {
+    const current = isAscAdmin;
+    setIsAscAdmin(!current);
+    handleSort("admin", !current);
+  };
+
   return (
     <div className="mx-3 mt-3">
       <h2>社員一覧</h2>
@@ -48,19 +93,33 @@ const EmployeeListPage = () => {
       <table className="table table-hover table-striped mt-3">
         <thead>
           <tr className="row">
-            <th className="col">名前</th>
-            <th className="col">メールアドレス</th>
-            <th className="col">権限</th>
-            <th className="col">アクション</th>
+            <th className="col-1" onClick={sortById}>
+              <SortIcon className="me-2" />
+              id
+            </th>
+            <th className="col-2" onClick={sortByName}>
+              <SortIcon className="me-2" />
+              名前
+            </th>
+            <th className="col-5" onClick={sortByEmail}>
+              <SortIcon className="me-2" />
+              メールアドレス
+            </th>
+            <th className="col-1" onClick={sortByAdmin}>
+              <SortIcon className="me-2" />
+              権限
+            </th>
+            <th className="col-3">アクション</th>
           </tr>
         </thead>
         <tbody>
           {list.map((employee: Employee) => (
             <tr className="row" key={employee.id}>
-              <td className="col">{employee.name}</td>
-              <td className="col">{employee.email}</td>
-              <td className="col">{employee.admin ? "管理者" : "一般"}</td>
-              <td className="col">
+              <td className="col-1">{employee.id}</td>
+              <td className="col-2">{employee.name}</td>
+              <td className="col-5">{employee.email}</td>
+              <td className="col-1">{employee.admin ? "管理者" : "一般"}</td>
+              <td className="col-3">
                 <button
                   className="btn btn-primary"
                   onClick={() => handleEdit(employee.id)}
