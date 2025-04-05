@@ -1,0 +1,45 @@
+spring:
+  devtools:
+    restart:
+      enabled: true
+    livereload:
+      enabled: true
+  datasource:
+    url: jdbc:mysql://db:3306/attendance_db
+    username: root
+    password: secret
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: none
+server:
+  servlet:
+    session:
+      timeout: 30m
+
+logging:
+  level:
+    root: INFO
+    org:
+      springframework:
+        security: DEBUG
+        security.web: DEBUG
+        security.authentication: DEBUG
+      hibernate.orm.jdbc.bind: trace
+    com:
+      example:
+        attendancemanager:
+          config: DEBUG
+          security: DEBUG
+
+frontend:
+  url: http://localhost:3000
+
+app:
+  jwtSecret: mySecretKey0123456789aop9879sgjnspkAxmndfsopkvajoirjg94gf2opfng2moknm
+  jwtExpirationMs: 3600000
