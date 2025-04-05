@@ -1,52 +1,26 @@
 package com.example.attendancemanager.service;
 
 import java.util.List;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.example.attendancemanager.model.Employee;
-import com.example.attendancemanager.repository.EmployeeRepository;
 
-@Service
-public class EmployeeService {
-
-    private final EmployeeRepository employeeRepository;
-
-    public EmployeeService(EmployeeRepository employeeRepository) {
-        this.employeeRepository = employeeRepository;
-    }
+public interface EmployeeService {
 
     // 新しい社員を登録する
-    @Transactional
-    public Employee saveEmployee(Employee employee) {
-        return employeeRepository.save(employee);
-    }
+    Employee saveEmployee(Employee employee);
 
     // すべての社員を取得する
-    public List<Employee> getAllEmployees() {
-        return employeeRepository.findAll();
-    }
+    List<Employee> getAllEmployees();
 
     // 特定の社員をIDで取得する
-    public Employee getEmployeeById(Long id) {
-        return employeeRepository.findById(id).orElse(null);
-    }
+    Employee getEmployeeById(Long id);
 
     // 特定の社員をIDで削除する
-    @Transactional
-    public void deleteEmployee(Long id) {
-        employeeRepository.deleteById(id);
-    }
+    void deleteEmployee(Long id);
 
     // メールアドレスで社員を取得する
-    public Employee findByEmail(String email) {
-        return employeeRepository.findByEmail(email);
-    }
+    Employee findByEmail(String email);
 
     // 社員を保存する
-    @Transactional
-    public void save(Employee employee) {
-        employeeRepository.save(employee);
-    }
+    void save(Employee employee);
+
 }

@@ -17,7 +17,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import com.example.attendancemanager.security.JwtAuthEntryPoint;
 import com.example.attendancemanager.security.JwtAuthTokenFilter;
-import com.example.attendancemanager.service.CustomUserDetailsService;
+import com.example.attendancemanager.service.CustomUserDetailsServiceImpl;
 
 @Configuration
 @EnableWebSecurity
@@ -29,10 +29,10 @@ public class SecurityConfig {
 
     private final JwtAuthEntryPoint jwtAuthEntryPoint;
     private final JwtAuthTokenFilter jwtAuthenticationFilter;
-    private final CustomUserDetailsService userDetailsService;
+    private final CustomUserDetailsServiceImpl userDetailsService;
 
     public SecurityConfig(JwtAuthTokenFilter jwtAuthenticationFilter,
-            CustomUserDetailsService userDetailsService,
+            CustomUserDetailsServiceImpl userDetailsService,
             JwtAuthEntryPoint jwtAuthEntryPoint) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.userDetailsService = userDetailsService;
