@@ -47,13 +47,14 @@ const EmployeeListPage = () => {
       [...list].sort((a: Employee, b: Employee) => {
         const aValue: string | number | boolean = a[colname as keyof Employee];
         const bValue: string | number | boolean = b[colname as keyof Employee];
+        const order = asc ? 1 : -1;
 
         if (typeof aValue === "string" && typeof bValue === "string") {
-          return aValue.localeCompare(bValue) * (asc ? 1 : -1);
+          return aValue.localeCompare(bValue) * order;
         } else if (typeof aValue === "number" && typeof bValue === "number") {
-          return (aValue - bValue) * (asc ? 1 : -1);
+          return (aValue - bValue) * order;
         } else if (typeof aValue === "boolean" && typeof bValue === "boolean") {
-          return (aValue === bValue ? 0 : aValue ? -1 : 1) * (asc ? 1 : -1);
+          return (aValue === bValue ? 0 : aValue ? -1 : 1) * order;
         }
         return 0;
       })
