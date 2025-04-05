@@ -8,7 +8,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,11 +22,14 @@ public class AttendanceService {
     // 日本時間を明示的に設定
     private ZoneId japanZoneId = ZoneId.of("Asia/Tokyo");
 
-    @Autowired
-    private AttendanceRepository attendanceRepository;
+    private final AttendanceRepository attendanceRepository;
+    private final EmployeeRepository employeeRepository;
 
-    @Autowired
-    private EmployeeRepository employeeRepository;
+    public AttendanceService(AttendanceRepository attendanceRepository,
+            EmployeeRepository employeeRepository) {
+        this.attendanceRepository = attendanceRepository;
+        this.employeeRepository = employeeRepository;
+    }
 
     // 出勤の記録
     @Transactional
@@ -68,11 +70,13 @@ public class AttendanceService {
     public Attendance remarks(Long employeeId, String date, String remarks) {
         return add(employeeId, date, remarks);
     }
+
     // 勤怠の追加
     @Transactional
     public Attendance add(Long employeeId, String date) {
         return add(employeeId, date, null);
     }
+
     // 勤怠の追加
     @Transactional
     public Attendance add(Long employeeId, String date, String remarks) {
@@ -101,10 +105,10 @@ public class AttendanceService {
         }
 
         // 備考の設定
-        if(remarks != null) {
+        if (remarks != null) {
             attendance.setRemarks(remarks);
         }
-        
+
         return attendanceRepository.save(attendance);
 
     }

@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,14 +28,16 @@ import com.example.attendancemanager.service.EmployeeService;
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
+    private final EmployeeService employeeService;
+    private final JwtUtils jwtUtils;
 
-    @Autowired
-    private EmployeeService employeeService;
-
-    @Autowired
-    private JwtUtils jwtUtils;
+    public AuthController(AuthenticationManager authenticationManager, EmployeeService employeeService,
+            JwtUtils jwtUtils) {
+        this.authenticationManager = authenticationManager;
+        this.employeeService = employeeService;
+        this.jwtUtils = jwtUtils;
+    }
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@RequestBody JwtRequest jwtRequest) {

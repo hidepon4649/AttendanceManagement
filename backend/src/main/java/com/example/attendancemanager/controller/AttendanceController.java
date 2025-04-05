@@ -3,7 +3,6 @@ package com.example.attendancemanager.controller;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -24,8 +23,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 @RequestMapping("/api/attendance")
 public class AttendanceController {
 
-    @Autowired
-    private AttendanceService attendanceService;
+    private final AttendanceService attendanceService;
+
+    public AttendanceController(AttendanceService attendanceService) {
+        this.attendanceService = attendanceService;
+    }
 
     @PostMapping("/{employeeId}/clock-in")
     public ResponseEntity<Attendance> clockIn(@PathVariable Long employeeId) {
@@ -57,6 +59,7 @@ public class AttendanceController {
         Attendance attendance = attendanceService.remarks(employeeId, date, remarks);
         return ResponseEntity.ok(attendance);
     }
+
     @PostMapping("/{employeeId}/{date}")
     public ResponseEntity<Attendance> add(@PathVariable Long employeeId, @PathVariable String date) {
         // date は "YYYY-MM-DD" 形式で受け取ります
@@ -79,6 +82,7 @@ public class AttendanceController {
 
         return ResponseEntity.ok(attendance);
     }
+
     @DeleteMapping("/maintenance/{attendanceId}")
     public ResponseEntity<Attendance> delete(@PathVariable Long attendanceId) {
         Attendance deletedAttendance = attendanceService.delete(attendanceId);

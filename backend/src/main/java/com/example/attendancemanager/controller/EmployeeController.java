@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -33,12 +32,13 @@ import com.example.attendancemanager.service.EmployeeService;
 public class EmployeeController {
 
     private static final String PASSWORD_PATTERN = "^[a-zA-Z0-9_]{8,24}$";
+    private final EmployeeService employeeService;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private EmployeeService employeeService;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    public EmployeeController(EmployeeService employeeService, PasswordEncoder passwordEncoder) {
+        this.employeeService = employeeService;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @GetMapping
     public List<Employee> getAllEmployees(@AuthenticationPrincipal UserDetails userDetails) {

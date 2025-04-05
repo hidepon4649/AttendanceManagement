@@ -9,7 +9,6 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,38 +21,41 @@ import com.example.attendancemanager.repository.AccessLogRepository;
 @Component
 public class LoggingAspect {
 
-    private static final Logger logger = LoggerFactory.getLogger(LoggingAspect.class);
+        private static final Logger logger = LoggerFactory.getLogger(LoggingAspect.class);
+        private final AccessLogRepository accessLogRepository;
 
-    @Autowired
-    private AccessLogRepository accessLogRepository;
+        public LoggingAspect(AccessLogRepository accessLogRepository) {
+                this.accessLogRepository = accessLogRepository;
+        }
 
-    @Before("within(@org.springframework.web.bind.annotation.RestController *)")
-    public void logBefore(JoinPoint joinPoint) {
+        @Before("within(@org.springframework.web.bind.annotation.RestController *)")
+        public void logBefore(JoinPoint joinPoint) {
 
-        String methodName = joinPoint.getSignature().getName();
-        String methodParams = Arrays.toString(joinPoint.getArgs());
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = (authentication != null && authentication.getPrincipal() instanceof UserDetails)
-                ? ((UserDetails) authentication.getPrincipal()).getUsername()
-                : "Anonymous";
+                String methodName = joinPoint.getSignature().getName();
+                String methodParams = Arrays.toString(joinPoint.getArgs());
+                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+                String username = (authentication != null && authentication.getPrincipal() instanceof UserDetails)
+                                ? ((UserDetails) authentication.getPrincipal()).getUsername()
+                                : "Anonymous";
 
-        // ユーザーのロールを取得
-        String userRoles = (authentication != null && authentication.getAuthorities() != null)
-                ? authentication.getAuthorities().stream()
-                        .map(authority -> authority.getAuthority())
-                        .collect(Collectors.joining(","))
-                : "None";
+                // ユーザーのロールを取得
+                String userRoles = (authentication != null && authentication.getAuthorities() != null)
+                                ? authentication.getAuthorities().stream()
+                                                .map(authority -> authority.getAuthority())
+                                                .collect(Collectors.joining(","))
+                                : "None";
 
-        // ログをデータベースに記録
-        AccessLog accessLog = new AccessLog();
-        accessLog.setUsername(username);
-        accessLog.setMethodName(methodName);
-        accessLog.setMethodParams(methodParams);
-        accessLog.setUserRoles(userRoles);
-        accessLog.setAccessTime(LocalDateTime.now());
-        accessLogRepository.save(accessLog);
+                // ログをデータベースに記録
+                AccessLog accessLog = new AccessLog();
+                accessLog.setUsername(username);
+                accessLog.setMethodName(methodName);
+                accessLog.setMethodParams(methodParams);
+                accessLog.setUserRoles(userRoles);
+                accessLog.setAccessTime(LocalDateTime.now());
+                accessLogRepository.save(accessLog);
 
-        logger.info("User: {} accessed method: {} with params: {} and roles: {}", username, methodName, methodParams,
-                userRoles);
-    }
+                logger.info("User: {} accessed method: {} with params: {} and roles: {}", username, methodName,
+                                methodParams,
+                                userRoles);
+        }
 }
