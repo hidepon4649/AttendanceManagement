@@ -1,5 +1,6 @@
 package com.example.attendancemanager.aspect;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -7,8 +8,6 @@ import java.util.stream.Collectors;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,7 +20,6 @@ import com.example.attendancemanager.repository.AccessLogRepository;
 @Component
 public class LoggingAspect {
 
-        private static final Logger logger = LoggerFactory.getLogger(LoggingAspect.class);
         private final AccessLogRepository accessLogRepository;
 
         public LoggingAspect(AccessLogRepository accessLogRepository) {
@@ -31,6 +29,7 @@ public class LoggingAspect {
         @Before("within(@org.springframework.web.bind.annotation.RestController *)")
         public void logBefore(JoinPoint joinPoint) {
 
+                String className = joinPoint.getSignature().getDeclaringTypeName();
                 String methodName = joinPoint.getSignature().getName();
                 String methodParams = Arrays.toString(joinPoint.getArgs());
                 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -48,14 +47,13 @@ public class LoggingAspect {
                 // ログをデータベースに記録
                 AccessLog accessLog = new AccessLog();
                 accessLog.setUsername(username);
+                accessLog.setClassName(className);
                 accessLog.setMethodName(methodName);
                 accessLog.setMethodParams(methodParams);
                 accessLog.setUserRoles(userRoles);
+                accessLog.setAccessDate(LocalDate.now());
                 accessLog.setAccessTime(LocalDateTime.now());
                 accessLogRepository.save(accessLog);
 
-                logger.info("User: {} accessed method: {} with params: {} and roles: {}", username, methodName,
-                                methodParams,
-                                userRoles);
         }
 }

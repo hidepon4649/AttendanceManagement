@@ -22,8 +22,10 @@ CREATE TABLE IF NOT EXISTS attendance (
 CREATE TABLE IF NOT EXISTS access_log (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(255),
+    class_name VARCHAR(255),
     method_name VARCHAR(255),
     method_params TEXT,
     user_roles VARCHAR(255),
+    access_date DATE,
     access_time TIMESTAMP
 );

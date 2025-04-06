@@ -1,5 +1,6 @@
 package com.example.attendancemanager.model;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.Entity;
@@ -15,9 +16,12 @@ public class AccessLog {
     private Long id;
 
     private String username;
+    private String className;
+
     private String methodName;
     private String methodParams;
     private String userRoles;
+    private LocalDate accessDate;
     private LocalDateTime accessTime;
 
     public Long getId() {
@@ -34,6 +38,14 @@ public class AccessLog {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
     }
 
     public String getMethodName() {
@@ -58,6 +70,14 @@ public class AccessLog {
 
     public void setUserRoles(String userRoles) {
         this.userRoles = userRoles;
+    }
+
+    public LocalDate getAccessDate() {
+        return accessDate;
+    }
+
+    public void setAccessDate(LocalDate accessDate) {
+        this.accessDate = accessDate;
     }
 
     public LocalDateTime getAccessTime() {
