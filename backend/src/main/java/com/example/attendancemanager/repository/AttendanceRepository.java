@@ -2,6 +2,7 @@ package com.example.attendancemanager.repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -15,15 +16,16 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
 
         // 社員IDで今日の出勤データを取得
         @Query("SELECT a FROM Attendance a WHERE a.employee.id = :employeeId AND a.date = :clockInYearMonthDate")
-        Attendance findByEmployeeIdAndDate(@Param("employeeId") Long employeeId,
+        Optional<Attendance> findByEmployeeIdAndDate(@Param("employeeId") Long employeeId,
                         @Param("clockInYearMonthDate") LocalDate clockInYearMonthDate);
 
         // 月次レポート用に、日付が指定月（"YYYY-MM"形式）に一致する出退勤データを取得
         @Query("SELECT a FROM Attendance a WHERE a.employee.id = :employeeId AND YEAR(a.date) = :year AND MONTH(a.date) = :month")
-        List<Attendance> findByEmployeeIdAndYearAndMonth(@Param("employeeId") Long employeeId, @Param("year") int year,
+        Optional<List<Attendance>> findByEmployeeIdAndYearAndMonth(@Param("employeeId") Long employeeId,
+                        @Param("year") int year,
                         @Param("month") int month);
 
         // 社員IDで出退勤データを取得
-        List<Attendance> findByEmployeeId(Long employeeId);
+        Optional<List<Attendance>> findByEmployeeId(Long employeeId);
 
 }

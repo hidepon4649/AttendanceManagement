@@ -6,7 +6,6 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,9 +38,10 @@ public class AttendanceServiceImpl implements AttendanceService {
                 .orElseThrow(() -> new RuntimeException("社員が見つかりません"));
 
         // 既に出勤記録が存在する場合はエラーとします
-        Attendance tadayRecord = attendanceRepository.findByEmployeeIdAndDate(employeeId, LocalDate.now(japanZoneId));
-        if (tadayRecord != null)
-            throw new RuntimeException("今日の出勤記録が既に存在します");
+        attendanceRepository.findByEmployeeIdAndDate(employeeId, LocalDate.now(japanZoneId))
+                .ifPresent((data) -> {
+                    throw new RuntimeException("今日の出勤記録が既に存在します:" + data.toString());
+                });
 
         Attendance attendance = new Attendance();
         attendance.setEmployee(employee);
@@ -56,11 +56,13 @@ public class AttendanceServiceImpl implements AttendanceService {
     @Transactional
     public Attendance clockOut(Long employeeId) {
         // 退勤は、当日の出勤記録が存在する場合にのみ記録します
-        employeeRepository.findById(employeeId).orElseThrow(() -> new RuntimeException("社員が見つかりません"));
+        employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new RuntimeException("社員が見つかりません"));
 
-        Attendance attendance = attendanceRepository.findByEmployeeIdAndDate(employeeId, LocalDate.now(japanZoneId));
-        if (attendance == null)
-            throw new RuntimeException("今日の出勤記録が見つかりません");
+        Attendance attendance = attendanceRepository.findByEmployeeIdAndDate(employeeId, LocalDate.now(japanZoneId))
+                .orElseThrow(() -> {
+                    throw new RuntimeException("今日の出勤記録が見つかりません");
+                });
 
         // 既に退勤記録が存在する場合は現在時刻で上書きします
         attendance.setClockOutTime(LocalDateTime.now(japanZoneId));
@@ -86,28 +88,26 @@ public class AttendanceServiceImpl implements AttendanceService {
     @Transactional
     public Attendance add(Long employeeId, String date, String remarks) {
 
-        Optional<Employee> optionalEmployee = employeeRepository.findById(employeeId);
-        if (!optionalEmployee.isPresent()) {
-            throw new RuntimeException("社員が見つかりません");
-        }
-        Employee employee = optionalEmployee.get();
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> {
+                    throw new RuntimeException("社員が見つかりません");
+                });
 
         // String型の日付をLocalDate型に変換
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate localDate = LocalDate.parse(date, formatter);
 
-        Attendance attendance = attendanceRepository.findByEmployeeIdAndDate(employeeId, localDate);
-
-        // 当日の出勤記録が存在しない場合は新規作成し、初期値を設定。
-        if (attendance == null) {
-            attendance = new Attendance();
-            attendance.setEmployee(employee);
-            attendance.setDate(localDate);
-            // 出勤時間,退勤時間,休憩時間を0で初期化
-            attendance.setClockInTime(LocalDateTime.of(localDate, LocalTime.of(0, 0)));
-            attendance.setClockOutTime(LocalDateTime.of(localDate, LocalTime.of(0, 0)));
-            attendance.setBreakMinutes(0);
-        }
+        Attendance attendance = attendanceRepository.findByEmployeeIdAndDate(employeeId, localDate)
+                .orElseGet(() -> {
+                    Attendance at = new Attendance();
+                    at.setEmployee(employee);
+                    at.setDate(localDate);
+                    // 出勤時間,退勤時間,休憩時間を0で初期化
+                    at.setClockInTime(LocalDateTime.of(localDate, LocalTime.of(0, 0)));
+                    at.setClockOutTime(LocalDateTime.of(localDate, LocalTime.of(0, 0)));
+                    at.setBreakMinutes(0);
+                    return at;
+                });
 
         // 備考の設定
         if (remarks != null) {
@@ -124,11 +124,10 @@ public class AttendanceServiceImpl implements AttendanceService {
     public Attendance edit(Long attendanceId, String newClockInTime, String newClockOutTime, int breakMinutes) {
 
         // 当日の勤怠記録が存在しない場合はエラー
-        Optional<Attendance> optionalAttendance = attendanceRepository.findById(attendanceId);
-        if (optionalAttendance == null) {
-            throw new RuntimeException("修正対象日の勤怠が見つかりません");
-        }
-        Attendance attendance = optionalAttendance.get();
+        Attendance attendance = attendanceRepository.findById(attendanceId)
+                .orElseThrow(() -> {
+                    throw new RuntimeException("修正対象日の勤怠が見つかりません");
+                });
 
         // 打刻時間の更新
         if (newClockInTime != null) {
@@ -146,17 +145,20 @@ public class AttendanceServiceImpl implements AttendanceService {
     @Override
     @Transactional
     public Attendance delete(Long attendanceId) {
-        Optional<Attendance> optionalAttendance = attendanceRepository.findById(attendanceId);
-        if (optionalAttendance == null) {
-            throw new RuntimeException("削除対象日の勤怠が見つかりません");
-        }
+        Attendance attendance = attendanceRepository.findById(attendanceId)
+                .orElseThrow(() -> {
+                    throw new RuntimeException("削除対象日の勤怠が見つかりません");
+                });
         attendanceRepository.deleteById(attendanceId);
-        return optionalAttendance.get();
+
+        return attendance;
     }
 
     // 月次レポートの取得
     @Override
     public List<Attendance> getMonthlyReportByEmployeeId(Long employeeId, int year, int month) {
-        return attendanceRepository.findByEmployeeIdAndYearAndMonth(employeeId, year, month);
+        return attendanceRepository.findByEmployeeIdAndYearAndMonth(employeeId, year, month)
+                .orElseThrow(
+                        () -> new RuntimeException("月次レポートが見つかりません"));
     }
 }

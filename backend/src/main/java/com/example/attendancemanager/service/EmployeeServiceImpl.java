@@ -33,7 +33,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     // 特定の社員をIDで取得する
     @Override
     public Employee getEmployeeById(Long id) {
-        return employeeRepository.findById(id).orElse(null);
+        return employeeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("社員が見つかりません:" + id));
     }
 
     // 特定の社員をIDで削除する
@@ -46,7 +47,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     // メールアドレスで社員を取得する
     @Override
     public Employee findByEmail(String email) {
-        return employeeRepository.findByEmail(email);
+        return employeeRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("社員が見つかりません:" + email));
     }
 
     // 社員を保存する

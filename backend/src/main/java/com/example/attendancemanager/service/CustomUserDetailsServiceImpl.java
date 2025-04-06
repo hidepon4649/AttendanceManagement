@@ -25,18 +25,18 @@ public class CustomUserDetailsServiceImpl implements UserDetailsService, CustomU
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Employee employee = employeeRepository.findByEmail(email);
-        if (employee != null) {
-            UserDetails user = User
-                    .withUsername(employee.getEmail())
-                    .password(employee.getPassword())
-                    .authorities(getAuthorities(employee.isAdmin()))
-                    .build();
-            return user;
 
-        } else {
-            throw new UsernameNotFoundException("User not found with email: " + email);
-        }
+        Employee employee = employeeRepository.findByEmail(email)
+                .orElseThrow(
+                        () -> new UsernameNotFoundException("User not found with email: " + email));
+
+        UserDetails user = User
+                .withUsername(employee.getEmail())
+                .password(employee.getPassword())
+                .authorities(getAuthorities(employee.isAdmin()))
+                .build();
+
+        return user;
 
     }
 

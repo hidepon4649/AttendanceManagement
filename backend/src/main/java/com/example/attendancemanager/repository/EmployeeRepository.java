@@ -1,5 +1,7 @@
 package com.example.attendancemanager.repository;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -9,9 +11,9 @@ import com.example.attendancemanager.model.Employee;
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
     // ログイン用のメソッド
-    Employee findByEmailAndPassword(String email, String password);
+    Optional<Employee> findByEmailAndPassword(String email, String password);
 
     // メールアドレスからユーザーを取得するメソッド
-    Employee findByEmail(String email);
-    
+    Optional<Employee> findByEmail(String email);
+
 }
