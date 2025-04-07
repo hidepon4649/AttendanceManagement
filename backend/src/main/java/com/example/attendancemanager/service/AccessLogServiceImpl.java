@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import org.springframework.jdbc.core.DataClassRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -27,8 +28,14 @@ public class AccessLogServiceImpl implements AccessLogService {
 
         final String sql = """
                 select
-                    a.*,
-                    e.name as e_username
+                    a.id,
+                    a.class_name,
+                    a.method_name,
+                    a.method_params,
+                    a.user_roles,
+                    a.access_date,
+                    a.access_time,
+                    e.name as username
                 from
                     access_log a,
                     employee e
@@ -42,19 +49,8 @@ public class AccessLogServiceImpl implements AccessLogService {
 
         return jdbcTemplate.query(
                 sql,
-                ps -> ps.setString(1, localDate.toString()),
-                (rs, rowNum) -> {
-                    AccessLog accessLog = new AccessLog();
-                    accessLog.setId(rs.getLong("id"));
-                    accessLog.setUsername(rs.getString("e_username"));
-                    accessLog.setClassName(rs.getString("class_name"));
-                    accessLog.setMethodName(rs.getString("method_name"));
-                    accessLog.setMethodParams(rs.getString("method_params"));
-                    accessLog.setUserRoles(rs.getString("user_roles"));
-                    accessLog.setAccessDate(rs.getDate("access_date").toLocalDate());
-                    accessLog.setAccessTime(rs.getTimestamp("access_time").toLocalDateTime());
-                    return accessLog;
-                });
+                new DataClassRowMapper<>(AccessLog.class),
+                localDate.toString());
 
     }
 
