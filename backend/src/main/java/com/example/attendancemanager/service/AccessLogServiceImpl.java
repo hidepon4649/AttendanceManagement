@@ -4,23 +4,18 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import com.example.attendancemanager.model.AccessLog;
-import com.example.attendancemanager.repository.AccessLogRepository;
-// import com.example.attendancemanager.repository.EmployeeRepository;
 
 @Service
 public class AccessLogServiceImpl implements AccessLogService {
 
-    private final AccessLogRepository accessLogRepository;
-    // private final EmployeeRepository employeeRepository;
+    private final JdbcTemplate jdbcTemplate;
 
-    public AccessLogServiceImpl(AccessLogRepository accessLogRepository
-    // , EmployeeRepository employeeRepository
-    ) {
-        this.accessLogRepository = accessLogRepository;
-        // this.employeeRepository = employeeRepository;
+    public AccessLogServiceImpl(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
@@ -30,8 +25,37 @@ public class AccessLogServiceImpl implements AccessLogService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate localDate = LocalDate.parse(date, formatter);
 
-        return accessLogRepository.findByAccessDate(localDate).orElseThrow(
-                () -> new RuntimeException("指定された日付のアクセスログが見つかりません: " + date));
+        final String sql = """
+                select
+                    a.*,
+                    e.name as e_username
+                from
+                    access_log a,
+                    employee e
+                where
+                    a.access_date = ?
+                    and
+                    a.username = e.email
+                order by
+                    a.access_date, a.access_time desc
+                """;
+
+        return jdbcTemplate.query(
+                sql,
+                ps -> ps.setString(1, localDate.toString()),
+                (rs, rowNum) -> {
+                    AccessLog accessLog = new AccessLog();
+                    accessLog.setId(rs.getLong("id"));
+                    accessLog.setUsername(rs.getString("e_username"));
+                    accessLog.setClassName(rs.getString("class_name"));
+                    accessLog.setMethodName(rs.getString("method_name"));
+                    accessLog.setMethodParams(rs.getString("method_params"));
+                    accessLog.setUserRoles(rs.getString("user_roles"));
+                    accessLog.setAccessDate(rs.getDate("access_date").toLocalDate());
+                    accessLog.setAccessTime(rs.getTimestamp("access_time").toLocalDateTime());
+                    return accessLog;
+                });
+
     }
 
 }

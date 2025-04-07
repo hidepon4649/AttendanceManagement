@@ -49,6 +49,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/csrf/token").permitAll()
                         .requestMatchers("/api/public/**").permitAll()
                         .requestMatchers("/api/employees/**").hasRole("ADMIN")
+                        .requestMatchers("/api/accesslogs/**").hasRole("ADMIN")
                         .requestMatchers("/api/attendance/maintenance/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthEntryPoint))
