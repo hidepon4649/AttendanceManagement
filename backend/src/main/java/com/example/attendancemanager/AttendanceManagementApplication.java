@@ -1,7 +1,10 @@
 package com.example.attendancemanager;
 
+import java.util.Arrays;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 @SpringBootApplication
@@ -9,11 +12,27 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 public class AttendanceManagementApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(AttendanceManagementApplication.class, args);
 
-        // ConfigurableApplicationContext appContext =
-        // SpringApplication.run(AttendanceManagementApplication.class, args);
-        // // Bean定義を標準出力
-        // Arrays.stream(appContext.getBeanDefinitionNames()).forEach(System.out::println);
+        ConfigurableApplicationContext appContext = SpringApplication.run(AttendanceManagementApplication.class, args);
+
+        if (args.length > 0) {
+            System.out.println("= SpringBootアプリ起動引数 ==========");
+            Arrays.stream(args).forEach(System.out::println);
+            System.out.println("===================================");
+        }
+
+        // ./gradlew bootRun --args=--debug // debugモードで起動
+        // ./gradlew bootRun --args=--printbeans // 標準モードで起動し、bean名を出力
+        if (args.length > 0 && args[0].equals("--printbeans")) {
+            printBeans(appContext);
+        }
+    }
+
+    private static void printBeans(ConfigurableApplicationContext appContext) {
+        // Bean名を標準出力
+        System.out.println("Bean名一覧");
+        System.out.println("===================================");
+        Arrays.stream(appContext.getBeanDefinitionNames()).sorted().forEach(System.out::println);
+        System.out.println("===================================");
     }
 }
