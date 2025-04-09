@@ -28,7 +28,7 @@ public class CustomUserDetailsServiceImpl implements UserDetailsService, CustomU
 
         Employee employee = employeeRepository.findByEmail(email)
                 .orElseThrow(
-                        () -> new UsernameNotFoundException("User not found with email: " + email));
+                        () -> new UsernameNotFoundException("認証失敗です。: " + email));
 
         UserDetails user = User
                 .withUsername(employee.getEmail())

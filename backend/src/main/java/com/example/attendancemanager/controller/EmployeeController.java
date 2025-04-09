@@ -47,12 +47,7 @@ public class EmployeeController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getEmployee(@PathVariable Long id) {
-        Employee employee = employeeService.getEmployeeById(id);
-        if (employee != null) {
-            return ResponseEntity.ok(employee);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Employee not found");
-        }
+        return ResponseEntity.ok(employeeService.getEmployeeById(id));
     }
 
     @PostMapping
@@ -69,7 +64,7 @@ public class EmployeeController {
         if (!validatePassword(employee.getPassword())) {
 
             Map<String, String> errors = new HashMap<>();
-            errors.put("password", "Password size must be between 8 and 24 characters");
+            errors.put("password", "パスワードの長さは 8〜24文字です。");
             return ResponseEntity.badRequest().body(errors);
         }
         employee.setPassword(passwordEncoder.encode(employee.getPassword()));
@@ -93,32 +88,23 @@ public class EmployeeController {
         // 暗号化前のパスワードに対してサイズ制限をチェック
         if (!validatePassword(updateEmployee.getPassword())) {
             Map<String, String> errors = new HashMap<>();
-            errors.put("password", "Password size must be between 8 and 24 characters");
+            errors.put("password", "パスワードの長さは 8〜24文字です。");
             return ResponseEntity.badRequest().body(errors);
         }
 
-        Employee existignEmployee = employeeService.getEmployeeById(id);
-        if (existignEmployee != null) {
-            updateEmployee.setPassword(passwordEncoder.encode(updateEmployee.getPassword()));
-            updateEmployee.setId(id);
-            employeeService.saveEmployee(updateEmployee);
-            return ResponseEntity.ok(updateEmployee);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Employee not found");
-        }
+        employeeService.getEmployeeById(id);
+        updateEmployee.setPassword(passwordEncoder.encode(updateEmployee.getPassword()));
+        updateEmployee.setId(id);
+        employeeService.saveEmployee(updateEmployee);
+        return ResponseEntity.ok(updateEmployee);
 
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteEmployee(@PathVariable Long id) {
-
-        Employee existingEmployee = employeeService.getEmployeeById(id);
-        if (existingEmployee != null) {
-            employeeService.deleteEmployee(id);
-            return ResponseEntity.ok("Employee deleted successfully");
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Employee not found");
-        }
+        Employee employee = employeeService.getEmployeeById(id);
+        employeeService.deleteEmployee(id);
+        return ResponseEntity.ok("社員を削除しました。:" + employee);
     }
 
     private static boolean validatePassword(String password) {

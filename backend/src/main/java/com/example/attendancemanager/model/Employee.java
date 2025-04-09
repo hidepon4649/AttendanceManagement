@@ -65,4 +65,10 @@ public class Employee {
         this.isAdmin = isAdmin;
     }
 
+    @Override
+    public String toString() {
+        return "Employee [id=" + id + ", name=" + name + ", email=" + email + ", password=" + password + ", isAdmin="
+                + isAdmin + "]";
+    }
+
 }

@@ -83,4 +83,9 @@ public class Attendance {
         this.breakMinutes = breakMinutes;
     }
 
+    @Override
+    public String toString() {
+        return "Attendance [id=" + id + ", employee=" + employee + ", clockInTime=" + clockInTime + ", clockOutTime="
+                + clockOutTime + ", date=" + date + ", remarks=" + remarks + ", breakMinutes=" + breakMinutes + "]";
+    }
 }

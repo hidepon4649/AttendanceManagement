@@ -7,8 +7,10 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.example.attendancemanager.model.Attendance;
 import com.example.attendancemanager.model.Employee;
@@ -35,12 +37,12 @@ public class AttendanceServiceImpl implements AttendanceService {
     @Transactional
     public Attendance clockIn(Long employeeId) {
         Employee employee = employeeRepository.findById(employeeId)
-                .orElseThrow(() -> new RuntimeException("社員が見つかりません"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "社員が見つかりません:" + employeeId));
 
         // 既に出勤記録が存在する場合はエラーとします
         attendanceRepository.findByEmployeeIdAndDate(employeeId, LocalDate.now(japanZoneId))
                 .ifPresent((data) -> {
-                    throw new RuntimeException("今日の出勤記録が既に存在します:" + data.toString());
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "今日の出勤記録が既に存在します:" + data);
                 });
 
         Attendance attendance = new Attendance();
@@ -57,11 +59,11 @@ public class AttendanceServiceImpl implements AttendanceService {
     public Attendance clockOut(Long employeeId) {
         // 退勤は、当日の出勤記録が存在する場合にのみ記録します
         employeeRepository.findById(employeeId)
-                .orElseThrow(() -> new RuntimeException("社員が見つかりません"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "社員が見つかりません:" + employeeId));
 
         Attendance attendance = attendanceRepository.findByEmployeeIdAndDate(employeeId, LocalDate.now(japanZoneId))
                 .orElseThrow(() -> {
-                    throw new RuntimeException("今日の出勤記録が見つかりません");
+                    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "今日の出勤記録が見つかりません");
                 });
 
         // 既に退勤記録が存在する場合は現在時刻で上書きします
@@ -90,7 +92,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> {
-                    throw new RuntimeException("社員が見つかりません");
+                    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "社員が見つかりません:" + employeeId);
                 });
 
         // String型の日付をLocalDate型に変換
@@ -126,7 +128,7 @@ public class AttendanceServiceImpl implements AttendanceService {
         // 当日の勤怠記録が存在しない場合はエラー
         Attendance attendance = attendanceRepository.findById(attendanceId)
                 .orElseThrow(() -> {
-                    throw new RuntimeException("修正対象日の勤怠が見つかりません");
+                    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "修正対象日の勤怠が見つかりません");
                 });
 
         // 打刻時間の更新
@@ -147,7 +149,7 @@ public class AttendanceServiceImpl implements AttendanceService {
     public Attendance delete(Long attendanceId) {
         Attendance attendance = attendanceRepository.findById(attendanceId)
                 .orElseThrow(() -> {
-                    throw new RuntimeException("削除対象日の勤怠が見つかりません");
+                    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "削除対象日の勤怠が見つかりません");
                 });
         attendanceRepository.deleteById(attendanceId);
 
@@ -159,6 +161,6 @@ public class AttendanceServiceImpl implements AttendanceService {
     public List<Attendance> getMonthlyReportByEmployeeId(Long employeeId, int year, int month) {
         return attendanceRepository.findByEmployeeIdAndYearAndMonth(employeeId, year, month)
                 .orElseThrow(
-                        () -> new RuntimeException("月次レポートが見つかりません"));
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "月次レポートが見つかりません"));
     }
 }

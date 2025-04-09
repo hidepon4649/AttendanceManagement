@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.attendancemanager.model.Employee;
 import com.example.attendancemanager.security.JwtRequest;
 import com.example.attendancemanager.security.JwtResponse;
 import com.example.attendancemanager.security.JwtUtils;
@@ -50,24 +49,25 @@ public class AuthController {
 
         } catch (AuthenticationException e) {
             Map<String, Object> map = new HashMap<>();
-            map.put("message", "Bad credentials");
+            map.put("message", "認証失敗です。:" + jwtRequest.getEmail());
             map.put("status", false);
             return new ResponseEntity<Object>(map, HttpStatus.NOT_FOUND);
         }
 
+        // 認証情報として、email, roles, jwtToken を返す
         SecurityContextHolder.getContext().setAuthentication(authentication);
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String jwtToken = jwtUtils.generateToken(userDetails.getUsername());
-        List<String> roles = userDetails.getAuthorities().stream()
+        List<String> roles = userDetails.getAuthorities()
+                .stream()
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
+        String jwtToken = jwtUtils.generateToken(userDetails.getUsername());
 
-        // ログインしたユーザーの情報を取得(Employee.idを取得するため)
-        Employee employee = employeeService.findByEmail(jwtRequest.getEmail());
-
-        JwtResponse response = new JwtResponse(employee, roles, jwtToken);
-        return ResponseEntity.ok(response);
-
+        return ResponseEntity.ok(
+                new JwtResponse(
+                        employeeService.findByEmail(jwtRequest.getEmail()),
+                        roles,
+                        jwtToken));
     }
 
     @PostMapping("/logout")

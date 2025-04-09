@@ -2,6 +2,7 @@ package com.example.attendancemanager.controller;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,9 +24,10 @@ public class AccessLogController {
     }
 
     @GetMapping("/{date}")
-    public List<AccessLog> getAccessLogsByDate(@PathVariable String date) {
+    public ResponseEntity<List<AccessLog>> getAccessLogsByDate(@PathVariable String date) {
         // date は "YYYY-MM-DD" 形式で受け取ります
-        return accessLogService.getAccessLogsByDate(date);
+        List<AccessLog> accessLogs = accessLogService.getAccessLogsByDate(date);
+        return ResponseEntity.ok(accessLogs);
     }
 
     // @DeleteMapping("/{id}")
