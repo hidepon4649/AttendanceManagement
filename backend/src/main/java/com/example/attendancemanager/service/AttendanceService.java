@@ -1,7 +1,8 @@
 package com.example.attendancemanager.service;
 
 import java.util.List;
-import com.example.attendancemanager.model.Attendance;
+
+import com.example.attendancemanager.entity.Attendance;
 
 public interface AttendanceService {
 

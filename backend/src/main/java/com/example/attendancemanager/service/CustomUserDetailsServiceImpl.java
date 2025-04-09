@@ -11,7 +11,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
-import com.example.attendancemanager.model.Employee;
+import com.example.attendancemanager.entity.Employee;
 import com.example.attendancemanager.repository.EmployeeRepository;
 
 @Service

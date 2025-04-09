@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.attendancemanager.model.Attendance;
+import com.example.attendancemanager.entity.Attendance;
 import com.example.attendancemanager.service.AttendanceService;
 
 import org.springframework.web.bind.annotation.PutMapping;

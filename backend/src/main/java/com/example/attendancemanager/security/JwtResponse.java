@@ -2,7 +2,7 @@ package com.example.attendancemanager.security;
 
 import java.util.List;
 
-import com.example.attendancemanager.model.Employee;
+import com.example.attendancemanager.entity.Employee;
 
 public class JwtResponse {
 

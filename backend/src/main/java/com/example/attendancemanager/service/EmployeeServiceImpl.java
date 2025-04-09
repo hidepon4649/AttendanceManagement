@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.example.attendancemanager.model.Employee;
+import com.example.attendancemanager.entity.Employee;
 import com.example.attendancemanager.repository.EmployeeRepository;
 
 @Service

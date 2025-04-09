@@ -1,4 +1,4 @@
-package com.example.attendancemanager.model;
+package com.example.attendancemanager.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.DataClassRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import com.example.attendancemanager.model.AccessLog;
+import com.example.attendancemanager.entity.AccessLog;
 
 @Service
 public class AccessLogServiceImpl implements AccessLogService {

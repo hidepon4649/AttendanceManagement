@@ -2,7 +2,7 @@ package com.example.attendancemanager.service;
 
 import java.util.List;
 
-import com.example.attendancemanager.model.AccessLog;
+import com.example.attendancemanager.entity.AccessLog;
 
 public interface AccessLogService {
 

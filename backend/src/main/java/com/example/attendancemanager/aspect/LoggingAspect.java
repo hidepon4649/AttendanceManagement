@@ -13,7 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import com.example.attendancemanager.model.AccessLog;
+import com.example.attendancemanager.entity.AccessLog;
 import com.example.attendancemanager.repository.AccessLogRepository;
 
 @Aspect

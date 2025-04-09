@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.example.attendancemanager.model.Attendance;
+import com.example.attendancemanager.entity.Attendance;
 
 @Repository
 public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
