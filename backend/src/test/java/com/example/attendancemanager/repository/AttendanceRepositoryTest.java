@@ -12,9 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @ActiveProfiles("test")
+@Sql({ "EmployeeRepositoryTest.sql", "AttendanceRepositoryTest.sql" })
+@Transactional
 public class AttendanceRepositoryTest {
 
     @Autowired
@@ -23,7 +26,6 @@ public class AttendanceRepositoryTest {
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
 
     @Test
-    @Sql({ "EmployeeRepositoryTest.sql", "AttendanceRepositoryTest.sql" })
     public void testFindByEmployeeIdAndDate() {
         final LocalDate date = LocalDate.parse("2024-10-01"); // String を LocalDate に変換
         this.attendanceRepository.findByEmployeeIdAndDate(11L, date).ifPresentOrElse(
@@ -41,7 +43,6 @@ public class AttendanceRepositoryTest {
     }
 
     @Test
-    @Sql({ "EmployeeRepositoryTest.sql", "AttendanceRepositoryTest.sql" })
     public void testFindByEmployeeIdAndYearAndMonth() {
         this.attendanceRepository.findByEmployeeIdAndYearAndMonth(11L, 2024, 10).ifPresentOrElse(
                 list -> {
@@ -60,7 +61,6 @@ public class AttendanceRepositoryTest {
     }
 
     @Test
-    @Sql({ "EmployeeRepositoryTest.sql", "AttendanceRepositoryTest.sql" })
     public void testFindByEmailAndPassword() {
         this.attendanceRepository.findByEmployeeId(11L).ifPresentOrElse(
                 list -> {

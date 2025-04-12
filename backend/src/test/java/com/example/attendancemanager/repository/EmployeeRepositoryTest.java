@@ -6,18 +6,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.attendancemanager.entity.Employee;
 
 @SpringBootTest
 @ActiveProfiles("test")
+@Sql("EmployeeRepositoryTest.sql")
+@Transactional
 public class EmployeeRepositoryTest {
 
     @Autowired
     private EmployeeRepository employeeRepository;
 
     @Test
-    @Sql("EmployeeRepositoryTest.sql")
     public void testFindByEmailAndPassword() {
         Employee employee = this.employeeRepository.findByEmailAndPassword(
                 "itohtohirofumi11@email.com", "$2a$12$9S./kSh2vC6VqFPQLg1ege7gWPmJ556aCDBO2Qg/tj5ZWEiBoRb1i")
@@ -28,7 +30,6 @@ public class EmployeeRepositoryTest {
     }
 
     @Test
-    @Sql("EmployeeRepositoryTest.sql")
     public void testFindByEmail() {
         Employee employee = this.employeeRepository.findByEmail("itohtohirofumi11@email.com").orElse(new Employee());
         assertEquals(employee.getId(), 11);

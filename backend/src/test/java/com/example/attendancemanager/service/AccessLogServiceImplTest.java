@@ -13,11 +13,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.attendancemanager.entity.AccessLog;
 
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
 @ActiveProfiles("test")
+@Sql("AccessLogServiceImplTest.sql")
+@Transactional
 public class AccessLogServiceImplTest {
 
     @Autowired
@@ -26,7 +29,6 @@ public class AccessLogServiceImplTest {
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
 
     @Test
-    @Sql("AccessLogServiceImplTest.sql")
     public void testGetAccessLogsByDate() {
         // テスト用の日付を指定
         String testDate = "2024-01-01";
