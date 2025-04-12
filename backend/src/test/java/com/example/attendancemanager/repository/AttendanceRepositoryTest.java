@@ -23,7 +23,7 @@ public class AttendanceRepositoryTest {
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
 
     @Test
-    @Sql("AttendanceRepositoryTest.sql")
+    @Sql({ "EmployeeRepositoryTest.sql", "AttendanceRepositoryTest.sql" })
     public void testFindByEmployeeIdAndDate() {
         final LocalDate date = LocalDate.parse("2024-10-01"); // String を LocalDate に変換
         this.attendanceRepository.findByEmployeeIdAndDate(11L, date).ifPresentOrElse(
@@ -41,7 +41,7 @@ public class AttendanceRepositoryTest {
     }
 
     @Test
-    @Sql("AttendanceRepositoryTest.sql")
+    @Sql({ "EmployeeRepositoryTest.sql", "AttendanceRepositoryTest.sql" })
     public void testFindByEmployeeIdAndYearAndMonth() {
         this.attendanceRepository.findByEmployeeIdAndYearAndMonth(11L, 2024, 10).ifPresentOrElse(
                 list -> {
@@ -60,7 +60,7 @@ public class AttendanceRepositoryTest {
     }
 
     @Test
-    @Sql("AttendanceRepositoryTest.sql")
+    @Sql({ "EmployeeRepositoryTest.sql", "AttendanceRepositoryTest.sql" })
     public void testFindByEmailAndPassword() {
         this.attendanceRepository.findByEmployeeId(11L).ifPresentOrElse(
                 list -> {
