@@ -1,4 +1,5 @@
 -- 最初にお掃除
+DELETE FROM attendance WHERE employee_id=11; -- employee_idの紐付けデータを削除
 DELETE FROM employee WHERE id=11;
 -- 次にテストデータを挿入
 INSERT INTO employee (id, email, is_admin, name, password) VALUES
