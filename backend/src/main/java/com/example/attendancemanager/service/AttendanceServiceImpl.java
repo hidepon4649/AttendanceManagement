@@ -7,6 +7,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,16 +21,18 @@ import com.example.attendancemanager.repository.EmployeeRepository;
 @Service
 public class AttendanceServiceImpl implements AttendanceService {
 
-    // 日本時間を明示的に設定
-    private ZoneId japanZoneId = ZoneId.of("Asia/Tokyo");
-
+    private ZoneId myZoneId;
     private final AttendanceRepository attendanceRepository;
     private final EmployeeRepository employeeRepository;
 
-    public AttendanceServiceImpl(AttendanceRepository attendanceRepository,
-            EmployeeRepository employeeRepository) {
+    public AttendanceServiceImpl(
+            AttendanceRepository attendanceRepository,
+            EmployeeRepository employeeRepository,
+            @Value("${app.timezone}") String timezone) {
+
         this.attendanceRepository = attendanceRepository;
         this.employeeRepository = employeeRepository;
+        this.myZoneId = ZoneId.of(timezone);
     }
 
     // 出勤の記録
@@ -40,15 +43,15 @@ public class AttendanceServiceImpl implements AttendanceService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "社員が見つかりません:" + employeeId));
 
         // 既に出勤記録が存在する場合はエラーとします
-        attendanceRepository.findByEmployeeIdAndDate(employeeId, LocalDate.now(japanZoneId))
+        attendanceRepository.findByEmployeeIdAndDate(employeeId, LocalDate.now(myZoneId))
                 .ifPresent((data) -> {
                     throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "今日の出勤記録が既に存在します:" + data);
                 });
 
         Attendance attendance = new Attendance();
         attendance.setEmployee(employee);
-        attendance.setClockInTime(LocalDateTime.now(japanZoneId));
-        attendance.setDate(LocalDate.now(japanZoneId));
+        attendance.setClockInTime(LocalDateTime.now(myZoneId));
+        attendance.setDate(LocalDate.now(myZoneId));
         return attendanceRepository.save(attendance);
 
     }
@@ -61,13 +64,13 @@ public class AttendanceServiceImpl implements AttendanceService {
         employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "社員が見つかりません:" + employeeId));
 
-        Attendance attendance = attendanceRepository.findByEmployeeIdAndDate(employeeId, LocalDate.now(japanZoneId))
+        Attendance attendance = attendanceRepository.findByEmployeeIdAndDate(employeeId, LocalDate.now(myZoneId))
                 .orElseThrow(() -> {
                     throw new ResponseStatusException(HttpStatus.NOT_FOUND, "今日の出勤記録が見つかりません");
                 });
 
         // 既に退勤記録が存在する場合は現在時刻で上書きします
-        attendance.setClockOutTime(LocalDateTime.now(japanZoneId));
+        attendance.setClockOutTime(LocalDateTime.now(myZoneId));
         return attendanceRepository.save(attendance);
     }
 

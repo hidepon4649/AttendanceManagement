@@ -41,5 +41,6 @@ frontend:
   url: http://localhost:3000
 
 app:
+  timezone: Asia/Tokyo
   jwtSecret: mySecretKey0123456789aop9879sgjnspkAxmndfsopkvajoirjg94gf2opfng2moknm
   jwtExpirationMs: 3600000

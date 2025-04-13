@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,13 +22,15 @@ import com.example.attendancemanager.repository.AccessLogRepository;
 @Component
 public class LoggingAspect {
 
-        // 日本時間を明示的に設定
-        private ZoneId japanZoneId = ZoneId.of("Asia/Tokyo");
-
+        private final ZoneId myZoneId;
         private final AccessLogRepository accessLogRepository;
 
-        public LoggingAspect(AccessLogRepository accessLogRepository) {
+        public LoggingAspect(
+                        AccessLogRepository accessLogRepository,
+                        @Value("${app.timezone}") String timezone) {
+
                 this.accessLogRepository = accessLogRepository;
+                this.myZoneId = ZoneId.of(timezone);
         }
 
         @Before("within(@org.springframework.web.bind.annotation.RestController *)")
@@ -55,8 +58,8 @@ public class LoggingAspect {
                 accessLog.setMethodName(methodName);
                 accessLog.setMethodParams(methodParams);
                 accessLog.setUserRoles(userRoles);
-                accessLog.setAccessDate(LocalDate.now(japanZoneId));
-                accessLog.setAccessTime(LocalDateTime.now(japanZoneId));
+                accessLog.setAccessDate(LocalDate.now(myZoneId));
+                accessLog.setAccessTime(LocalDateTime.now(myZoneId));
                 accessLogRepository.save(accessLog);
 
         }
