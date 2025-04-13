@@ -3,6 +3,7 @@ const _jsxFileName = "/Users/hidemac1/attendance-management-app/frontend/src/pag
 import { useState, useEffect } from 'react';
 import api from '../services/api';
 import '../css/AccessLog.css';
+import { formatDateTime } from '../utils/formatTimeUtils';
 const AccessLogPage = () => {
     const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
     const [list, setList] = useState([]);
@@ -13,7 +14,7 @@ const AccessLogPage = () => {
     useEffect(() => {
         fetchList().catch((error) => console.error(error));
     }, [date]);
-    const logList = list.map((log) => (_jsxDEV("tr", { className: "row p-0 m-0", children: [_jsxDEV("td", { className: "col-1", children: log.username?.split('@')[0] }, void 0, false, { fileName: _jsxFileName, lineNumber: 23, columnNumber: 7 }, this), _jsxDEV("td", { className: "col-2", children: log.className?.split('.').pop() }, void 0, false, { fileName: _jsxFileName, lineNumber: 24, columnNumber: 7 }, this), _jsxDEV("td", { className: "col-2", children: log.methodName }, void 0, false, { fileName: _jsxFileName, lineNumber: 25, columnNumber: 7 }, this), _jsxDEV("td", { className: "col-5", children: log.methodParams }, void 0, false, { fileName: _jsxFileName, lineNumber: 26, columnNumber: 7 }, this), _jsxDEV("td", { className: "col-2", children: log.accessTime }, void 0, false, { fileName: _jsxFileName, lineNumber: 29, columnNumber: 7 }, this)] }, log.id, true, { fileName: _jsxFileName, lineNumber: 20, columnNumber: 49 }, this)));
-    return (_jsxDEV("table", { className: "table table-striped table-hover mt-3", children: _jsxDEV("tbody", { children: logList }, void 0, false, { fileName: _jsxFileName, lineNumber: 35, columnNumber: 7 }, this) }, void 0, false, { fileName: _jsxFileName, lineNumber: 33, columnNumber: 11 }, this));
+    const logList = list.map((log) => (_jsxDEV("tr", { className: "row p-0 m-0", children: [_jsxDEV("td", { className: "col-1", children: formatDateTime(log.accessTime, 'yyyyMMdd') }, void 0, false, { fileName: _jsxFileName, lineNumber: 23, columnNumber: 7 }, this), _jsxDEV("td", { className: "col-1", children: formatDateTime(log.accessTime, 'hh:mm:ss') }, void 0, false, { fileName: _jsxFileName, lineNumber: 24, columnNumber: 7 }, this), _jsxDEV("td", { className: "col-1", children: log.username?.split('@')[0] }, void 0, false, { fileName: _jsxFileName, lineNumber: 25, columnNumber: 7 }, this), _jsxDEV("td", { className: "col-2", children: log.className?.split('.').pop() }, void 0, false, { fileName: _jsxFileName, lineNumber: 26, columnNumber: 7 }, this), _jsxDEV("td", { className: "col-3", children: log.methodName }, void 0, false, { fileName: _jsxFileName, lineNumber: 27, columnNumber: 7 }, this), _jsxDEV("td", { className: "col-4", children: log.methodParams }, void 0, false, { fileName: _jsxFileName, lineNumber: 28, columnNumber: 7 }, this)] }, log.id, true, { fileName: _jsxFileName, lineNumber: 21, columnNumber: 49 }, this)));
+    return (_jsxDEV("table", { className: "table table-striped table-hover mt-3", children: _jsxDEV("tbody", { children: logList }, void 0, false, { fileName: _jsxFileName, lineNumber: 34, columnNumber: 7 }, this) }, void 0, false, { fileName: _jsxFileName, lineNumber: 32, columnNumber: 11 }, this));
 };
 export default AccessLogPage;

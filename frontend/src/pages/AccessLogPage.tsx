@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import api from '../services/api';
 import { AccessLog } from 'src/models/AccessLog';
 import '../css/AccessLog.css';
+import { formatDateTime } from '../utils/formatTimeUtils';
 import SortIcon from '@mui/icons-material/Sort';
 
 const AccessLogPage = () => {
@@ -19,14 +20,12 @@ const AccessLogPage = () => {
 
   const logList = list.map((log: AccessLog) => (
     <tr key={log.id} className="row p-0 m-0">
-      {/* <td className="col-1">{log.id}</td> */}
+      <td className="col-1">{formatDateTime(log.accessTime, 'yyyyMMdd')}</td>
+      <td className="col-1">{formatDateTime(log.accessTime, 'hh:mm:ss')}</td>
       <td className="col-1">{log.username?.split('@')[0]}</td>
       <td className="col-2">{log.className?.split('.').pop()}</td>
-      <td className="col-2">{log.methodName}</td>
-      <td className="col-5">{log.methodParams}</td>
-      {/* <td className="col">{log.userRoles}</td> */}
-      {/* <td className="col">{log.accessDate}</td> */}
-      <td className="col-2">{log.accessTime}</td>
+      <td className="col-3">{log.methodName}</td>
+      <td className="col-4">{log.methodParams}</td>
     </tr>
   ));
 
