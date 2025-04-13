@@ -2,6 +2,7 @@ package com.example.attendancemanager.aspect;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -19,6 +20,9 @@ import com.example.attendancemanager.repository.AccessLogRepository;
 @Aspect
 @Component
 public class LoggingAspect {
+
+        // 日本時間を明示的に設定
+        private ZoneId japanZoneId = ZoneId.of("Asia/Tokyo");
 
         private final AccessLogRepository accessLogRepository;
 
@@ -51,8 +55,8 @@ public class LoggingAspect {
                 accessLog.setMethodName(methodName);
                 accessLog.setMethodParams(methodParams);
                 accessLog.setUserRoles(userRoles);
-                accessLog.setAccessDate(LocalDate.now());
-                accessLog.setAccessTime(LocalDateTime.now());
+                accessLog.setAccessDate(LocalDate.now(japanZoneId));
+                accessLog.setAccessTime(LocalDateTime.now(japanZoneId));
                 accessLogRepository.save(accessLog);
 
         }
