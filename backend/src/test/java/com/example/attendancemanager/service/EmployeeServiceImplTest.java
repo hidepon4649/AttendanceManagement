@@ -1,67 +1,57 @@
 package com.example.attendancemanager.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.doReturn;
 
-import java.util.Optional;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.attendancemanager.entity.Employee;
-import com.example.attendancemanager.repository.EmployeeRepository;
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest(webEnvironment = WebEnvironment.NONE)
+@ActiveProfiles("test")
+@Sql("EmployeeServiceImplTest.sql")
+@Transactional
 public class EmployeeServiceImplTest {
 
-    @InjectMocks
+    @Autowired
     private EmployeeServiceImpl employeeService;
 
-    @Mock
-    private EmployeeRepository employeeRepository;
+    @Test
+    void testGetAllEmployees() {
+        List<Employee> list = employeeService.getAllEmployees();
+        assertEquals(3, list.size());
+    }
 
     @Test
     void testGetEmployeeById() {
 
-        Employee expectedEmployee = new Employee();
-        expectedEmployee.setId(99999L);
-        expectedEmployee.setName("テスト太郎");
-        expectedEmployee.setEmail("test@taro.com");
-        expectedEmployee.setPassword("password123");
-        expectedEmployee.setAdmin(false);
+        Employee employee = employeeService.getEmployeeById(11L);
 
-        doReturn(Optional.of(expectedEmployee)).when(employeeRepository).findById(99999L);
-        Employee actualEmployee = employeeService.getEmployeeById(99999L);
-
-        assertEquals(actualEmployee.getId(), expectedEmployee.getId());
-        assertEquals(actualEmployee.getName(), expectedEmployee.getName());
-        assertEquals(actualEmployee.getEmail(), expectedEmployee.getEmail());
-        assertEquals(actualEmployee.getPassword(), expectedEmployee.getPassword());
-        assertEquals(actualEmployee.isAdmin(), expectedEmployee.isAdmin());
+        assertEquals(11L, employee.getId());
+        assertEquals("伊藤博文11", employee.getName());
+        assertEquals("itohtohirofumi11@email.com", employee.getEmail());
+        assertEquals("$2a$12$9S./kSh2vC6VqFPQLg1ege7gWPmJ556aCDBO2Qg/tj5ZWEiBoRb1i", employee.getPassword());
+        assertEquals(true, employee.isAdmin());
 
     }
 
     @Test
     void tesFindByEmail() {
 
-        Employee expectedEmployee = new Employee();
-        expectedEmployee.setId(99999L);
-        expectedEmployee.setName("テスト太郎");
-        expectedEmployee.setEmail("test@taro.com");
-        expectedEmployee.setPassword("password123");
-        expectedEmployee.setAdmin(false);
+        Employee employee = employeeService.findByEmail("itohtohirofumi11@email.com");
 
-        doReturn(Optional.of(expectedEmployee)).when(employeeRepository).findByEmail("test@taro.com");
-        Employee actualEmployee = employeeService.findByEmail("test@taro.com");
-
-        assertEquals(actualEmployee.getId(), expectedEmployee.getId());
-        assertEquals(actualEmployee.getName(), expectedEmployee.getName());
-        assertEquals(actualEmployee.getEmail(), expectedEmployee.getEmail());
-        assertEquals(actualEmployee.getPassword(), expectedEmployee.getPassword());
-        assertEquals(actualEmployee.isAdmin(), expectedEmployee.isAdmin());
+        assertEquals(11L, employee.getId());
+        assertEquals("伊藤博文11", employee.getName());
+        assertEquals("itohtohirofumi11@email.com", employee.getEmail());
+        assertEquals("$2a$12$9S./kSh2vC6VqFPQLg1ege7gWPmJ556aCDBO2Qg/tj5ZWEiBoRb1i", employee.getPassword());
+        assertEquals(true, employee.isAdmin());
 
     }
 }
