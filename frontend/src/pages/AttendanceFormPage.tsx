@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
-import api from "../services/api";
-import { Employee } from "../models/Employee";
-import { Attendance } from "../models/Attendance";
-import Button from "@mui/material/Button";
-import PunchClockIcon from "@mui/icons-material/PunchClock";
-import { lsGetMyId } from "../utils/localStorageUtils";
+import React, { useState, useEffect } from 'react';
+import api from '../services/api';
+import { Employee } from '../models/Employee';
+import { Attendance } from '../models/Attendance';
+import Button from '@mui/material/Button';
+import PunchClockIcon from '@mui/icons-material/PunchClock';
+import { lsGetMyId } from '../utils/localStorageUtils';
 import {
   handleApiError,
   addRecord,
@@ -12,14 +12,14 @@ import {
   targetMonthDefaultRecords,
   updateMonth,
   isCurrentMonth,
-} from "../utils/attendanceUtils";
-import { Bikou } from "../components/Bikou";
-import { ClockInOutEditSave } from "../components/ClockInOutEditSave";
-import OutputReportButton from "../components/OutputReportButton";
-import { minutesToHHMM } from "../utils/dateTimeUtils";
-import MonthNavigation from "../components/MonthNavigation";
-import useLoginUserContext from "src/hooks/useLoginUserContext";
-import { Youbi } from "../components/Youbi";
+} from '../utils/attendanceUtils';
+import { Bikou } from '../components/Bikou';
+import { ClockInOutEditSave } from '../components/ClockInOutEditSave';
+import OutputReportButton from '../components/OutputReportButton';
+import { getFormattedToday, minutesToHHMM } from '../utils/dateTimeUtils';
+import MonthNavigation from '../components/MonthNavigation';
+import useLoginUserContext from 'src/hooks/useLoginUserContext';
+import { Youbi } from '../components/Youbi';
 
 const AttendanceFormPage = () => {
   const { isAdmin } = useLoginUserContext();
@@ -32,7 +32,7 @@ const AttendanceFormPage = () => {
     [] as Attendance[]
   );
   const [targetMonth, setTargetMonth] = useState(
-    new Date().toISOString().slice(0, 7)
+    getFormattedToday().slice(0, 7)
   ); // YYYY-MM形式で年月を取得
   const [dates, setDates] = useState<string[]>([]);
 
@@ -43,10 +43,10 @@ const AttendanceFormPage = () => {
       // 管理者の場合のみ社員情報を取得
       if (isAdmin) {
         try {
-          const response = await api.get("/employees");
+          const response = await api.get('/employees');
           setEmployees(response.data);
         } catch (error) {
-          handleApiError(error, "Failed to fetch employees");
+          handleApiError(error, 'Failed to fetch employees');
         }
       }
     };
@@ -71,7 +71,7 @@ const AttendanceFormPage = () => {
           {}
         );
 
-        console.log("Clocked in:", response.data);
+        console.log(`Clocked in:${response.data}`);
 
         // 出勤記録を再取得して更新
         await fetchAttendanceRecords(
@@ -81,7 +81,7 @@ const AttendanceFormPage = () => {
           setTotalMinutes
         );
       } catch (error) {
-        handleApiError(error, "Clock-in failed");
+        handleApiError(error, 'Clock-in failed');
       }
     }
   };
@@ -93,7 +93,7 @@ const AttendanceFormPage = () => {
           `/attendance/${employeeId}/clock-out`,
           {}
         );
-        console.log("Clocked out:", response.data);
+        console.log(`Clocked out:${response.data}`);
 
         // 出勤記録を再取得して更新
         await fetchAttendanceRecords(
@@ -103,7 +103,7 @@ const AttendanceFormPage = () => {
           setTotalMinutes
         );
       } catch (error) {
-        handleApiError(error, "Clock-out failed");
+        handleApiError(error, 'Clock-out failed');
       }
     }
   };
@@ -114,13 +114,13 @@ const AttendanceFormPage = () => {
 
   const handlePrevMonth = () => {
     const newMonth = updateMonth(targetMonth, -1); // 前の月に移動
-    console.log(newMonth);
+    console.log(`${newMonth}`);
     setTargetMonth(newMonth);
   };
 
   const handleNextMonth = () => {
     const newMonth = updateMonth(targetMonth, 1); // 次の月に移動
-    console.log(newMonth);
+    console.log(`${newMonth}`);
     setTargetMonth(newMonth);
   };
 
@@ -151,7 +151,7 @@ const AttendanceFormPage = () => {
           <Bikou
             employeeId={employeeId}
             date={date}
-            initalRemarks={record ? record.remarks : ""}
+            initalRemarks={record ? record.remarks : ''}
             callback={() =>
               fetchAttendanceRecords(
                 employeeId,

@@ -4,9 +4,10 @@ import { AccessLog } from 'src/models/AccessLog';
 import '../css/AccessLog.css';
 import { formatDateTime } from '../utils/formatTimeUtils';
 import SortIcon from '@mui/icons-material/Sort';
+import { getFormattedToday } from 'src/utils/dateTimeUtils';
 
 const AccessLogPage = () => {
-  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+  const [date, setDate] = useState(getFormattedToday());
   const [list, setList] = useState([]);
 
   const fetchList = async () => {

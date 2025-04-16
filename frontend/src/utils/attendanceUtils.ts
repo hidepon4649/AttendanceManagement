@@ -1,7 +1,7 @@
-import React from "react";
-import api from "../services/api";
-import { getDefaultRecords } from "./dateTimeUtils";
-import { Attendance } from "../models/Attendance";
+import React from 'react';
+import api from '../services/api';
+import { getDefaultRecords, getFormattedToday } from './dateTimeUtils';
+import { Attendance } from '../models/Attendance';
 
 export const handleApiError = (error: any, message: string) => {
   console.error(`${message}:`, error);
@@ -13,9 +13,9 @@ export const addRecord = async (employeeId: number, date: string) => {
       employeeId,
       date,
     });
-    console.log("Record added:", response.data);
+    console.log('Record added:', response.data);
   } catch (error) {
-    handleApiError(error, "Failed to add record");
+    handleApiError(error, 'Failed to add record');
   }
 };
 
@@ -36,9 +36,9 @@ export const fetchAttendanceRecords = async (
         employeeName: record.employee.name,
       }))
     );
-    console.log("Attendance records:", response.data);
+    console.log('Attendance records:', response.data);
   } catch (error) {
-    handleApiError(error, "Failed to fetch attendance records");
+    handleApiError(error, 'Failed to fetch attendance records');
   }
 };
 
@@ -50,13 +50,13 @@ export const targetMonthDefaultRecords = (
 };
 
 export const updateMonth = (targetMonth: string, offset: number) => {
-  const [year, month] = targetMonth.split("-").map(Number);
+  const [year, month] = targetMonth.split('-').map(Number);
   const date = new Date(year, month + offset, 1);
   return date.toISOString().slice(0, 7);
 };
 
 export const isCurrentMonth = (targetMonth: string) => {
-  const currentMonth = new Date().toISOString().slice(0, 7);
+  const currentMonth = getFormattedToday().slice(0, 7);
   console.log(`currentMonth:${currentMonth}, targetMonth:${targetMonth}`);
   return currentMonth === targetMonth;
 };
