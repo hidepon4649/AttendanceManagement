@@ -71,6 +71,7 @@ frontend/src/models/*.js
 frontend/src/pages/*.js
 frontend/src/services/*.js
 frontend/src/utils/*.js
+frontend/src/App.js
 
 # Dockerお掃除シェル
 cleanup_docker.zsh
