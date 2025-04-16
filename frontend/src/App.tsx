@@ -18,7 +18,7 @@ import useLoginUserContext from './hooks/useLoginUserContext';
 const App = () => {
   const { isLoggedIn, isAdmin, myName } = useLoginUserContext();
 
-  console.log('App.tsx is rendered. isLoggedIn:', isLoggedIn);
+  console.log(`App.tsx is rendered. isLoggedIn:${isLoggedIn}`);
 
   return (
     <div className="container">

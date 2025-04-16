@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from "react";
-import { formatShortTime, getStartEndGap } from "../utils/dateTimeUtils";
-import { Attendance } from "../models/Attendance";
-import api from "../services/api";
-import { Alert, Modal, Button } from "react-bootstrap";
-import useLoginUserContext from "src/hooks/useLoginUserContext";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import dayjs from "dayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { TimePicker } from "@mui/x-date-pickers/TimePicker";
-import { formatDBStyle } from "src/utils/formatTimeUtils";
+import React, { useState, useEffect } from 'react';
+import { formatShortTime, getStartEndGap } from '../utils/dateTimeUtils';
+import { Attendance } from '../models/Attendance';
+import api from '../services/api';
+import { Alert, Modal, Button } from 'react-bootstrap';
+import useLoginUserContext from 'src/hooks/useLoginUserContext';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs, { Dayjs } from 'dayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import { formatDBStyle } from 'src/utils/formatTimeUtils';
 interface ClockInOutEditSaveProps {
   record: Attendance | null;
   callback: () => void;
@@ -21,11 +21,11 @@ export const ClockInOutEditSave = (props: ClockInOutEditSaveProps) => {
   const { isAdmin } = useLoginUserContext();
 
   const [editRecordId, setEditRecordId] = useState<string | null>(null);
-  const [clockInTime, setClockInTime] = useState(record?.clockInTime || "");
-  const [clockOutTime, setClockOutTime] = useState(record?.clockOutTime || "");
+  const [clockInTime, setClockInTime] = useState(record?.clockInTime || '');
+  const [clockOutTime, setClockOutTime] = useState(record?.clockOutTime || '');
   const [breakMinutes, setBreakMinutes] = useState(record?.breakMinutes || 0);
 
-  const [startEndGap, setStartEndGap] = useState("");
+  const [startEndGap, setStartEndGap] = useState('');
 
   useEffect(() => {
     if (record) {
@@ -60,18 +60,18 @@ export const ClockInOutEditSave = (props: ClockInOutEditSaveProps) => {
         clockOutTime: clockOutTime || record.clockOutTime,
         breakMinutes: breakMinutes || record.breakMinutes,
       });
-      setAlert({ type: "success", message: "勤怠が修正されました" });
+      setAlert({ type: 'success', message: '勤怠が修正されました' });
     } catch (error) {
-      setAlert({ type: "danger", message: "勤怠の修正に失敗しました" });
+      setAlert({ type: 'danger', message: '勤怠の修正に失敗しました' });
     }
     refresh();
   };
   const handleAddClick = async () => {
     try {
       await addRecord();
-      setAlert({ type: "success", message: "勤怠が追加されました" });
+      setAlert({ type: 'success', message: '勤怠が追加されました' });
     } catch (error) {
-      setAlert({ type: "danger", message: "勤怠の追加に失敗しました" });
+      setAlert({ type: 'danger', message: '勤怠の追加に失敗しました' });
     }
     refresh();
   };
@@ -83,9 +83,9 @@ export const ClockInOutEditSave = (props: ClockInOutEditSaveProps) => {
 
     try {
       await api.delete(`/attendance/maintenance/${record.id}`);
-      setAlert({ type: "success", message: "勤怠が削除されました" });
+      setAlert({ type: 'success', message: '勤怠が削除されました' });
     } catch (error) {
-      setAlert({ type: "danger", message: "勤怠の削除に失敗しました" });
+      setAlert({ type: 'danger', message: '勤怠の削除に失敗しました' });
     }
     refresh();
   };
@@ -95,13 +95,13 @@ export const ClockInOutEditSave = (props: ClockInOutEditSaveProps) => {
     callback();
   };
 
-  const handleClockInTimeChange = (value: any) => {
-    console.log("in value:", value);
+  const handleClockInTimeChange = (value: Dayjs | null) => {
+    console.log(`in value:${value}`);
     setClockInTime(() => formatDBStyle(value));
   };
 
-  const handleClockOutTimeChange = (value: any) => {
-    console.log("out value:", value);
+  const handleClockOutTimeChange = (value: Dayjs | null) => {
+    console.log(`out value:${value}`);
     setClockOutTime(() => formatDBStyle(value));
   };
 
@@ -116,7 +116,7 @@ export const ClockInOutEditSave = (props: ClockInOutEditSaveProps) => {
         <>
           {editRecordId === record.id.toString() ? (
             <>
-              <td className="align-middle p-0 m-0" style={{ width: "110px" }}>
+              <td className="align-middle p-0 m-0" style={{ width: '110px' }}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <TimePicker
                     ampm={false}
@@ -126,7 +126,7 @@ export const ClockInOutEditSave = (props: ClockInOutEditSaveProps) => {
                   />
                 </LocalizationProvider>
               </td>
-              <td className="align-middle p-0 m-0" style={{ width: "110px" }}>
+              <td className="align-middle p-0 m-0" style={{ width: '110px' }}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <TimePicker
                     ampm={false}
@@ -136,7 +136,7 @@ export const ClockInOutEditSave = (props: ClockInOutEditSaveProps) => {
                   />
                 </LocalizationProvider>
               </td>
-              <td className="align-middle p-0 m-0" style={{ width: "80px" }}>
+              <td className="align-middle p-0 m-0" style={{ width: '80px' }}>
                 <input
                   type="number"
                   className="form-control"

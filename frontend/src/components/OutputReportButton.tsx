@@ -1,9 +1,9 @@
-import React from "react";
-import Button from "@mui/material/Button";
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import jsPDF from "jspdf";
-import "jspdf-autotable";
-import NotoSansJP from "../fonts/NotoSansJP-Regular-base64.js";
+import React from 'react';
+import Button from '@mui/material/Button';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+import NotoSansJP from '../fonts/NotoSansJP-Regular-base64.js';
 import {
   formatShortTime,
   getYoubi,
@@ -11,8 +11,8 @@ import {
   getYearMonthForPrint,
   getStartEndGap,
   minutesToHHMM,
-} from "../utils/dateTimeUtils.js";
-import { Attendance } from "../models/Attendance.js";
+} from '../utils/dateTimeUtils.js';
+import { Attendance } from '../models/Attendance.js';
 
 interface OutputReportButtonProps {
   employeeId: number;
@@ -28,22 +28,22 @@ const OutputReportButton = (props: OutputReportButtonProps) => {
         const doc = new jsPDF();
 
         // フォントの追加
-        doc.addFileToVFS("NotoSansJP-Regular.ttf", NotoSansJP);
-        doc.addFont("NotoSansJP-Regular.ttf", "NotoSansJP", "normal");
-        doc.setFont("NotoSansJP");
+        doc.addFileToVFS('NotoSansJP-Regular.ttf', NotoSansJP);
+        doc.addFont('NotoSansJP-Regular.ttf', 'NotoSansJP', 'normal');
+        doc.setFont('NotoSansJP');
 
         const tableColumn = [
-          "日付",
-          "出勤時間",
-          "退勤時間",
-          "休憩(分)",
-          "作業時間",
-          "備考",
+          '日付',
+          '出勤時間',
+          '退勤時間',
+          '休憩(分)',
+          '作業時間',
+          '備考',
         ];
-        const tableRows: any = [];
+        const tableRows: (string | number)[][] = [];
 
         const dates = getDefaultRecords(targetMonth);
-        let employeeName: string = "";
+        let employeeName: string = '';
 
         {
           dates.map((date) => {
@@ -51,18 +51,18 @@ const OutputReportButton = (props: OutputReportButtonProps) => {
               ? attendanceRecords.find((record) => record.date === date) || null
               : null;
             const row = [
-              date + " " + getYoubi(date),
-              record ? formatShortTime(record.clockInTime) : "",
-              record ? formatShortTime(record.clockOutTime) : "",
-              record ? record.breakMinutes : "",
+              date + ' ' + getYoubi(date),
+              record ? formatShortTime(record.clockInTime) : '',
+              record ? formatShortTime(record.clockOutTime) : '',
+              record ? record.breakMinutes : '',
               record
                 ? getStartEndGap(
                     record.clockInTime,
                     record.clockOutTime,
                     record.breakMinutes
                   ).hhmm
-                : "",
-              record ? record.remarks || "" : "",
+                : '',
+              record ? record.remarks || '' : '',
             ];
 
             if (!employeeName && record) {
@@ -76,7 +76,7 @@ const OutputReportButton = (props: OutputReportButtonProps) => {
           head: [tableColumn],
           body: tableRows,
           startY: 20,
-          styles: { font: "NotoSansJP" },
+          styles: { font: 'NotoSansJP' },
         });
 
         const pageWidth = doc.internal.pageSize.width;
@@ -95,19 +95,19 @@ const OutputReportButton = (props: OutputReportButtonProps) => {
           15
         );
 
-        const pdfBlob = doc.output("blob");
+        const pdfBlob = doc.output('blob');
 
         const url = window.URL.createObjectURL(pdfBlob);
-        const a = document.createElement("a");
+        const a = document.createElement('a');
         a.href = url;
-        a.download = "report.pdf";
+        a.download = 'report.pdf';
         document.body.appendChild(a);
         a.click();
         a.remove();
         window.URL.revokeObjectURL(url);
-        console.log("output report success");
+        console.log(`output report success`);
       } catch (error) {
-        console.error("output report failed:", error);
+        console.error('output report failed:', error);
       }
     }
   };

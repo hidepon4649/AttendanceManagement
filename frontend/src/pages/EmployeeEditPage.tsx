@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
-import api from "../services/api";
-import { useParams } from "react-router-dom";
-import { Employee } from "../models/Employee";
-import { Alert } from "react-bootstrap";
+import React, { useEffect, useState } from 'react';
+import api from '../services/api';
+import { useParams } from 'react-router-dom';
+import { Employee } from '../models/Employee';
+import { Alert } from 'react-bootstrap';
 
-const EmployeeEditPage = (props: any) => {
+const EmployeeEditPage = () => {
   const { id } = useParams<{ id: string }>();
   const [employee, setEmployee] = useState<Employee>(
-    new Employee(0, "", "", "", false)
+    new Employee(0, '', '', '', false)
   );
 
   const [errors, setErrors] = useState<Errors>({});
@@ -27,14 +27,14 @@ const EmployeeEditPage = (props: any) => {
     setErrors({});
     try {
       await api.put(`/employees/${id}`, { ...employee });
-      setAlert({ type: "success", message: "編集が成功しました" });
+      setAlert({ type: 'success', message: '編集が成功しました' });
     } catch (error: any) {
       if (error.response && error.response.data) {
         setErrors({
           fieldErrors: error.response.data, // フィールドエラー
         });
       }
-      setAlert({ type: "danger", message: "編集が失敗しました" });
+      setAlert({ type: 'danger', message: '編集が失敗しました' });
     }
   };
 
@@ -44,7 +44,7 @@ const EmployeeEditPage = (props: any) => {
     setEmployee((prevValue) => {
       const newValue = {
         ...prevValue,
-        [name]: type === "checkbox" ? checked : value,
+        [name]: type === 'checkbox' ? checked : value,
       } as Employee;
 
       return newValue;

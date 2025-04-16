@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import api from "../services/api";
-import { Alert } from "react-bootstrap";
+import React, { useState, useEffect } from 'react';
+import api from '../services/api';
+import { Alert } from 'react-bootstrap';
 
 interface BikouProps {
   employeeId: number;
@@ -36,13 +36,20 @@ export const Bikou = (props: BikouProps) => {
         date: date,
         remarks: remarks,
       });
-      setAlert({ type: "success", message: "備考が登録されました" });
+      setAlert({ type: 'success', message: '備考が登録されました' });
       callback();
-    } catch (error: any) {
-      setAlert({
-        type: "danger",
-        message: `備考の登録に失敗しました:${error.message}`,
-      });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setAlert({
+          type: 'danger',
+          message: `備考の登録に失敗しました:${error.message}`,
+        });
+      } else {
+        setAlert({
+          type: 'danger',
+          message: `備考の登録に失敗しました:不明なエラー`,
+        });
+      }
     }
   };
   return (
@@ -63,7 +70,7 @@ export const Bikou = (props: BikouProps) => {
         <input
           type="text"
           className="form-control"
-          value={remarks || ""}
+          value={remarks || ''}
           onChange={handleRemarksChange}
           maxLength={100}
         />
