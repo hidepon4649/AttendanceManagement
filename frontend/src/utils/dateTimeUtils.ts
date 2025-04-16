@@ -54,6 +54,11 @@ export const getStartEndGap = (
   }
   const clockInTime = new Date(start);
   const clockOutTime = new Date(end);
+
+  // 秒とミリ秒を0にリセット(秒までは計上しない)
+  clockInTime.setSeconds(0, 0);
+  clockOutTime.setSeconds(0, 0);
+
   const timeDifference = clockOutTime.getTime() - clockInTime.getTime();
   const totalMinutes = Math.floor(timeDifference / (1000 * 60)) - breakMinutes;
   const hours = padFrontZero(Math.floor(totalMinutes / 60), 2);
