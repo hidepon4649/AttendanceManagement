@@ -63,13 +63,14 @@ out/
 node_modules/
 jspm_packages/
 
-# frontend/src/components 内のすべての JS ファイルを無視
+# アプリケーションの JSファイルを無視
 frontend/src/components/*.js
-frontend/src/components/**/*.js
-
-# TypeScript ファイル（TSX）は必要なら無視しないようにする
-!frontend/src/components/*.tsx
-!frontend/src/components/**/*.tsx
+frontend/src/context/*.js
+frontend/src/hooks/*.js
+frontend/src/models/*.js
+frontend/src/pages/*.js
+frontend/src/services/*.js
+frontend/src/utils/*.js
 
 # Dockerお掃除シェル
 cleanup_docker.zsh
