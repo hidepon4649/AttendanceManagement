@@ -163,20 +163,22 @@ const EmployeeListPage = () => {
             <tr className="row" key={employee.id}>
               <td className="col-1">{employee.id}</td>
               <td className="col-1">
-                <img
-                  src={imageMap[employee.id] || ''}
-                  alt="顔写真"
-                  width="50"
-                  height="50"
-                  style={{
-                    objectFit: 'cover',
-                    border: '1px solid #ccc', // 枠線
-                    backgroundColor: '#f9f9f9', // 背景色
-                  }}
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).src = '';
-                  }}
-                />
+                {imageMap[employee.id] && (
+                  <img
+                    src={imageMap[employee.id] || ''}
+                    alt="顔写真"
+                    width="50"
+                    height="50"
+                    style={{
+                      objectFit: 'cover',
+                      border: '1px solid #ccc', // 枠線
+                      backgroundColor: '#f9f9f9', // 背景色
+                    }}
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = '';
+                    }}
+                  />
+                )}
               </td>
               <td className="col-2">{employee.name}</td>
               <td className="col-5">{employee.email}</td>
