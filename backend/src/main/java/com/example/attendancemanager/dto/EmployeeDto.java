@@ -1,16 +1,15 @@
-package com.example.attendancemanager.entity;
+package com.example.attendancemanager.dto;
 
-import jakarta.persistence.Entity;
+import org.springframework.web.multipart.MultipartFile;
+
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-@Entity
-public class Employee {
+public class EmployeeDto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,8 +24,8 @@ public class Employee {
     @NotBlank(message = "パスワードは必須です")
     private String password;
     private boolean isAdmin;
-    @Lob
-    private byte[] picture;
+
+    private MultipartFile picture;
 
     public Long getId() {
         return id;
@@ -68,11 +67,11 @@ public class Employee {
         this.isAdmin = isAdmin;
     }
 
-    public byte[] getPicture() {
+    public MultipartFile getPicture() {
         return picture;
     }
 
-    public void setPicture(byte[] picture) {
+    public void setPicture(MultipartFile picture) {
         this.picture = picture;
     }
 

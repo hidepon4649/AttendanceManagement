@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import api from "../services/api";
-import { Employee } from "../models/Employee";
-import { Alert } from "react-bootstrap";
+import React, { useState } from 'react';
+import api from '../services/api';
+import { Employee } from '../models/Employee';
+import { Alert } from 'react-bootstrap';
 
-const RegisterEmployeeFormPage = () => {
+const EmployeeRegisterPage = () => {
   const [employee, setEmployee] = useState({} as Employee);
 
   const [errors, setErrors] = useState<Errors>({});
@@ -13,17 +13,32 @@ const RegisterEmployeeFormPage = () => {
 
   const handleRegister = async () => {
     setErrors({});
+
+    // 画像をアップロードする場合は、FormDataを使用して送信する必要があります。
+    const formData = new FormData();
+    formData.append('name', employee.name);
+    formData.append('email', employee.email);
+    formData.append('password', employee.password);
+    formData.append('admin', String(employee.admin));
+    if (employee.picture) {
+      formData.append('picture', employee.picture);
+    }
+
     try {
-      await api.post("/employees", { ...employee });
-      setAlert({ type: "success", message: "登録が成功しました" });
+      await api.post('/employees', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      setAlert({ type: 'success', message: '登録が成功しました' });
       setEmployee({} as Employee);
     } catch (error: any) {
-      if (error.response && error.response.data) {
+      if (error.response?.data) {
         setErrors({
           fieldErrors: error.response.data, // フィールドエラー
         });
       }
-      setAlert({ type: "danger", message: "登録が失敗しました" });
+      setAlert({ type: 'danger', message: '登録が失敗しました' });
     }
   };
 
@@ -33,10 +48,44 @@ const RegisterEmployeeFormPage = () => {
     setEmployee((prevValue) => {
       return {
         ...prevValue,
-        [name]: type === "checkbox" ? checked : value,
+        [name]: type === 'checkbox' ? checked : value,
       } as Employee;
     });
   }
+
+  const handleOnChangeFile = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type, checked } = event.target;
+
+    const file: File | undefined = event.target.files?.[0];
+    if (!file) {
+      return;
+    }
+    const isValidType = ['image/jpeg', 'image/png'].includes(file.type);
+    const isValidSize = file.size <= 5 * 1024 * 1024; // 5MB
+
+    if (!isValidType) {
+      setErrors({
+        fieldErrors: { picture: 'jpgまたはpng形式のみ対応しています。' },
+      });
+      return;
+    }
+
+    if (!isValidSize) {
+      setErrors({
+        fieldErrors: { picture: 'ファイルサイズは5MB以下にしてください。' },
+      });
+      return;
+    }
+    setEmployee((prevValue) => {
+      const newValue = {
+        ...prevValue,
+        [name]: type === 'checkbox' ? checked : value,
+        picture: file,
+      } as Employee;
+
+      return newValue;
+    });
+  };
 
   return (
     <div className="mx-3 mt-3">
@@ -46,6 +95,22 @@ const RegisterEmployeeFormPage = () => {
           {alert.message}
         </Alert>
       )}
+      <div className="mb-3 mt-3 custom-file">
+        <label className="form-label custom-file-label" htmlFor="picture">
+          顔写真:
+        </label>
+        <input
+          type="file"
+          className="form-control custom-file-input"
+          name="picture"
+          id="picture"
+          onChange={handleOnChangeFile}
+          placeholder="顔写真の選択"
+        />
+        {errors.fieldErrors?.picture && (
+          <p className="text-danger">{errors.fieldErrors.picture}</p>
+        )}
+      </div>
 
       <div className="mb-3 mt-3">
         <label className="form-label" htmlFor="name">
@@ -60,7 +125,7 @@ const RegisterEmployeeFormPage = () => {
           onChange={handleOnChange}
           placeholder="名前"
         />
-        {errors.fieldErrors && errors.fieldErrors.name && (
+        {errors.fieldErrors?.name && (
           <p className="text-danger">{errors.fieldErrors.name}</p>
         )}
       </div>
@@ -77,7 +142,7 @@ const RegisterEmployeeFormPage = () => {
           onChange={handleOnChange}
           placeholder="メールアドレス"
         />
-        {errors.fieldErrors && errors.fieldErrors.email && (
+        {errors.fieldErrors?.email && (
           <p className="text-danger">{errors.fieldErrors.email}</p>
         )}
       </div>
@@ -93,7 +158,7 @@ const RegisterEmployeeFormPage = () => {
           onChange={handleOnChange}
           placeholder="パスワード"
         />
-        {errors.fieldErrors && errors.fieldErrors.password && (
+        {errors.fieldErrors?.password && (
           <p className="text-danger">{errors.fieldErrors.password}</p>
         )}
       </div>
@@ -124,4 +189,4 @@ interface Errors {
   fieldErrors?: FieldErrors;
 }
 
-export default RegisterEmployeeFormPage;
+export default EmployeeRegisterPage;
