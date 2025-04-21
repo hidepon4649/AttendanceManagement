@@ -5,7 +5,8 @@ CREATE TABLE IF NOT EXISTS employee (
     email VARCHAR(255) NOT NULL UNIQUE,
     is_admin BIT(1) NOT NULL,
     name VARCHAR(24) NOT NULL,
-    password VARCHAR(255) NOT NULL
+    password VARCHAR(255) NOT NULL,
+    picture MEDIUMBLOB
 );
 
 CREATE TABLE IF NOT EXISTS attendance (

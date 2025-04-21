@@ -1,53 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import api from '../services/api';
-import { useParams } from 'react-router-dom';
 import { Employee } from '../models/Employee';
 import { Alert } from 'react-bootstrap';
-import { lsGetJwtToken, lsGetCsrfToken } from 'src/utils/localStorageUtils';
 
-const EmployeeEditPage = () => {
-  const { id } = useParams<{ id: string }>();
-  const [employee, setEmployee] = useState<Employee>(
-    new Employee(0, '', '', '', false, null)
-  );
+const EmployeeRegisterPage = () => {
+  const [employee, setEmployee] = useState({} as Employee);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
+
   const [errors, setErrors] = useState<Errors>({});
   const [alert, setAlert] = useState<{ type: string; message: string } | null>(
     null
   );
 
-  useEffect(() => {
-    const fetchEmployee = async () => {
-      const response = await api.get(`/employees/${id}`);
-      setEmployee(response.data);
-    };
-    fetchEmployee().catch((error) => console.error(error));
-  }, [id]);
-
-  useEffect(() => {
-    const fetchImage = async () => {
-      try {
-        const response = await api.get(`/employees/${id}/picture`, {
-          responseType: 'blob',
-        });
-        if (response.data) {
-          const imageUrl = URL.createObjectURL(response.data);
-          setPreviewImage(imageUrl);
-        }
-      } catch (error) {
-        console.error('画像の取得に失敗しました:', error);
-        setPreviewImage(null); // エラー時もnullを設定
-      }
-    };
-    fetchImage();
-  }, [id]);
-
-  const handleEdit = async () => {
+  const handleRegister = async () => {
     setErrors({});
 
     // 画像をアップロードする場合は、FormDataを使用して送信する必要があります。
     const formData = new FormData();
-    formData.append('id', String(employee.id));
     formData.append('name', employee.name);
     formData.append('email', employee.email);
     formData.append('password', employee.password);
@@ -56,25 +25,21 @@ const EmployeeEditPage = () => {
       formData.append('picture', employee.picture);
     }
 
-    const token = lsGetJwtToken();
-    const csrfToken = lsGetCsrfToken();
-
     try {
-      await api.put(`/employees/${id}`, formData, {
+      await api.post('/employees', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${token}`,
-          'X-CSRF-TOKEN': csrfToken,
         },
       });
-      setAlert({ type: 'success', message: '編集が成功しました' });
+      setAlert({ type: 'success', message: '登録が成功しました' });
+      setEmployee({} as Employee);
     } catch (error: any) {
       if (error.response?.data) {
         setErrors({
           fieldErrors: error.response.data, // フィールドエラー
         });
       }
-      setAlert({ type: 'danger', message: '編集が失敗しました' });
+      setAlert({ type: 'danger', message: '登録が失敗しました' });
     }
   };
 
@@ -82,12 +47,10 @@ const EmployeeEditPage = () => {
     const { name, value, type, checked } = event.target;
 
     setEmployee((prevValue) => {
-      const newValue = {
+      return {
         ...prevValue,
         [name]: type === 'checkbox' ? checked : value,
       } as Employee;
-
-      return newValue;
     });
   }
 
@@ -130,21 +93,18 @@ const EmployeeEditPage = () => {
 
   return (
     <div className="mx-3 mt-3">
-      <h2>社員編集</h2>
+      <h2>社員登録</h2>
       {alert && (
         <Alert variant={alert.type} onClose={() => setAlert(null)} dismissible>
           {alert.message}
         </Alert>
       )}
-
       {previewImage && (
-        <div className="mb-3 mt-3 custom-file">
-          <img
-            src={previewImage}
-            alt="顔写真プレビュー"
-            style={{ width: '200px', height: 'auto', borderRadius: '10px' }}
-          />
-        </div>
+        <img
+          src={previewImage}
+          alt="顔写真プレビュー"
+          style={{ width: '200px', height: 'auto', borderRadius: '10px' }}
+        />
       )}
       <div className="mb-3 mt-3 custom-file">
         <label className="form-label custom-file-label" htmlFor="picture">
@@ -225,8 +185,8 @@ const EmployeeEditPage = () => {
           onChange={handleOnChange}
         />
       </div>
-      <button className="btn btn-primary" onClick={handleEdit}>
-        更新
+      <button className="btn btn-primary" onClick={handleRegister}>
+        社員を登録
       </button>
     </div>
   );
@@ -240,4 +200,4 @@ interface Errors {
   fieldErrors?: FieldErrors;
 }
 
-export default EmployeeEditPage;
+export default EmployeeRegisterPage;

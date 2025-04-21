@@ -1,12 +1,21 @@
 package com.example.attendancemanager.controller;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
+
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,13 +25,15 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.example.attendancemanager.dto.EmployeeDto;
 import com.example.attendancemanager.entity.Employee;
 import com.example.attendancemanager.service.EmployeeService;
 
@@ -50,8 +61,45 @@ public class EmployeeController {
         return ResponseEntity.ok(employeeService.getEmployeeById(id));
     }
 
-    @PostMapping
-    public ResponseEntity<?> createEmployee(@Validated @RequestBody Employee employee, BindingResult result) {
+    @GetMapping("/{id}/picture")
+    public ResponseEntity<byte[]> getPicture(@PathVariable Long id) {
+        Employee employee = employeeService.getEmployeeById(id);
+        byte[] image = employee.getPicture();
+
+        if (image == null || image.length == 0) {
+            return ResponseEntity.notFound().build();
+        }
+
+        String mimeType = detectImageMimeType(image);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType(mimeType));
+        return new ResponseEntity<>(image, headers, HttpStatus.OK);
+    }
+
+    private String detectImageMimeType(byte[] imageBytes) {
+        try (ImageInputStream iis = ImageIO.createImageInputStream(new ByteArrayInputStream(imageBytes))) {
+            Iterator<ImageReader> readers = ImageIO.getImageReaders(iis);
+            if (readers.hasNext()) {
+                ImageReader reader = readers.next();
+                String formatName = reader.getFormatName();
+                switch (formatName.toLowerCase()) {
+                    case "jpeg":
+                    case "jpg":
+                        return "image/jpeg";
+                    case "png":
+                        return "image/png";
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> createEmployee(
+            @Validated @ModelAttribute EmployeeDto dto,
+            BindingResult result) {
 
         if (result.hasErrors()) {
 
@@ -61,20 +109,35 @@ public class EmployeeController {
 
         }
         // 暗号化前のパスワードに対してサイズ制限をチェック
-        if (!validatePassword(employee.getPassword())) {
-
+        if (!validatePassword(dto.getPassword())) {
+            
             Map<String, String> errors = new HashMap<>();
             errors.put("password", "パスワードの長さは 8〜24文字です。");
             return ResponseEntity.badRequest().body(errors);
         }
-        employee.setPassword(passwordEncoder.encode(employee.getPassword()));
+        Employee employee = new Employee();
+        employee.setName(dto.getName());
+        employee.setEmail(dto.getEmail());
+        employee.setPassword(passwordEncoder.encode(dto.getPassword()));
+        employee.setAdmin(dto.isAdmin());
+
+        MultipartFile picture = dto.getPicture();
+        if (picture != null && !picture.isEmpty()) {
+            try {
+                employee.setPicture(picture.getBytes());
+            } catch (IOException e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("画像の読み込みに失敗しました");
+            }
+        }
 
         Employee newEmployee = employeeService.saveEmployee(employee);
         return ResponseEntity.status(HttpStatus.CREATED).body(newEmployee);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> updateEmployee(@PathVariable Long id, @Validated @RequestBody Employee updateEmployee,
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> updateEmployee(
+            @PathVariable Long id,
+            @Validated @ModelAttribute EmployeeDto dto,
             BindingResult result) {
 
         if (result.hasErrors()) {
@@ -86,17 +149,29 @@ public class EmployeeController {
         }
 
         // 暗号化前のパスワードに対してサイズ制限をチェック
-        if (!validatePassword(updateEmployee.getPassword())) {
+        if (!validatePassword(dto.getPassword())) {
             Map<String, String> errors = new HashMap<>();
             errors.put("password", "パスワードの長さは 8〜24文字です。");
             return ResponseEntity.badRequest().body(errors);
         }
 
-        employeeService.getEmployeeById(id);
-        updateEmployee.setPassword(passwordEncoder.encode(updateEmployee.getPassword()));
-        updateEmployee.setId(id);
-        employeeService.saveEmployee(updateEmployee);
-        return ResponseEntity.ok(updateEmployee);
+        Employee employee = employeeService.getEmployeeById(id);
+        employee.setName(dto.getName());
+        employee.setEmail(dto.getEmail());
+        employee.setPassword(passwordEncoder.encode(dto.getPassword()));
+        employee.setAdmin(dto.isAdmin());
+
+        MultipartFile picture = dto.getPicture();
+        if (picture != null && !picture.isEmpty()) {
+            try {
+                employee.setPicture(picture.getBytes());
+            } catch (IOException e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("画像の読み込みに失敗しました");
+            }
+        }
+
+        employeeService.saveEmployee(employee);
+        return ResponseEntity.ok(employee);
 
     }
 

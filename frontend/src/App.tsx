@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import AccessLog from './pages/AccessLogPage';
 import AttendanceForm from './pages/AttendanceFormPage';
-import RegisterEmployeeForm from './pages/EmployeeRegisterFormPage';
+import RegisterEmployeeForm from './pages/EmployeeRegisterPage';
 import EmployeeList from './pages/EmployeeListPage';
 import EmployeeEdit from './pages/EmployeeEditPage';
 import LogoutButton from './components/LogoutButton ';

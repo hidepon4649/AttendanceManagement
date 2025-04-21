@@ -7,10 +7,11 @@ import { Alert } from 'react-bootstrap';
 import SortIcon from '@mui/icons-material/Sort';
 
 const EmployeeListPage = () => {
-  const [list, setList] = useState([]);
+  const [list, setList] = useState<Employee[]>([]);
   const [alert, setAlert] = useState<{ type: string; message: string } | null>(
     null
   );
+  const [imageMap, setImageMap] = useState<Record<number, string>>({});
   const navigate = useNavigate();
 
   const fetchList = async () => {
@@ -21,6 +22,38 @@ const EmployeeListPage = () => {
   useEffect(() => {
     fetchList().catch((error) => console.error(error));
   }, []); // 空の配列を第2引数に渡すことで、初回レンダリング時のみ実行される
+
+  // 画像を非同期に取得しURLをセット
+  const fetchImage = async (employeeId: number) => {
+    try {
+      const response = await api.get(`/employees/${employeeId}/picture`, {
+        responseType: 'blob',
+        withCredentials: true,
+      });
+      return URL.createObjectURL(response.data); // Blob URLを返す
+    } catch (error) {
+      console.error('画像の取得に失敗しました', error);
+      return ''; // 画像が取得できない場合は空文字を返す
+    }
+  };
+
+  // 従業員ごとに画像を取得して状態に保存
+  useEffect(() => {
+    const loadImages = async () => {
+      const newImageMap: Record<number, string> = {};
+
+      for (const employee of list) {
+        const imageUrl = await fetchImage(employee.id);
+        newImageMap[employee.id] = imageUrl;
+      }
+
+      setImageMap(newImageMap);
+    };
+
+    if (list.length > 0) {
+      loadImages();
+    }
+  }, [list]);
 
   const handleEdit = (id: number) => {
     console.log(`${id}`);
@@ -45,8 +78,10 @@ const EmployeeListPage = () => {
   const handleSort = (colname: string, asc: boolean = true) => {
     setList(
       [...list].sort((a: Employee, b: Employee) => {
-        const aValue: string | number | boolean = a[colname as keyof Employee];
-        const bValue: string | number | boolean = b[colname as keyof Employee];
+        const aValue: string | number | boolean | File | null =
+          a[colname as keyof Employee];
+        const bValue: string | number | boolean | File | null =
+          b[colname as keyof Employee];
         const order = asc ? 1 : -1;
 
         if (typeof aValue === 'string' && typeof bValue === 'string') {
@@ -92,6 +127,7 @@ const EmployeeListPage = () => {
               <SortIcon className="me-2" />
               id
             </th>
+            <th className="col-1">顔写真</th>
             <th
               className="col-2"
               onClick={() => {
@@ -119,17 +155,33 @@ const EmployeeListPage = () => {
               <SortIcon className="me-2" />
               権限
             </th>
-            <th className="col-3">アクション</th>
+            <th className="col-2">アクション</th>
           </tr>
         </thead>
         <tbody>
           {list.map((employee: Employee) => (
             <tr className="row" key={employee.id}>
               <td className="col-1">{employee.id}</td>
+              <td className="col-1">
+                <img
+                  src={imageMap[employee.id] || ''}
+                  alt="顔写真"
+                  width="50"
+                  height="50"
+                  style={{
+                    objectFit: 'cover',
+                    border: '1px solid #ccc', // 枠線
+                    backgroundColor: '#f9f9f9', // 背景色
+                  }}
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = '';
+                  }}
+                />
+              </td>
               <td className="col-2">{employee.name}</td>
               <td className="col-5">{employee.email}</td>
               <td className="col-1">{employee.admin ? '管理者' : '一般'}</td>
-              <td className="col-3">
+              <td className="col-2">
                 <button
                   className="btn btn-primary"
                   onClick={() => handleEdit(employee.id)}
