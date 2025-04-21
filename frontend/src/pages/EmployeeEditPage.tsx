@@ -114,6 +114,9 @@ const EmployeeEditPage = () => {
       });
       return;
     }
+
+    setPreviewImage(URL.createObjectURL(file));
+
     setEmployee((prevValue) => {
       const newValue = {
         ...prevValue,

@@ -5,6 +5,7 @@ import { Alert } from 'react-bootstrap';
 
 const EmployeeRegisterPage = () => {
   const [employee, setEmployee] = useState({} as Employee);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
 
   const [errors, setErrors] = useState<Errors>({});
   const [alert, setAlert] = useState<{ type: string; message: string } | null>(
@@ -76,6 +77,9 @@ const EmployeeRegisterPage = () => {
       });
       return;
     }
+
+    setPreviewImage(URL.createObjectURL(file));
+
     setEmployee((prevValue) => {
       const newValue = {
         ...prevValue,
@@ -94,6 +98,13 @@ const EmployeeRegisterPage = () => {
         <Alert variant={alert.type} onClose={() => setAlert(null)} dismissible>
           {alert.message}
         </Alert>
+      )}
+      {previewImage && (
+        <img
+          src={previewImage}
+          alt="顔写真プレビュー"
+          style={{ width: '200px', height: 'auto', borderRadius: '10px' }}
+        />
       )}
       <div className="mb-3 mt-3 custom-file">
         <label className="form-label custom-file-label" htmlFor="picture">
