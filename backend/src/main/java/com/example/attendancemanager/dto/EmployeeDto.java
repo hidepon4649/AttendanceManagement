@@ -16,7 +16,7 @@ public class EmployeeDto {
     private Long id;
 
     @NotBlank(message = "名前は必須です")
-    @Size(min = 2, max = 24, message = "名前は2文字以上、24文字以下です")
+    @Size(min = 2, max = 24, message = "名前は{min}文字以上、{max}文字以下です")
     private String name;
     @NotBlank(message = "メールアドレスは必須です")
     @Email(message = "メールアドレスが不正です")
