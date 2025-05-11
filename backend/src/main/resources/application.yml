@@ -10,7 +10,7 @@ spring:
     password: secret
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         format_sql: true
@@ -33,7 +33,11 @@ logging:
         security: DEBUG
         security.web: DEBUG
         security.authentication: DEBUG
-      hibernate.orm.jdbc.bind: trace
+        transaction: DEBUG
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor: TRACE
     com:
       example:
         attendancemanager:
