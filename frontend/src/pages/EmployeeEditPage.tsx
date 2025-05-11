@@ -3,7 +3,7 @@ import api from '../services/api';
 import { useParams } from 'react-router-dom';
 import { Employee } from '../models/Employee';
 import { Alert } from 'react-bootstrap';
-import { lsGetJwtToken, lsGetCsrfToken } from 'src/utils/localStorageUtils';
+import { lsGetJwtToken } from 'src/utils/localStorageUtils';
 
 const EmployeeEditPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -57,14 +57,12 @@ const EmployeeEditPage = () => {
     }
 
     const token = lsGetJwtToken();
-    const csrfToken = lsGetCsrfToken();
 
     try {
       await api.put(`/employees/${id}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${token}`,
-          'X-CSRF-TOKEN': csrfToken,
         },
       });
       setAlert({ type: 'success', message: '編集が成功しました' });

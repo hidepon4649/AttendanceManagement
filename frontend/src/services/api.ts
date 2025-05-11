@@ -1,24 +1,20 @@
-import axios from "axios";
+import axios from 'axios';
 
-import {
-  lsGetJwtToken,
-  lsGetCsrfToken,
-  lsSetCsrfToken,
-} from "src/utils/localStorageUtils";
+import { lsGetJwtToken } from 'src/utils/localStorageUtils';
 
-console.log("API URL:", process.env.REACT_APP_API_URL);
+console.log('API URL:', process.env.REACT_APP_API_URL);
 
 // Create an Axios instance
 const api = axios.create({
   baseURL: `${process.env.REACT_APP_API_URL}/api`,
   headers: {
-    "Content-Type": "application/json",
-    Accept: "application/json",
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
   },
   withCredentials: true,
 });
 
-// Add a request interceptor to include JWT and CSRF tokens
+// Add a request interceptor to include JWT
 api.interceptors.request.use(
   async (config) => {
     const token = lsGetJwtToken();
@@ -26,25 +22,6 @@ api.interceptors.request.use(
       config.headers.Authorization = `Bearer ${token}`;
     }
 
-    let csrfToken = lsGetCsrfToken();
-    if (!csrfToken) {
-      try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_API_URL}/api/csrf/token`,
-          { withCredentials: true }
-        );
-
-        csrfToken = response.data.token;
-        if (csrfToken) lsSetCsrfToken(csrfToken);
-      } catch (error) {
-        console.error("Failed to fetch CSRF token", error);
-      }
-    }
-
-    if (csrfToken) {
-      config.headers["X-CSRF-TOKEN"] = csrfToken;
-    }
-    console.log("X-CSRF-TOKEN " + csrfToken);
     return config;
   },
   (error) => {

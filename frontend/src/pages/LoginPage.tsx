@@ -1,17 +1,12 @@
-import React, { useState } from "react";
-import api from "../services/api";
-import {
-  lsClear,
-  lsSetCsrfToken,
-  lsSetUser,
-  lsSetJwtToken,
-} from "src/utils/localStorageUtils";
-import useLoginUserContext from "src/hooks/useLoginUserContext";
+import React, { useState } from 'react';
+import api from '../services/api';
+import { lsClear, lsSetUser, lsSetJwtToken } from 'src/utils/localStorageUtils';
+import useLoginUserContext from 'src/hooks/useLoginUserContext';
 
 const LoginPage = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
   const { handleLoginSuccess } = useLoginUserContext();
 
@@ -22,22 +17,16 @@ const LoginPage = () => {
     lsClear();
 
     try {
-      await fetchCsrfToken();
       await loginUser();
     } catch (error) {
       setError(
-        "ログインに失敗しました。ユーザー名とパスワードを確認してください。"
+        'ログインに失敗しました。ユーザー名とパスワードを確認してください。'
       );
     }
   };
-  const fetchCsrfToken = async () => {
-    const responseCsrf = await api.get("/csrf/token");
-    lsSetCsrfToken(responseCsrf.data.token);
-  };
-
   const loginUser = async () => {
-    const response = await api.post("/auth/login", { email, password });
-    setError("");
+    const response = await api.post('/auth/login', { email, password });
+    setError('');
     lsSetUser(response.data);
     lsSetJwtToken(response.data.token);
 
