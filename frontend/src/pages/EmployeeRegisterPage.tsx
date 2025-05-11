@@ -20,7 +20,7 @@ const EmployeeRegisterPage = () => {
     formData.append('name', employee.name);
     formData.append('email', employee.email);
     formData.append('password', employee.password);
-    formData.append('admin', String(employee.admin));
+    formData.append('admin', String(employee.admin ?? false));
     if (employee.picture) {
       formData.append('picture', employee.picture);
     }
