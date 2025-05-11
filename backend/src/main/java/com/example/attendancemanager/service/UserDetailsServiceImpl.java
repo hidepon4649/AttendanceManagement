@@ -12,14 +12,15 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
 import com.example.attendancemanager.entity.Employee;
+import com.example.attendancemanager.model.Role;
 import com.example.attendancemanager.repository.EmployeeRepository;
 
 @Service
-public class CustomUserDetailsServiceImpl implements UserDetailsService, CustomUserDetailsService {
+public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final EmployeeRepository employeeRepository;
 
-    public CustomUserDetailsServiceImpl(EmployeeRepository employeeRepository) {
+    public UserDetailsServiceImpl(EmployeeRepository employeeRepository) {
         this.employeeRepository = employeeRepository;
     }
 
@@ -42,7 +43,8 @@ public class CustomUserDetailsServiceImpl implements UserDetailsService, CustomU
 
     private Collection<? extends GrantedAuthority> getAuthorities(boolean isAdmin) {
         return isAdmin
-                ? List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"))
-                : List.of(new SimpleGrantedAuthority("ROLE_USER"));
+                ? List.of(new SimpleGrantedAuthority(Role.ROLE_ADMIN.toString()),
+                        new SimpleGrantedAuthority(Role.ROLE_USER.toString()))
+                : List.of(new SimpleGrantedAuthority(Role.ROLE_USER.toString()));
     }
 }
