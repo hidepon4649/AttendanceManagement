@@ -10,7 +10,7 @@
 - **バックエンド**: Spring Boot, Gradle
 - **データベース**: MySQL
 - **インフラ**: Docker(コンテナ化), Docker Compose
-- **認証認可**: Spring Security, JWT, BCrypt, CSRF
+- **認証認可**: Spring Security, JWT, BCrypt
 - **自動テスト**: JUnit
 
 ## セットアップ手順
@@ -37,7 +37,7 @@ itohtohirofumi@email.com/password
 TODO:主な機能を紹介する
 ## 主な機能
 - 共通機能(一般ユーザ、管理ユーザ)
-  - ログイン・認証認可(JWT, CSRF)
+  - ログイン・認証認可(JWT)
   - 出勤・退勤の登録
   - 月次帳票のPDF出力
 - 管理機能(管理ユーザ)
