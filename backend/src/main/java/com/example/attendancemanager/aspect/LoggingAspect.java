@@ -35,7 +35,7 @@ public class LoggingAspect {
                 this.myZoneId = ZoneId.of(timezone);
         }
 
-        @Pointcut("within(@org.springframework.web.bind.annotation.RestController)")
+        @Pointcut("execution(* com.example.attendancemanager.controller..*(..))")
         public void controllerMethods() {
         }
 
