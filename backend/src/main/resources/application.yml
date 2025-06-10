@@ -51,3 +51,15 @@ app:
   timezone: Asia/Tokyo
   jwtSecret: mySecretKey0123456789aop9879sgjnspkAxmndfsopkvajoirjg94gf2opfng2moknm
   jwtExpirationMs: 3600000
+# Actuator endpointsは開発環境でのみ有効にすることを推奨します。
+# management:
+#   endpoints:
+#     web:
+#       exposure:
+#         # include: '*'
+#   endpoint:
+#     health:
+#       show-details: always
+#   metrics:
+#     tags:
+#       enabled: true
