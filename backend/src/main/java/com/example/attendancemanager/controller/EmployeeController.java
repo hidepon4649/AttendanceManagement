@@ -1,5 +1,7 @@
 package com.example.attendancemanager.controller;
 
+import static java.net.URI.create;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.HashMap;
@@ -52,12 +54,12 @@ public class EmployeeController {
     }
 
     @GetMapping
-    public List<Employee> getAllEmployees(@AuthenticationPrincipal UserDetails userDetails) {
-        return employeeService.getAllEmployees();
+    public ResponseEntity<List<Employee>> getAllEmployees(@AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(employeeService.getAllEmployees());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getEmployee(@PathVariable Long id) {
+    public ResponseEntity<Employee> getEmployee(@PathVariable Long id) {
         return ResponseEntity.ok(employeeService.getEmployeeById(id));
     }
 
@@ -110,7 +112,7 @@ public class EmployeeController {
         }
         // 暗号化前のパスワードに対してサイズ制限をチェック
         if (!validatePassword(dto.getPassword())) {
-            
+
             Map<String, String> errors = new HashMap<>();
             errors.put("password", "パスワードの長さは 8〜24文字です。");
             return ResponseEntity.badRequest().body(errors);
@@ -131,7 +133,9 @@ public class EmployeeController {
         }
 
         Employee newEmployee = employeeService.saveEmployee(employee);
-        return ResponseEntity.status(HttpStatus.CREATED).body(newEmployee);
+        return ResponseEntity
+                .created(create("/api/employees/" + newEmployee.getId()))
+                .body(newEmployee);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -148,17 +152,21 @@ public class EmployeeController {
 
         }
 
-        // 暗号化前のパスワードに対してサイズ制限をチェック
-        if (!validatePassword(dto.getPassword())) {
-            Map<String, String> errors = new HashMap<>();
-            errors.put("password", "パスワードの長さは 8〜24文字です。");
-            return ResponseEntity.badRequest().body(errors);
-        }
+        // ここではパスワードは変更しない。
+        // パスワード更新は専用のエンドポイント/画面を作成する。
+        // // 暗号化前のパスワードに対してサイズ制限をチェック
+        // if (!validatePassword(dto.getPassword())) {
+        // Map<String, String> errors = new HashMap<>();
+        // errors.put("password", "パスワードの長さは 8〜24文字です。");
+        // return ResponseEntity.badRequest().body(errors);
+        // }
 
         Employee employee = employeeService.getEmployeeById(id);
         employee.setName(dto.getName());
         employee.setEmail(dto.getEmail());
-        employee.setPassword(passwordEncoder.encode(dto.getPassword()));
+        // ここではパスワードは変更しない。
+        // パスワード更新は専用のエンドポイント/画面を作成する。
+        // employee.setPassword(passwordEncoder.encode(dto.getPassword()));
         employee.setAdmin(dto.isAdmin());
 
         MultipartFile picture = dto.getPicture();
@@ -171,15 +179,14 @@ public class EmployeeController {
         }
 
         employeeService.saveEmployee(employee);
-        return ResponseEntity.ok(employee);
+        return ResponseEntity.noContent().build();
 
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteEmployee(@PathVariable Long id) {
-        Employee employee = employeeService.getEmployeeById(id);
+    public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
         employeeService.deleteEmployee(id);
-        return ResponseEntity.ok("社員を削除しました。:" + employee);
+        return ResponseEntity.noContent().build();
     }
 
     private static boolean validatePassword(String password) {

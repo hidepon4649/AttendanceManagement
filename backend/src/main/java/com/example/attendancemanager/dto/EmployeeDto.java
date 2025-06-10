@@ -21,7 +21,7 @@ public class EmployeeDto {
     @NotBlank(message = "メールアドレスは必須です")
     @Email(message = "メールアドレスが不正です")
     private String email;
-    @NotBlank(message = "パスワードは必須です")
+    // @NotBlank(message = "パスワードは必須です")
     private String password;
     private boolean isAdmin;
 

@@ -50,7 +50,6 @@ const EmployeeEditPage = () => {
     formData.append('id', String(employee.id));
     formData.append('name', employee.name);
     formData.append('email', employee.email);
-    formData.append('password', employee.password);
     formData.append('admin', String(employee.admin));
     if (employee.picture) {
       formData.append('picture', employee.picture);
@@ -193,22 +192,6 @@ const EmployeeEditPage = () => {
         />
         {errors.fieldErrors?.email && (
           <p className="text-danger">{errors.fieldErrors.email}</p>
-        )}
-      </div>
-      <div className="mb-3">
-        <label className="form-label" htmlFor="password">
-          パスワード:
-        </label>
-        <input
-          type="password"
-          className="form-control"
-          name="password"
-          value={employee.password}
-          onChange={handleOnChange}
-          placeholder="パスワード"
-        />
-        {errors.fieldErrors?.password && (
-          <p className="text-danger">{errors.fieldErrors.password}</p>
         )}
       </div>
       <div className="mb-3">
