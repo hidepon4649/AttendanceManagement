@@ -20,6 +20,7 @@ public class AccessLog {
 
     private String methodName;
     private String methodParams;
+    private String errorMessage;
     private String userRoles;
     private LocalDate accessDate;
     private LocalDateTime accessTime;
@@ -62,6 +63,14 @@ public class AccessLog {
 
     public void setMethodParams(String methodParams) {
         this.methodParams = methodParams;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
     }
 
     public String getUserRoles() {

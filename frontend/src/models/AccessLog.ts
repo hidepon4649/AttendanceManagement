@@ -4,6 +4,7 @@ export interface AccessLog {
   className: string;
   methodName: string;
   methodParams: string;
+  errorMessage: string;
   userRoles: string;
   accessDate: string;
   accessTime: string;

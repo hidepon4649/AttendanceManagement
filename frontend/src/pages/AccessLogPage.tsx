@@ -25,8 +25,9 @@ const AccessLogPage = () => {
       <td className="col-1">{formatDateTime(log.accessTime, 'hh:mm:ss')}</td>
       <td className="col-1">{log.username?.split('@')[0]}</td>
       <td className="col-2">{log.className?.split('.').pop()}</td>
-      <td className="col-3">{log.methodName}</td>
-      <td className="col-4">{log.methodParams}</td>
+      <td className="col-2">{log.methodName}</td>
+      <td className="col-3">{log.methodParams}</td>
+      <td className="col-2">{log.errorMessage}</td>
     </tr>
   ));
 
