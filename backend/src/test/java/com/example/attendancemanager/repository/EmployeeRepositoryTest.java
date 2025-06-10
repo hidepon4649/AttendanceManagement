@@ -1,6 +1,8 @@
 package com.example.attendancemanager.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,6 +23,7 @@ public class EmployeeRepositoryTest {
     private EmployeeRepository employeeRepository;
 
     @Test
+    @DisplayName("従業員の取得ができること。emailとパスワードで検索")
     public void testFindByEmailAndPassword() {
         Employee employee = this.employeeRepository.findByEmailAndPassword(
                 "itohtohirofumi11@email.com", "$2a$12$9S./kSh2vC6VqFPQLg1ege7gWPmJ556aCDBO2Qg/tj5ZWEiBoRb1i")
@@ -31,6 +34,7 @@ public class EmployeeRepositoryTest {
     }
 
     @Test
+    @DisplayName("従業員の取得ができること。emailで検索")
     public void testFindByEmail() {
         Employee employee = this.employeeRepository.findByEmail("itohtohirofumi11@email.com").orElse(new Employee());
         assertEquals(employee.getId(), 11);
