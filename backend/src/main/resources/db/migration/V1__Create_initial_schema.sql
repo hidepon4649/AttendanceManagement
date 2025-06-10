@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS access_log (
     class_name VARCHAR(255),
     method_name VARCHAR(255),
     method_params TEXT,
+    error_message TEXT,
     user_roles VARCHAR(255),
     access_date DATE,
     access_time TIMESTAMP
