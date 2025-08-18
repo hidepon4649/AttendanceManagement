@@ -2,7 +2,7 @@
 
 # ---------------------------------------
 # ビルド用のイメージ
-FROM node:22.10.0-alpine AS build
+FROM node:20-alpine AS build
 
 WORKDIR /app/frontend
 
@@ -20,7 +20,7 @@ RUN npm install --legacy-peer-deps
 
 # # ---------------------------------------
 # # 実行用のイメージ
-# FROM node:18-alpine
+# FROM node:20-alpine
 
 # WORKDIR /app/frontend
 
