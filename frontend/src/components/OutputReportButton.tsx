@@ -2,8 +2,9 @@ import React from 'react';
 import Button from '@mui/material/Button';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+import autoTable from 'jspdf-autotable';
 import NotoSansJP from '../fonts/NotoSansJP-Regular-base64.js';
+import NotoSansJP_Bold from '../fonts/NotoSansJP-Bold-base64.js';
 import {
   formatShortTime,
   getYoubi,
@@ -30,6 +31,10 @@ const OutputReportButton = (props: OutputReportButtonProps) => {
         // フォントの追加
         doc.addFileToVFS('NotoSansJP-Regular.ttf', NotoSansJP);
         doc.addFont('NotoSansJP-Regular.ttf', 'NotoSansJP', 'normal');
+
+        doc.addFileToVFS('NotoSansJP-Bold.ttf', NotoSansJP_Bold);
+        doc.addFont('NotoSansJP-Bold.ttf', 'NotoSansJP', 'bold');
+
         doc.setFont('NotoSansJP');
 
         const tableColumn = [
@@ -72,18 +77,19 @@ const OutputReportButton = (props: OutputReportButtonProps) => {
           });
         }
 
-        doc.autoTable({
+        autoTable(doc, {
           head: [tableColumn],
           body: tableRows,
           startY: 20,
-          styles: { font: 'NotoSansJP' },
+          styles: { font: 'NotoSansJP', fontStyle: 'normal' },
+          headStyles: { font: 'NotoSansJP', fontStyle: 'bold' },
         });
 
         const pageWidth = doc.internal.pageSize.width;
 
         const titleText = `${getYearMonthForPrint(
           targetMonth
-        )} 勤怠表　${employeeName} 様`;
+        )} 勤怠表 ${employeeName} 様`;
         const timeText = `当月作業時間の合計: ${minutesToHHMM(totalMinutes)}`;
 
         const w1 = doc.getTextWidth(titleText);
