@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import AccessLog from './pages/AccessLogPage';
 import AttendanceForm from './pages/AttendanceFormPage';
@@ -33,7 +33,8 @@ const App = () => {
             <Button
               className="nav-link text-light"
               size="medium"
-              href="/"
+              component={Link}
+              to="/"
               variant="outlined"
               startIcon={<HomeIcon />}
             >
@@ -46,7 +47,8 @@ const App = () => {
                 <Button
                   className="nav-link text-light"
                   size="medium"
-                  href="/employees/list"
+                  component={Link}
+                  to="/employees/list"
                   variant="outlined"
                   startIcon={<PeopleIcon />}
                 >
@@ -57,7 +59,8 @@ const App = () => {
                 <Button
                   className="nav-link text-light"
                   size="medium"
-                  href="/employees/register"
+                  component={Link}
+                  to="/employees/register"
                   variant="outlined"
                   startIcon={<BadgeIcon />}
                 >
@@ -67,59 +70,48 @@ const App = () => {
             </>
           )}
           {isLoggedIn && (
-            <>
-              <li className="nav-item">
-                <Button
-                  className="nav-link text-light"
-                  size="medium"
-                  href="/attendance"
-                  variant="outlined"
-                  startIcon={<PunchClockIcon />}
-                >
-                  出退勤管理
-                </Button>
-              </li>
-            </>
+            <li className="nav-item">
+              <Button
+                className="nav-link text-light"
+                size="medium"
+                component={Link}
+                to="/attendance"
+                variant="outlined"
+                startIcon={<PunchClockIcon />}
+              >
+                出退勤管理
+              </Button>
+            </li>
           )}
           {isLoggedIn && isAdmin && (
-            <>
-              <li className="nav-item">
-                <Button
-                  className="nav-link text-light"
-                  size="medium"
-                  href="/accessLogs"
-                  variant="outlined"
-                  startIcon={<ManageSearchIcon />}
-                >
-                  操作ログ閲覧
-                </Button>
-              </li>
-            </>
+            <li className="nav-item">
+              <Button
+                className="nav-link text-light"
+                size="medium"
+                component={Link}
+                to="/accessLogs"
+                variant="outlined"
+                startIcon={<ManageSearchIcon />}
+              >
+                操作ログ閲覧
+              </Button>
+            </li>
           )}
           {isLoggedIn && (
-            <>
-              <li className="nav-item">
-                <LogoutButton />
-              </li>
-            </>
+            <li className="nav-item">
+              <LogoutButton />
+            </li>
           )}
         </ul>
       </nav>
 
       <Routes>
         <Route path="/" element={<LoginPage />} />
-        {isLoggedIn && (
-          <>
-            <Route path="/employees/list" element={<EmployeeList />} />
-            <Route
-              path="/employees/register"
-              element={<RegisterEmployeeForm />}
-            />
-            <Route path="/attendance" element={<AttendanceForm />} />
-            <Route path="/employees/edit/:id" element={<EmployeeEdit />} />
-            <Route path="/accessLogs" element={<AccessLog />} />
-          </>
-        )}
+        <Route path="/employees/list" element={<EmployeeList />} />
+        <Route path="/employees/register" element={<RegisterEmployeeForm />} />
+        <Route path="/attendance" element={<AttendanceForm />} />
+        <Route path="/employees/edit/:id" element={<EmployeeEdit />} />
+        <Route path="/accessLogs" element={<AccessLog />} />
       </Routes>
     </div>
   );

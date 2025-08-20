@@ -69,7 +69,7 @@ public class EmployeeController {
         byte[] image = employee.getPicture();
 
         if (image == null || image.length == 0) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.noContent().build();
         }
 
         String mimeType = detectImageMimeType(image);

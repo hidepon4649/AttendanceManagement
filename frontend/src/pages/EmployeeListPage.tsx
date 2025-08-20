@@ -30,6 +30,12 @@ const EmployeeListPage = () => {
         responseType: 'blob',
         withCredentials: true,
       });
+
+      if (response.status === 204 || !response.data) {
+        console.info('画像未登録 employeeId:', employeeId);
+        return '';
+      }
+
       return URL.createObjectURL(response.data); // Blob URLを返す
     } catch (error) {
       console.error('画像の取得に失敗しました', error);
