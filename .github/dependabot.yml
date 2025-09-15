@@ -10,13 +10,9 @@ updates:
     directory: "/frontend" # package.json のある場所
     schedule:
       interval: "monthly"  # 毎月チェック
-      day: 1               # 毎月1日
-      time: "15:00"        # UTC → 日本時間 0:00
 
   # バックエンド (Gradle)
   - package-ecosystem: "gradle"
     directory: "/backend" # build.gradle のある場所
     schedule:
       interval: "monthly"  # 毎月チェック
-      day: 1               # 毎月1日
-      time: "15:00"        # UTC → 日本時間 0:00
