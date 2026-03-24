@@ -20,7 +20,7 @@
     "@mui/x-date-pickers": "^7.27.0",
     "@types/jest": "^30.0.0",
     "@types/node": "^22.17.2",
-    "@types/react": "^18.3.23",
+    "@types/react": "^19.2.14",
     "@types/react-dom": "^18.3.7",
     "axios": "^1.11.0",
     "date-fns": "^4.1.0",
@@ -29,7 +29,7 @@
     "jspdf-autotable": "^5.0.2",
     "nth-check": "^2.1.1",
     "postcss": "^8.5.6",
-    "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
+    "react": "^19.2.4",
     "react-bootstrap": "^2.10.7",
     "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0",
     "react-router-dom": "^6.14.2",
@@ -62,7 +62,7 @@
     "webpack-dev-server": "^5.2.2"
   },
   "peerDependencies": {
-    "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
+    "react": "^19.2.4",
     "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
   }
 }
