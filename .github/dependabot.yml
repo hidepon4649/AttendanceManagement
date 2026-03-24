@@ -9,10 +9,10 @@ updates:
   - package-ecosystem: "npm"
     directory: "/frontend" # package.json のある場所
     schedule:
-      interval: "monthly"  # 毎月チェック
+      interval: "yearly"  # 年次チェック
 
   # バックエンド (Gradle)
   - package-ecosystem: "gradle"
     directory: "/backend" # build.gradle のある場所
     schedule:
-      interval: "monthly"  # 毎月チェック
+      interval: "yearly"  # 年次チェック
